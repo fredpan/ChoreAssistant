@@ -38,12 +38,27 @@
             android:ems="10"
             android:inputType="textPassword"
             android:hint="Please enter your password" />
+<LinearLayout
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    android:orientation="horizontal">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="SUBMIT"
-            android:onClick="submit"/>
+    <Button
+        android:id="@+id/createUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create user account"
+        android:layout_weight="1"/>
+
+    <Button
+        android:id="@+id/createAdmin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="create Administrator account"
+        android:layout_weight="1"/>
+
+</LinearLayout>>
+
 
     </LinearLayout>
 

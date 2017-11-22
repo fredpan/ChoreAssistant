@@ -3,8 +3,12 @@ package com.seg2105.doooge.choreassistant;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -16,38 +20,137 @@ import java.util.Random;
  * Created by fredpan on 2017/11/21.
  */
 
-public class RegistrationActivity extends AppCompatActivity {
+public class RegistrationActivity extends AppCompatActivity implements View.OnClickListener {
     private DatabaseReference databaseLoginInfo;
-    private DatabaseReference databaseRoleInfo;
     private int userID;
-    private boolean isAdmin;
+    private Boolean isAdmin = false;
+    private Button createUser;
+    private Button createAdmin;
+    private boolean adminExist = false;
+
+    //((HashMap) dataSnapshot.child(key).getValue()).get("admin");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.registration);
         databaseLoginInfo = FirebaseDatabase.getInstance().getReference("Login");
-        databaseLoginInfo = FirebaseDatabase.getInstance().getReference("Role");
         Random rdm = new Random();
         userID = 000000 + rdm.nextInt(999999);
+        createUser = (Button) findViewById(R.id.createUser);
+        createUser.setOnClickListener(this);
+        createAdmin = (Button) findViewById(R.id.createAdmin);
+        createAdmin.setOnClickListener(this);
+        allowCreateUser();
+
     }
 
-    public void submit(View view) throws NoSuchAlgorithmException {
-        // Storing new username with its related password
-        EditText username = (EditText) findViewById(R.id.newUserName);
-        EditText password  = (EditText) findViewById(R.id.newPassword);
-        String encrypted = encryption(String.valueOf(username.getText()), String.valueOf(password.getText()));
-        databaseLoginInfo.child(Integer.toString(userID)).setValue(encrypted);
+    private boolean allowCreateUser() {
+        // If no admin, require to create one
+        AdminExist();
+        if (adminExist) {
+            System.out.println("HERE");
+            createUser.setClickable(true);
+            return true;
+        } else {
+            createUser.setClickable(false);
+            return false;
+        }
+    }
+
+    private void AdminExist() {
+
+        DataSnapshot dataSnapshot;
+        ChildEventListener childEventListener = databaseLoginInfo.addChildEventListener(new ChildEventListener() {
+
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    String key = child.getKey();
+                    boolean isadmin = Boolean.getBoolean( dataSnapshot.child(key).getValue().toString()   );
+                    if (isadmin) {
+                        adminExist = true;
+                        System.out.println(adminExist + "!!!!!!!!!!!!!!!!!");
+                    } else {
+                        adminExist = false;
+                    }
+                }
+
+            }
 
 
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    String key = child.getKey();
+                    boolean isadmin = Boolean.getBoolean( dataSnapshot.child(key).getValue().toString()   );
+                    if (isadmin) {
+                        adminExist = true;
+                        System.out.println(adminExist + "!!!!!!!!!!!!!!!!!");
+                    } else {
+                        adminExist = false;
+                    }
+                }
 
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    String key = child.getKey();
+                    boolean isadmin = Boolean.getBoolean( dataSnapshot.child(key).getValue().toString()   );
+                    if (isadmin) {
+                        adminExist = true;
+                        System.out.println(adminExist + "!!!!!!!!!!!!!!!!!");
+                    } else {
+                        adminExist = false;
+                    }
+                }
+
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    String key = child.getKey();
+                    boolean isadmin = Boolean.getBoolean( dataSnapshot.child(key).getValue().toString()   );
+                    if (isadmin) {
+                        adminExist = true;
+                        System.out.println(adminExist + "!!!!!!!!!!!!!!!!!");
+                    } else {
+                        adminExist = false;
+                    }
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void StoreAccountInfo() throws NoSuchAlgorithmException {
+        // Storing new username with its related encrypted password, user ID, and isAdmin to database
+        EditText obtainedUsername = (EditText) findViewById(R.id.newUserName);
+        EditText obtainedPassword = (EditText) findViewById(R.id.newPassword);
+        String username = String.valueOf(obtainedUsername.getText());
+        String password = String.valueOf(obtainedPassword.getText());
+        String encrypted = encryption(username, password);
+        Identification identification = new Identification(username, encrypted, userID, isAdmin);
+        databaseLoginInfo.child(username).setValue(identification);
+        System.out.println("===============");
     }
 
     private String encryption(String username, String pwd) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         md.update(
                 concatenation(
-                        pwd.getBytes(),username.getBytes()
+                        pwd.getBytes(), username.getBytes()
                 )
         );
         byte[] encrypted = md.digest();
@@ -58,6 +161,45 @@ public class RegistrationActivity extends AppCompatActivity {
         }
         String result = sb.toString();
         return result;
+    }
+
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.createUser:
+                if (allowCreateUser()) {
+                    try {
+                        StoreAccountInfo();
+                    } catch (NoSuchAlgorithmException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println("TO BE IMPLEMENTED: Pop up notify success, and redirect to Other page");
+                } else {
+                    System.out.println("TO BE IMPLEMENT: POP UP: PLZ create admin first");
+                }
+                break;
+            case R.id.createAdmin:
+                if (isQualified()) {
+                    isAdmin = true;
+                    System.out.println("TO BE IMPLEMENTED: Pop up asking input admin info, notify success,and redirect to Other page");
+                    try {
+                        StoreAccountInfo();
+                        createUser.setClickable(true);
+                        isAdmin = false;
+                    } catch (NoSuchAlgorithmException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    System.out.println("POP UP: Cannot create,remain in this page");
+                }
+
+                break;
+
+        }
+    }
+
+    private Boolean isQualified() {
+
+        return true;
     }
 
     private byte[] concatenation(byte[] a, byte[] b) {
