@@ -14,6 +14,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Iterator;
 import java.util.Random;
 
 /**
@@ -41,7 +42,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         createUser.setOnClickListener(this);
         createAdmin = (Button) findViewById(R.id.createAdmin);
         createAdmin.setOnClickListener(this);
-        allowCreateUser();
+        AdminExist();
 
     }
 
@@ -58,22 +59,27 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-    private void AdminExist() {
+    public void AdminExist() {
 
-        DataSnapshot dataSnapshot;
         ChildEventListener childEventListener = databaseLoginInfo.addChildEventListener(new ChildEventListener() {
 
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     String key = child.getKey();
-                    boolean isadmin = Boolean.getBoolean( dataSnapshot.child(key).getValue().toString()   );
-                    if (isadmin) {
-                        adminExist = true;
-                        System.out.println(adminExist + "!!!!!!!!!!!!!!!!!");
-                    } else {
-                        adminExist = false;
+                    Iterator temp = dataSnapshot.getChildren().iterator();
+                    while (temp.hasNext()){
+                        System.out.println(temp.next());
                     }
+                    //System.out.println("HELLO: "+dataSnapshot.getChildren().iterator().next().getValue());
+//                    boolean isadmin = (Boolean) ((HashMap) dataSnapshot.child(key).getValue()).get("admin") ;
+//                    if (isadmin) {
+//                        createUser.setClickable(true);
+//                        System.out.println(adminExist + "!!!!!!!!!!!!!!!!!"+createUser.getLinksClickable());
+//                        break;
+//                    }
+//                    System.out.println("Set creatUser as FALSE");
+                    createUser.setClickable(false);
                 }
 
             }
@@ -83,15 +89,15 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     String key = child.getKey();
-                    boolean isadmin = Boolean.getBoolean( dataSnapshot.child(key).getValue().toString()   );
-                    if (isadmin) {
-                        adminExist = true;
-                        System.out.println(adminExist + "!!!!!!!!!!!!!!!!!");
-                    } else {
-                        adminExist = false;
-                    }
+//                    boolean isadmin = (Boolean) ((HashMap) dataSnapshot.child(key).getValue()).get("admin") ;
+//                    if (isadmin) {
+//                        createUser.setClickable(true);
+//                        System.out.println(adminExist + "!!!!!!!!!!!!!!!!!"+createUser.getLinksClickable());
+//                        break;
+//                    }
+//                    System.out.println("Set creatUser as FALSE");
+                    createUser.setClickable(false);
                 }
-
 
             }
 
@@ -99,13 +105,15 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     String key = child.getKey();
-                    boolean isadmin = Boolean.getBoolean( dataSnapshot.child(key).getValue().toString()   );
-                    if (isadmin) {
-                        adminExist = true;
-                        System.out.println(adminExist + "!!!!!!!!!!!!!!!!!");
-                    } else {
-                        adminExist = false;
-                    }
+
+//                    boolean isadmin = (Boolean) ((HashMap) dataSnapshot.child(key).getValue()).get("admin") ;
+//                    if (isadmin) {
+//                        createUser.setClickable(true);
+//                        System.out.println(adminExist + "!!!!!!!!!!!!!!!!!"+createUser.getLinksClickable());
+//                        break;
+//                    }
+//                    System.out.println("Set creatUser as FALSE");
+                    createUser.setClickable(false);
                 }
 
 
@@ -115,13 +123,15 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     String key = child.getKey();
-                    boolean isadmin = Boolean.getBoolean( dataSnapshot.child(key).getValue().toString()   );
-                    if (isadmin) {
-                        adminExist = true;
-                        System.out.println(adminExist + "!!!!!!!!!!!!!!!!!");
-                    } else {
-                        adminExist = false;
-                    }
+//                    boolean isadmin = (Boolean) ((HashMap) dataSnapshot.child(key).getValue()).get("admin") ;
+//                    if (isadmin) {
+//                        adminExist = true;
+//                        System.out.println(adminExist + "!!!!!!!!!!!!!!!!!");
+//                        break;
+//                    }
+//
+//                    System.out.println("Set creatUser as FALSE");
+                    createUser.setClickable(false);
                 }
 
 
@@ -166,16 +176,16 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.createUser:
-                if (allowCreateUser()) {
+                //if (allowCreateUser()) {
                     try {
                         StoreAccountInfo();
                     } catch (NoSuchAlgorithmException e) {
                         e.printStackTrace();
                     }
                     System.out.println("TO BE IMPLEMENTED: Pop up notify success, and redirect to Other page");
-                } else {
-                    System.out.println("TO BE IMPLEMENT: POP UP: PLZ create admin first");
-                }
+               // } else {
+                //    System.out.println("TO BE IMPLEMENT: POP UP: PLZ create admin first");
+               // }
                 break;
             case R.id.createAdmin:
                 if (isQualified()) {
@@ -183,7 +193,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                     System.out.println("TO BE IMPLEMENTED: Pop up asking input admin info, notify success,and redirect to Other page");
                     try {
                         StoreAccountInfo();
-                        createUser.setClickable(true);
+               //         createUser.setClickable(true);
                         isAdmin = false;
                     } catch (NoSuchAlgorithmException e) {
                         e.printStackTrace();
