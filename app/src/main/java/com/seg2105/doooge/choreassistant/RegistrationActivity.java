@@ -40,8 +40,6 @@ public class RegistrationActivity extends AppCompatActivity {
         databaseLoginInfo.child(Integer.toString(userID)).setValue(encrypted);
 
 
-        databaseRoleInfo.child(Integer.toString(userID)).setValue(isAdmin);
-
 
     }
 

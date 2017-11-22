@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "810417926325",
+    "firebase_url": "https://choreassistant-b57b8.firebaseio.com",
+    "project_id": "choreassistant-b57b8",
+    "storage_bucket": "choreassistant-b57b8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:810417926325:android:09f232763bfd2417",
+        "android_client_info": {
+          "package_name": "com.seg2105.doooge.choreassistant"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "810417926325-7augbbc2etdfks9vkho6ujckskh2g29m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.seg2105.doooge.choreassistant",
+            "certificate_hash": "91b729fa015d2343404f699d91ce1ee21d75f12a"
+          }
+        },
+        {
+          "client_id": "810417926325-1r3qcqbsf6v42dernjkdj4uul8v7nosh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDb8ru9fmR7XLi8of2knykw1oA3AQXN28"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "810417926325-1r3qcqbsf6v42dernjkdj4uul8v7nosh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
