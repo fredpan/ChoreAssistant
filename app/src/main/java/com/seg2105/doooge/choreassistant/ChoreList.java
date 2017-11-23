@@ -3,6 +3,7 @@ package com.seg2105.doooge.choreassistant;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
@@ -19,6 +20,7 @@ public class ChoreList extends AppCompatActivity {
     int month;
     int year;
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chore_list);
@@ -31,8 +33,23 @@ public class ChoreList extends AppCompatActivity {
         setDate(day,month,year);
     }
 
-    private void date_OnClick() {
+    public void textDate2_OnClick(View view) {
         datePick();
+    }
+
+    public void imgDateUp_OnClick(View view){
+
+    }
+
+    public void imgDateDown_OnClick(View view){
+        Calendar cal = Calendar.getInstance();
+        cal.set(year,month,day);
+        cal.add(Calendar.DATE, 1);
+        year = cal.get(Calendar.YEAR);
+        month = cal.get(Calendar.MONTH);
+        day = cal.get(Calendar.DAY_OF_MONTH);
+
+        setDate(year,month,day);
     }
 
     private void setDate(int year, int month, int day) {
