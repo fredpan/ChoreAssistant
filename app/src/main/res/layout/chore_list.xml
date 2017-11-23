@@ -66,8 +66,7 @@
             android:id="@+id/imgDateDown"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:layout_weight="1"
-            app:srcCompat="?android:attr/findOnPageNextDrawable" />
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/textDate2"
@@ -84,8 +83,7 @@
             android:id="@+id/imgDateUp"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:layout_weight="1"
-            app:srcCompat="?android:attr/findOnPagePreviousDrawable" />
+            android:layout_weight="1" />
     </LinearLayout>
 
     <Space
