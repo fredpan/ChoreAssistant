@@ -13,9 +13,11 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import java.util.Calendar;
+import java.util.Locale;
 
 
 public class ChoreEdit  extends AppCompatActivity {
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +46,9 @@ public class ChoreEdit  extends AppCompatActivity {
      */
     private void setDate(int year, int month, int day) {
         TextView textDate = (TextView) findViewById(R.id.textDate);
-        textDate.setText(day + "/" + month + "/" + year);
+
+        Calendar cal = Calendar.getInstance();
+        textDate.setText(day + "/" + month+1 + "/" + year);
     }
 
     /**
@@ -96,7 +100,6 @@ public class ChoreEdit  extends AppCompatActivity {
 
         DatePickerDialog temp = new DatePickerDialog(this, tempListen, year, month, day);
         temp.show();
-        //temp.setOnDateSetListener(tempListen);
     }
 
     //https://developer.android.com/reference/android/app/DatePickerDialog.OnDateSetListener.html
@@ -104,7 +107,7 @@ public class ChoreEdit  extends AppCompatActivity {
 
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
             //From article: the selected month (0-11 for compatibility with MONTH), so add 1...
-            setDate(year, month + 1, dayOfMonth);
+            setDate(year, month, dayOfMonth);
         }
 
     };
