@@ -16,40 +16,35 @@
             android:layout_width="107dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:color/holo_blue_dark"
-            android:text="chore1" />
+            android:background="@android:color/holo_blue_dark" />
 
         <Button
             android:id="@+id/btnChore2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:color/holo_green_light"
-            android:text="chore2" />
+            android:background="@android:color/holo_green_light" />
 
         <Button
             android:id="@+id/btnChore3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:color/holo_orange_dark"
-            android:text="chore3" />
+            android:background="@android:color/holo_orange_dark" />
 
         <Button
             android:id="@+id/btnChore4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:color/holo_purple"
-            android:text="chore4" />
+            android:background="@android:color/holo_purple" />
 
         <Button
             android:id="@+id/btnChore5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:color/holo_red_light"
-            android:text="chore5" />
+            android:background="@android:color/holo_red_light" />
     </LinearLayout>
 
     <Space
