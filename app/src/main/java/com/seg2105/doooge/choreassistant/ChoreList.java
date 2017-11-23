@@ -13,7 +13,7 @@ import java.util.Locale;
  * Created by dustin on 11/22/17.
  */
 
-public class Responsibility extends AppCompatActivity {
+public class ChoreList extends AppCompatActivity {
 
     int day;
     int month;
@@ -28,9 +28,10 @@ public class Responsibility extends AppCompatActivity {
         day = cal.get(Calendar.DAY_OF_MONTH);
         month = cal.get(Calendar.MONTH);
         year = cal.get(Calendar.YEAR);
+        setDate(day,month,year);
     }
 
-    private void date_OnClick(){
+    private void date_OnClick() {
         datePick();
     }
 

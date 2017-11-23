@@ -13,11 +13,9 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import java.util.Calendar;
-import java.util.Locale;
 
 
 public class ChoreEdit  extends AppCompatActivity {
-
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
