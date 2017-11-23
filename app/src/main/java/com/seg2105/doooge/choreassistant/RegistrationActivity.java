@@ -14,6 +14,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -38,11 +40,13 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         databaseLoginInfo = FirebaseDatabase.getInstance().getReference("Login");
         Random rdm = new Random();
         userID = 000000 + rdm.nextInt(999999);
-        createUser = (Button) findViewById(R.id.createUser);
+        createUser = findViewById(R.id.createUser);
         createUser.setOnClickListener(this);
-        createAdmin = (Button) findViewById(R.id.createAdmin);
+        createAdmin = findViewById(R.id.createAdmin);
         createAdmin.setOnClickListener(this);
         AdminExist();
+        Calendar a = Calendar.getInstance();
+
 
     }
 
@@ -56,6 +60,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         } else {
             createUser.setClickable(false);
             return false;
+
         }
     }
 
@@ -69,6 +74,8 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                     String key = child.getKey();
                     Iterator temp = dataSnapshot.getChildren().iterator();
                     while (temp.hasNext()){
+                        HashMap<String, String> t = new HashMap<>();
+                        // t.put(temp.next())
                         System.out.println(temp.next());
                     }
                     //System.out.println("HELLO: "+dataSnapshot.getChildren().iterator().next().getValue());
@@ -146,8 +153,8 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 
     private void StoreAccountInfo() throws NoSuchAlgorithmException {
         // Storing new username with its related encrypted password, user ID, and isAdmin to database
-        EditText obtainedUsername = (EditText) findViewById(R.id.newUserName);
-        EditText obtainedPassword = (EditText) findViewById(R.id.newPassword);
+        EditText obtainedUsername = findViewById(R.id.newUserName);
+        EditText obtainedPassword = findViewById(R.id.newPassword);
         String username = String.valueOf(obtainedUsername.getText());
         String password = String.valueOf(obtainedPassword.getText());
         String encrypted = encryption(username, password);
