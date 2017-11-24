@@ -16,11 +16,11 @@ import java.util.ArrayList;
  */
 
 public class LoginIconAdapter extends BaseAdapter implements ListAdapter {
-    private ArrayList<String> list = new ArrayList<String>();
+    private ArrayList<String[]> list = new ArrayList<String[]>();
     private Context context;
 
 
-    public LoginIconAdapter(ArrayList<String> list, Context context) {
+    public LoginIconAdapter(ArrayList<String[]> list, Context context) {
         this.list = list;
         this.context = context;
     }
@@ -58,6 +58,7 @@ public class LoginIconAdapter extends BaseAdapter implements ListAdapter {
         Button button1 = view.findViewById(R.id.col1);
         Button button2 = view.findViewById(R.id.col2);
         Button button3 = view.findViewById(R.id.col2);
+
 
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
