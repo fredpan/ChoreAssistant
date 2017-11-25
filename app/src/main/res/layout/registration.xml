@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_width="match_parent" >
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/askingForNewUserName"
@@ -21,8 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="Please enter your user name" />
+            android:hint="Please enter your user name"
+            android:inputType="textPersonName" />
 
 
             <TextView
@@ -36,28 +34,72 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textPassword"
-            android:hint="Please enter your password" />
+            android:hint="Please enter your password"
+            android:inputType="textPassword" />
+
+        <TextView
+            android:id="@+id/askingforNewColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Please choose a color to represent yourself:" />
 <LinearLayout
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_width="wrap_content"
     android:orientation="horizontal">
 
     <Button
-        android:id="@+id/createUser"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Create user account"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:background="#4169E1" />
 
     <Button
-        android:id="@+id/createAdmin"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="create Administrator account"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:background="#32CD32" />
 
-</LinearLayout>>
+    <Button
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="#FFA500" />
+
+    <Button
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="#8A2BE2" />
+
+    <Button
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="#FF0000" />
+</LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/registrationButtonSet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/createUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Create user account" />
+
+            <Button
+                android:id="@+id/createAdmin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="create Administrator account" />
+
+        </LinearLayout>>
 
 
     </LinearLayout>

@@ -5,17 +5,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.seg2105.doooge.choreassistant.dBUtility.LoginInfoUtility;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Calendar;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -24,124 +26,171 @@ import java.util.Random;
  */
 
 public class RegistrationActivity extends AppCompatActivity implements View.OnClickListener {
-    private DatabaseReference databaseLoginInfo;
+
+    private static ArrayList<Identification> a = new ArrayList<>();
+    private final DatabaseReference databaseLoginInfo = FirebaseDatabase.getInstance().getReference("Login");
+    int ctr = 0;
+    ArrayList<Identification> identification = new ArrayList<>();
     private int userID;
     private Boolean isAdmin = false;
     private Button createUser;
     private Button createAdmin;
+    private LinearLayout registrationButtonSet;
     private boolean adminExist = false;
+    private LoginInfoUtility loginInfoUtility;
+    private Object testInter = (Object) 0;
 
-    //((HashMap) dataSnapshot.child(key).getValue()).get("admin");
+//    boolean isAdmin = (boolean) dataSnapshot.child("admin").getValue();
+//    String hashed = (String) dataSnapshot.child("encrypted").getValue();
+//    long id = (long) dataSnapshot.child("userID").getValue();
+//    String usernamea =  (String) dataSnapshot.child("userName").getValue();
+//    OR
+
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.registration);
-        databaseLoginInfo = FirebaseDatabase.getInstance().getReference("Login");
+        setContentView(R.layout.edit_user_info);
+        loginInfoUtility = new LoginInfoUtility();
         Random rdm = new Random();
         userID = 000000 + rdm.nextInt(999999);
-        createUser = findViewById(R.id.createUser);
-        createUser.setOnClickListener(this);
-        createAdmin = findViewById(R.id.createAdmin);
-        createAdmin.setOnClickListener(this);
-        AdminExist();
-        Calendar a = Calendar.getInstance();
+//        createUser = (Button) findViewById(R.id.createUser);
+//        createUser.setOnClickListener(this);
+//        createAdmin = findViewById(R.id.createAdmin);
+//        registrationButtonSet = findViewById(R.id.registrationButtonSet);
+//        createAdmin.setOnClickListener(this);
+//        createUser.setClickable(false);//init
+//        AdminExistEvaluation();
 
 
     }
 
-    private boolean allowCreateUser() {
+
+    //==========
+    public ArrayList<Identification> getAllEventsOnFirebase(final ArrayList<Identification> events) {
+        DatabaseReference databaseLoginInfo1 = FirebaseDatabase.getInstance().getReference("Login");
+        databaseLoginInfo1.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                System.out.println("HELLLLO!");
+
+                dataSnapshot = dataSnapshot.child("sample");
+                System.out.println("INNER:" + dataSnapshot.getValue());
+                boolean isAdmin;
+                String hashed;
+                long id;
+                String username;
+                String color;
+                isAdmin = (boolean) dataSnapshot.child("admin").getValue();
+                //System.out.println("1st:"+ (isAdmin));
+                hashed = (String) dataSnapshot.child("encrypted").getValue();
+
+                id = (long) dataSnapshot.child("userID").getValue();
+
+                username = (String) dataSnapshot.child("userName").getValue();
+
+                color = (String) dataSnapshot.child("color").getValue();
+
+                Identification identification = new Identification(username, hashed, id, isAdmin, color);
+
+                a.add(identification);
+                ctr++;
+                // System.out.println(identification == null);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
+        return events;
+    }
+    //===================
+
+
+    private void allowCreateUser() {
+        System.out.println("COMMMMMMMMMEEEEE ON!!:" + adminExist + "Should equal above");
         // If no admin, require to create one
-        AdminExist();
         if (adminExist) {
-            System.out.println("HERE");
+            //System.out.println("HERE");
             createUser.setClickable(true);
-            return true;
+            adminExist = false;// reset adminExist as false
+//            return true;
         } else {
+            adminExist = false;
             createUser.setClickable(false);
-            return false;
+//            return false;
 
         }
     }
 
-    public void AdminExist() {
-
-        ChildEventListener childEventListener = databaseLoginInfo.addChildEventListener(new ChildEventListener() {
+    public void AdminExistEvaluation() {
+        ChildEventListener childEventListener = loginInfoUtility.getDatabaseLoginInfo().addChildEventListener(new ChildEventListener() {
 
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    String key = child.getKey();
-                    Iterator temp = dataSnapshot.getChildren().iterator();
-                    while (temp.hasNext()){
-                        HashMap<String, String> t = new HashMap<>();
-                        // t.put(temp.next())
-                        System.out.println(temp.next());
-                    }
-                    //System.out.println("HELLO: "+dataSnapshot.getChildren().iterator().next().getValue());
-//                    boolean isadmin = (Boolean) ((HashMap) dataSnapshot.child(key).getValue()).get("admin") ;
-//                    if (isadmin) {
-//                        createUser.setClickable(true);
-//                        System.out.println(adminExist + "!!!!!!!!!!!!!!!!!"+createUser.getLinksClickable());
-//                        break;
-//                    }
-//                    System.out.println("Set creatUser as FALSE");
-                    createUser.setClickable(false);
-                }
+                Iterator iterator = dataSnapshot.getChildren().iterator();
+                while (iterator.hasNext()) {
+                    boolean isAdmin = (boolean) ((DataSnapshot) iterator.next()).getValue();//save admin:boolean
+                    iterator.next();//discard encrypted: String
+                    iterator.next();//discard userID: long
+                    iterator.next();//discard userName: String
+                    if (isAdmin) {
+                        adminExist = true;
+                        System.out.println("TEEEEESSSTTTT:" + adminExist);
 
+                        allowCreateUser();
+
+                    }
+                }
             }
 
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    String key = child.getKey();
-//                    boolean isadmin = (Boolean) ((HashMap) dataSnapshot.child(key).getValue()).get("admin") ;
-//                    if (isadmin) {
-//                        createUser.setClickable(true);
-//                        System.out.println(adminExist + "!!!!!!!!!!!!!!!!!"+createUser.getLinksClickable());
-//                        break;
-//                    }
-//                    System.out.println("Set creatUser as FALSE");
-                    createUser.setClickable(false);
+                Iterator iterator = dataSnapshot.getChildren().iterator();
+                while (iterator.hasNext()) {
+                    boolean isAdmin = (boolean) ((DataSnapshot) iterator.next()).getValue();//save admin:boolean
+                    iterator.next();//discard encrypted: String
+                    iterator.next();//discard userID: long
+                    iterator.next();//discard userName: String
+                    if (isAdmin) {
+                        adminExist = true;
+                        allowCreateUser();
+                        System.out.println("Oh..");
+                    }
                 }
-
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    String key = child.getKey();
-
-//                    boolean isadmin = (Boolean) ((HashMap) dataSnapshot.child(key).getValue()).get("admin") ;
-//                    if (isadmin) {
-//                        createUser.setClickable(true);
-//                        System.out.println(adminExist + "!!!!!!!!!!!!!!!!!"+createUser.getLinksClickable());
-//                        break;
-//                    }
-//                    System.out.println("Set creatUser as FALSE");
-                    createUser.setClickable(false);
+                Iterator iterator = dataSnapshot.getChildren().iterator();
+                while (iterator.hasNext()) {
+                    boolean isAdmin = (boolean) ((DataSnapshot) iterator.next()).getValue();//save admin:boolean
+                    iterator.next();//discard encrypted: String
+                    iterator.next();//discard userID: long
+                    iterator.next();//discard userName: String
+                    if (isAdmin) {
+                        adminExist = true;
+                        allowCreateUser();
+                    }
                 }
-
-
             }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    String key = child.getKey();
-//                    boolean isadmin = (Boolean) ((HashMap) dataSnapshot.child(key).getValue()).get("admin") ;
-//                    if (isadmin) {
-//                        adminExist = true;
-//                        System.out.println(adminExist + "!!!!!!!!!!!!!!!!!");
-//                        break;
-//                    }
-//
-//                    System.out.println("Set creatUser as FALSE");
-                    createUser.setClickable(false);
+                Iterator iterator = dataSnapshot.getChildren().iterator();
+                while (iterator.hasNext()) {
+                    boolean isAdmin = (boolean) ((DataSnapshot) iterator.next()).getValue();//save admin:boolean
+                    iterator.next();//discard encrypted: String
+                    iterator.next();//discard userID: long
+                    iterator.next();//discard userName: String
+                    if (isAdmin) {
+                        adminExist = true;
+                        allowCreateUser();
+                    }
                 }
-
-
             }
 
             @Override
@@ -158,9 +207,9 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         String username = String.valueOf(obtainedUsername.getText());
         String password = String.valueOf(obtainedPassword.getText());
         String encrypted = encryption(username, password);
-        Identification identification = new Identification(username, encrypted, userID, isAdmin);
-        databaseLoginInfo.child(username).setValue(identification);
-        System.out.println("===============");
+        String color = "Some COLOR TO BE IMPLEMENTED";
+        Identification identification = new Identification(username, encrypted, userID, isAdmin, color);
+        loginInfoUtility.updateDatabaseLoginInfo(username, identification);
     }
 
     private String encryption(String username, String pwd) throws NoSuchAlgorithmException {
@@ -180,27 +229,85 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         return result;
     }
 
+    private void addChildSafely(DataSnapshot dataSnapshot) {
+        System.out.println(dataSnapshot.child("admin"));
+        boolean tmpIsAdmin = true;//(boolean) dataSnapshot.child("admin").getValue();
+        if (tmpIsAdmin) {
+            createUser.setClickable(true);
+            try {
+                StoreAccountInfo();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
+            System.out.println("FINAL:            TO BE IMPLEMENTED: Pop up notify success, and redirect to Other page");
+        } else {
+            createUser.setClickable(false);
+            System.out.println("FINAL:            TO BE IMPLEMENT: POP UP: PLZ create admin first");
+        }
+    }
+
     public void onClick(View view) {
         switch (view.getId()) {
+
             case R.id.createUser:
-                //if (allowCreateUser()) {
-                    try {
-                        StoreAccountInfo();
-                    } catch (NoSuchAlgorithmException e) {
-                        e.printStackTrace();
+
+                createUser.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        databaseLoginInfo.addChildEventListener(new ChildEventListener() {
+
+                            @Override
+                            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                addChildSafely(dataSnapshot);
+                            }
+
+                            @Override
+                            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                                addChildSafely(dataSnapshot);
+                            }
+
+                            @Override
+                            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                                addChildSafely(dataSnapshot);
+                            }
+
+                            @Override
+                            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                                addChildSafely(dataSnapshot);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                            }
+                        });
                     }
-                    System.out.println("TO BE IMPLEMENTED: Pop up notify success, and redirect to Other page");
-               // } else {
-                //    System.out.println("TO BE IMPLEMENT: POP UP: PLZ create admin first");
-               // }
+                });
+//                if (createUser.isClickable()) {
+//                    try {
+//                        StoreAccountInfo();
+//                    } catch (NoSuchAlgorithmException e) {
+//                        e.printStackTrace();
+//                    }
+//                    allowCreateUser();
+//                    System.out.println("TO BE IMPLEMENTED: Pop up notify success, and redirect to Other page");
+//                } else {
+//                    System.out.println("TO BE IMPLEMENT: POP UP: PLZ create admin first");
+//                }
                 break;
+
             case R.id.createAdmin:
+
+                System.out.println("Should be same as below: " + createUser.isClickable());
+
+                AdminExistEvaluation();
+
+                System.out.println("Should be false: ==============" + createUser.isClickable());
                 if (isQualified()) {
                     isAdmin = true;
                     System.out.println("TO BE IMPLEMENTED: Pop up asking input admin info, notify success,and redirect to Other page");
                     try {
                         StoreAccountInfo();
-               //         createUser.setClickable(true);
+
                         isAdmin = false;
                     } catch (NoSuchAlgorithmException e) {
                         e.printStackTrace();
@@ -212,6 +319,14 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                 break;
 
         }
+    }
+
+    public void deleteAdmin() {
+        //databaseLoginInfo.removeValue();
+        createUser.setClickable(false);
+        AdminExistEvaluation();
+        //remove
+
     }
 
     private Boolean isQualified() {

@@ -34,7 +34,6 @@ public class WelcomePageActivity extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.welcomepage);
         // Create a progress bar to display while the list loads
         ProgressBar progressBar = new ProgressBar(this);
