@@ -6,6 +6,8 @@
             <solid android:color="#666666" />
 
             <size android:width="120dp" android:height="120dp" />
+
+            <stroke android:width="2px" android:color="#4d4c4c" />
         </shape>
     </item>
 </selector>
