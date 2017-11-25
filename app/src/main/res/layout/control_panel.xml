@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
@@ -12,43 +12,42 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="CHORE ASSISTANT"
+            android:text="Control Panel"
             android:textSize="27dp"
             android:textStyle="bold|italic" />
+
+        <ListView
+            android:id="@+id/controlPanelListView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"></ListView>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <TextView
+            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Please Select to Login or:"
-                android:textSize="15dp"
-                android:textStyle="bold" />
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:text="Add New User" />
 
             <Button
-                android:id="@+id/loginAsAdmin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:text="Go To Control Panel"
-                android:textSize="11dp" />
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:text="Create Reward" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:text="Edit Reward" />
         </LinearLayout>
-
-        <ListView
-            android:id="@android:id/list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:divider="@null">
-
-        </ListView>
-
-
     </LinearLayout>
 
-
 </android.support.constraint.ConstraintLayout>
-

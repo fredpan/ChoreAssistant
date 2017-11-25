@@ -8,6 +8,9 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 
 
@@ -15,7 +18,7 @@ import java.util.ArrayList;
  * Created by fredpan on 2017/11/22.
  */
 
-public class ListViewAdapter extends ListActivity {
+public class WelcomePageActivity extends ListActivity {
 
     // The Contacts rows that we will retrieve
     static final String[] PROJECTION = new String[]{ContactsContract.Data._ID,
@@ -24,12 +27,12 @@ public class ListViewAdapter extends ListActivity {
     static final String SELECTION = "((" +
             ContactsContract.Data.DISPLAY_NAME + " NOTNULL) AND (" +
             ContactsContract.Data.DISPLAY_NAME + " != '' ))";
+    DatabaseReference databaseLoginInfo = FirebaseDatabase.getInstance().getReference("Login");
     LoginIconAdapter mAdapter; //The Adapter being used to display the list's data
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        super.onCreate(savedInstanceState);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcomepage);
         // Create a progress bar to display while the list loads
@@ -47,14 +50,10 @@ public class ListViewAdapter extends ListActivity {
         //String[] fromColumns = {ContactsContract.Data.DISPLAY_NAME};
         int[] toViews = {android.R.id.button1}; // The TextView in simple_list_item_1
 
-        ArrayList<String> buttonList = new ArrayList<>();
-        buttonList.add("r1c1");
-        buttonList.add("r1c2");
-        buttonList.add("r1c3");
+        ArrayList<String[]> buttonList = new ArrayList<>();
+        String[] a = {"a", "b", "c"};
+        buttonList.add(a);
 
-        buttonList.add("r1c1");
-        buttonList.add("r1c2");
-        buttonList.add("r1c3");
 
         // Create an empty adapter we will use to display the loaded data.
         // We pass null for the cursor, then update it in onLoadFinished()
@@ -63,5 +62,6 @@ public class ListViewAdapter extends ListActivity {
 
 
     }
+
 
 }
