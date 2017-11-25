@@ -11,14 +11,16 @@
 
 
     <LinearLayout
-        android:layout_width="584dp"
-        android:layout_height="871dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_centerInParent="true"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp">
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
 
         <EditText
             android:id="@+id/editText4"
@@ -31,7 +33,7 @@
             android:focusableInTouchMode="false"
             android:inputType="textPersonName"
             android:linksClickable="false"
-            android:text="Create chore"
+            android:text="Edit chore"
             android:textAllCaps="false"
             android:textSize="36sp"
             android:textStyle="bold" />
@@ -164,35 +166,6 @@
             android:layout_marginTop="20dp" />
 
         <EditText
-            android:id="@+id/editText13"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:drawable/screen_background_light_transparent"
-            android:clickable="false"
-            android:ems="10"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:inputType="textPersonName"
-            android:linksClickable="false"
-            android:text="Duration"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/textDuration"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/back"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:textSize="24sp" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp" />
-
-        <EditText
             android:id="@+id/editText16"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -211,6 +184,11 @@
             android:id="@+id/spinner2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp" />
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
