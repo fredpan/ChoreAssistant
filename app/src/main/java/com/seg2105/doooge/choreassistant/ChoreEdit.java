@@ -17,6 +17,10 @@ import java.util.Calendar;
 
 public class ChoreEdit  extends AppCompatActivity {
 
+    private int day;
+    private int month;
+    private int year;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,8 +50,28 @@ public class ChoreEdit  extends AppCompatActivity {
     private void setDate(int year, int month, int day) {
         TextView textDate = (TextView) findViewById(R.id.textDate);
 
-        Calendar cal = Calendar.getInstance();
-        textDate.setText(day + "/" + month+1 + "/" + year);
+        //Calendar cal = Calendar.getInstance();
+
+        this.day = day;
+        this.month = month;
+        this.year = year;
+
+        String[] monthString = {
+                "January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December" };
+
+
+        textDate.setText( monthString[month] +" " + day + ", " + year);
     }
 
     /**
