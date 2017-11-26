@@ -23,8 +23,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
 
-import java.util.Calendar;
-
 
 /**
  * Created by dustin on 11/22/17.
@@ -337,14 +335,6 @@ public class ChoreList extends AppCompatActivity {
     }
 
 
-    //https://developer.android.com/reference/android/app/DatePickerDialog.OnDateSetListener.html
-    private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
 
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            //the selected month (0-11 for compatibility with MONTH)
-            updateDate(year, month, dayOfMonth);
-            setDate(year, month, dayOfMonth);
-        }
-    };
 
 }
