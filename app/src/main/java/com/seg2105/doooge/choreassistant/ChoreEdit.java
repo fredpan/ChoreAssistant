@@ -167,8 +167,14 @@ public class ChoreEdit extends AppCompatActivity {
             String name = txtName.getText().toString();
             String description = txtDescription.getText().toString();
 
+            Calendar calChore = Calendar.getInstance();
+            calChore.set(year,month,day,hour,minute);
+
             //Create a chore and set parameters
-            Chore chore = new Chore(name,description,day,month,year,hour,minute);
+
+            Chore chore = new Chore(name,description,calChore);
+
+            //Chore chore = new Chore(name,description,day,month,year,hour,minute);
 
         }
 
