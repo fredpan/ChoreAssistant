@@ -1,13 +1,14 @@
 package com.seg2105.doooge.choreassistant;
 
 
+import java.io.Serializable;
 import java.util.Calendar;
 
 /**
  * Created by dustin on 11/25/17.
  */
 
-public class Chore {
+public class Chore implements Serializable {
 
     private String description;
     private String choreName;

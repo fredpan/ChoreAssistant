@@ -33,6 +33,7 @@ public class ChoreList extends AppCompatActivity {
     private int month;
     private int year;
     private Calendar cal;
+    private Chore choreSubmit;
 
 
     //https://developer.android.com/reference/android/app/DatePickerDialog.OnDateSetListener.html
@@ -83,12 +84,16 @@ public class ChoreList extends AppCompatActivity {
             Button edit = (Button) findViewById(R.id.btnEdit);
             add.setVisibility(View.INVISIBLE);
             edit.setVisibility(View.INVISIBLE);
-        } else {
+        } else if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE) == "user") {
             Button add = (Button) findViewById(R.id.btnAdd);
             Button edit = (Button) findViewById(R.id.btnEdit);
             add.setVisibility(View.VISIBLE);
             edit.setVisibility(View.VISIBLE);
+        } else {
+            choreSubmit = (Chore) intent.getSerializableExtra("SUBMIT");
         }
+
+
     }
 
     public void add_OnClick(View view) {

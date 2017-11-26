@@ -67,7 +67,7 @@ public class WelcomePageActivity extends AppCompatActivity {
 
     public void adminLogin(View view) {
         Intent intent = new Intent(WelcomePageActivity.this, ChoreList.class);
-        String message = "adimin";
+        String message = "admin";
         intent.putExtra(EXTRA_MASSAGE, message);
         startActivity(intent);
 
@@ -113,6 +113,7 @@ public class WelcomePageActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(WelcomePageActivity.this, ChoreList.class);
+                    intent.putExtra(EXTRA_MASSAGE, "user");
                     startActivity(intent);
                 }
             });
