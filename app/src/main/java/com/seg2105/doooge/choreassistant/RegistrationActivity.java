@@ -12,7 +12,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -128,35 +127,10 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         EditText obtainedPassword = findViewById(R.id.newPassword);
         String username = String.valueOf(obtainedUsername.getText());
         String password = String.valueOf(obtainedPassword.getText());
-        String encrypted = encryption(username, password);
+        String encrypted = IdentificationUtility.generateIdentification(username, password);
         String color = "Some COLOR TO BE IMPLEMENTED";
         PersonRule personRule = new PersonRule(username, encrypted, isAdmin, color, userID);
         databaseLoginInfo.child(username).setValue(personRule);
-    }
-
-
-    private String encryption(String username, String pwd) throws NoSuchAlgorithmException {
-        MessageDigest md = MessageDigest.getInstance("SHA-256");
-        md.update(
-                concatenation(
-                        pwd.getBytes(), username.getBytes()
-                )
-        );
-        byte[] encrypted = md.digest();
-        encrypted.toString();
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < encrypted.length; i++) {
-            sb.append(Integer.toString((encrypted[i] & 0xff) + 0x100, 16).toUpperCase().substring(1));
-        }
-        String result = sb.toString();
-        return result;
-    }
-
-    private byte[] concatenation(byte[] a, byte[] b) {
-        byte[] c = new byte[a.length + b.length];
-        System.arraycopy(a, 0, c, 0, a.length);
-        System.arraycopy(b, 0, c, a.length, b.length);
-        return c;
     }
 
 

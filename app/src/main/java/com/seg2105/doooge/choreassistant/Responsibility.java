@@ -14,6 +14,14 @@ public class Responsibility {
         this.choreIdentification = choreIdentification;
     }
 
+    public int getUserId() {
+        return userId;
+    }
+
+    public String getChoreIdentification() {
+        return choreIdentification;
+    }
+
     /*
     public Chore getChore(){
         return chore;
