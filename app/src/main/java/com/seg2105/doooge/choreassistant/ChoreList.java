@@ -15,7 +15,6 @@ import android.widget.TextView;
 import java.util.Calendar;
 
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -65,7 +64,7 @@ public class ChoreList extends AppCompatActivity {
         final LinearLayout linearView = findViewById(R.id.choreView);
 
         //########################TESTING###################################
-        responsibility=new Responsibility();
+
 
 
 
@@ -107,6 +106,7 @@ public class ChoreList extends AppCompatActivity {
 //                    linearView.addView(temp);
 //
 //                }
+
                 for (long i = 0; i < dataSnapshot.getChildrenCount(); i++) {
                     Chore tempChore = responsibility.getChore((int)i);
                     dissassembleChore(tempChore);

@@ -1,37 +1,32 @@
 package com.seg2105.doooge.choreassistant;
 
-import java.util.LinkedList;
-
-
 /**
  * Created by dustin on 11/25/17.
  */
 
 public class Responsibility {
 
-    private LinkedList<Chore> chores;
-    private int size;
+    private Chore chore;
+    private PersonRule person;
 
-    public void Responsibility(){
-        chores = new LinkedList<Chore>();
-        size = -1;
-
+    public void Responsibility(Chore chore){
+        this.chore = chore;
     }
 
-    public void addChore(Chore chore){
-        chores.add(chore);
-        size++;
+    public Chore getChore(){
+        return chore;
     }
 
-    public Chore getChore(int index){
-        return chores.get(index);
+    public void setPerson(PersonRule person){
+        this.person = person;
     }
 
-    public int getSize(){
-        return size;
+    public PersonRule getPerson(){
+        return person;
     }
 
-
-
+    public void setChore(Chore chore){
+        this.chore = chore;
+    }
 
 }

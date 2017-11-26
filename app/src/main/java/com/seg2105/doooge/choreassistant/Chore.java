@@ -22,15 +22,15 @@ public class Chore implements Serializable {
     private int choreID;
     private Boolean complete;
 
-    public Chore(String choreName, String description, Calendar cal) throws NoSuchAlgorithmException {
-        this.choreName = choreName;
-        this.description = description;
-        //this.cal = cal;
-        this.timeInMillis = timeInMillis;
+    public Chore(String choreName, String description, long timeInMillis) throws NoSuchAlgorithmException {
+        this.choreName      = choreName;
+        this.description    = description;
+        this.timeInMillis   = timeInMillis;
+        this.choreID        = choreID;
+
         complete = false;
 
-        this.cal = cal;
-        this.choreID = choreID;
+
         generateChoreCharacIdentification();
 
         /*
