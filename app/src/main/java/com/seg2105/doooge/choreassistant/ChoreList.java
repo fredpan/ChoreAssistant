@@ -77,16 +77,20 @@ public class ChoreList extends AppCompatActivity {
 
         // check if admin, if not ,set invisible for add button and edit button
         Intent intent = getIntent();
-        if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE).equals("user")) {
-            Button add = (Button) findViewById(R.id.btnAdd);
-            Button edit = (Button) findViewById(R.id.btnEdit);
-            add.setVisibility(View.INVISIBLE);
-            edit.setVisibility(View.INVISIBLE);
-        } else if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE).equals("admin")) {
-            Button add = (Button) findViewById(R.id.btnAdd);
-            Button edit = (Button) findViewById(R.id.btnEdit);
-            add.setVisibility(View.VISIBLE);
-            edit.setVisibility(View.VISIBLE);
+
+        if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE) != null) {
+
+            if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE).equals("user")) {
+                Button add = (Button) findViewById(R.id.btnAdd);
+                Button edit = (Button) findViewById(R.id.btnEdit);
+                add.setVisibility(View.INVISIBLE);
+                edit.setVisibility(View.INVISIBLE);
+            } else if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE).equals("admin")) {
+                Button add = (Button) findViewById(R.id.btnAdd);
+                Button edit = (Button) findViewById(R.id.btnEdit);
+                add.setVisibility(View.VISIBLE);
+                edit.setVisibility(View.VISIBLE);
+            }
         } else {
             choreSubmit = (Chore) intent.getSerializableExtra("SUBMIT");
         }
