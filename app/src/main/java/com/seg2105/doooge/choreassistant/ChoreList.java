@@ -38,13 +38,14 @@ public class ChoreList extends AppCompatActivity {
     private final String CHORE_ORANGE   = "#ffff8800";
     private final String CHORE_GREEN    = "#ff99cc00";
     private final String CHORE_BLUE     = "#ff0099cc";
+    private static Chore choreSubmit;
+    DatabaseReference databaseChore = FirebaseDatabase.getInstance().getReference("Responsibility");
+    DatabaseReference databaseInfo = FirebaseDatabase.getInstance().getReference("PersonRule");
     private int day;
     private int month;
     private int year;
     private Calendar cal;
-    private Chore choreSubmit;
     //private Responsibility responsibility;
-    DatabaseReference databaseChore = FirebaseDatabase.getInstance().getReference("Chore");
 
 
 
@@ -63,8 +64,16 @@ public class ChoreList extends AppCompatActivity {
 
 
         //############################## FUNCTION FOR SAMPLE CHORES####################
-        displaySampleChores();
-        //##########################################################################
+        //displaySampleChores();
+
+
+        //SAMPLE Responsibility
+        Responsibility chore1 = new Responsibility(123, "Resp1: This is the Chore Identification");
+        Responsibility chore2 = new Responsibility(321, "Resp2: This is the Chore Identification");
+        Responsibility chore3 = new Responsibility(213, "Resp3: This is the Chore Identification");
+        databaseChore.child("Resp Identification1").setValue(chore1);
+        databaseChore.child("Resp Identification2").setValue(chore2);
+        databaseChore.child("Resp Identification3").setValue(chore3);
 
 
         databaseChore.addValueEventListener(new ValueEventListener() {
@@ -72,13 +81,22 @@ public class ChoreList extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
 
-//                for (long i = 0; i < dataSnapshot.getChildrenCount(); i++) {
-//                    GridLayout temp = layoutTest("Chore" + i, "TIME", "Name"); //, draw[i%5]);
-//
-//                    temp.setTag("chore" + i);
-//                    linearView.addView(temp);
-//
-//                }
+                for (long i = 0; i < dataSnapshot.getChildrenCount(); i++) {
+                    System.out.println("=====================" + (dataSnapshot.child("Resp Identification1").child("userId").getValue()));
+
+                    //GET THE CORRESPONDING USERINFO AND CHOREINFO
+
+
+                    System.out.println("++++++++++++++++++++++" + databaseInfo.child("admin"));
+
+                    //=============================================
+                    //GridLayout temp = layoutTest(Long.toString((long) dataSnapshot.child("Resp Identification1").child("userId").getValue()), "TIME", "Name"); //, draw[i%5]);
+
+                    //temp.setTag("chore" + i);
+                    //
+                    // linearView.addView(temp);
+
+                }
 
 //                for (long i = 0; i < dataSnapshot.getChildrenCount(); i++) {
 //                    Chore tempChore = responsibility.getChore();
@@ -88,7 +106,7 @@ public class ChoreList extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled (DatabaseError databaseError){
+            public void onCancelled(DatabaseError databaseError) {
 
             }
 
@@ -208,7 +226,7 @@ public class ChoreList extends AppCompatActivity {
 
             }
 
-        } );
+        });
 
         //Create a listener for long touch screen events;
         gridLayout.setOnLongClickListener(new View.OnLongClickListener() {
@@ -228,21 +246,17 @@ public class ChoreList extends AppCompatActivity {
     }
 
     /**
-     *
      * @param text text to be inserted into textview
      * @param textSize size of the font of the text
      * @return
      */
-
     private TextView textTest(String text, int textSize){
         TextView tempText = new TextView(this);
 
         tempText.setTextSize(textSize);
         tempText.setText(text);
-        //tempText.setTextColor(Color.BLACK);
         return tempText;
     }
-
 
     public void textDate_OnClick(View view) {
         datePick();
@@ -279,8 +293,8 @@ public class ChoreList extends AppCompatActivity {
         month   = cal.get(Calendar.MONTH);
         day     = cal.get(Calendar.DAY_OF_MONTH);
 
-        updateDate(year,month,day);
-        setDate(year,month,day);
+        updateDate(year, month, day);
+        setDate(year, month, day);
 
     }
 
@@ -304,7 +318,7 @@ public class ChoreList extends AppCompatActivity {
                 "September",
                 "October",
                 "November",
-                "December" };
+                "December"};
 
         textDate.setText(monthString[month] + " " + day + ", " + year);
     }

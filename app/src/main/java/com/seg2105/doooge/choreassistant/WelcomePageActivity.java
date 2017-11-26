@@ -1,20 +1,17 @@
 package com.seg2105.doooge.choreassistant;
 
-import android.app.ActionBar;
-import android.app.ListActivity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ProgressBar;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
@@ -76,6 +73,49 @@ public class WelcomePageActivity extends AppCompatActivity {
     /*
     create listener for adminLogin button
      */
+
+    //create a listener to display login Dialog for admin button
+    public void showLoginDialog(View view) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.login_dialog, null);
+        dialogBuilder.setView(dialogView);
+        dialogBuilder.setTitle("Login Page");
+
+
+        final EditText userName = dialogView.findViewById(R.id.editID);
+        final EditText password = dialogView.findViewById(R.id.editPassword);
+
+        final Button login = (Button) dialogView.findViewById(R.id.LoginButton);
+        final Button exist = (Button) dialogView.findViewById(R.id.ExistButton);
+        final TextView warm = dialogView.findViewById(R.id.warm);
+        final AlertDialog dialog = dialogBuilder.create();
+        dialog.show();
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (userName.getText().toString().equals("") || password.getText().toString().equals("")) {
+                    warm.setText("Your userID or Password is wrong !!");
+                    warm.setVisibility(View.VISIBLE);
+
+                } else {
+                    Intent intent = new Intent(WelcomePageActivity.this, ControlPanelActivity.class);
+                    startActivity(intent);
+                    warm.setVisibility(View.INVISIBLE);
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        exist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+    }
 
     /*
     ** To createa adapter control each user in the recyclerView.

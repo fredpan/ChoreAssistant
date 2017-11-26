@@ -74,13 +74,6 @@ public class Chore implements Serializable {
         this.choreName = choreName;
     }
 
-    public Calendar getCalendar(){
-        return cal;
-    }
-
-    public void setCalendar(Calendar cal){
-        this.cal = cal;
-    }
 
     public void setComplete(boolean value){
         this.complete = value;
