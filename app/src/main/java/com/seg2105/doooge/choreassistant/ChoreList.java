@@ -23,6 +23,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
 
+import java.util.Calendar;
+
 
 /**
  * Created by dustin on 11/22/17.
@@ -61,12 +63,12 @@ public class ChoreList extends AppCompatActivity {
         setContentView(R.layout.chore_list);
 
         //setting up calendar
-        cal = Calendar.getInstance();
-        day = cal.get(Calendar.DAY_OF_MONTH);
-        month = cal.get(Calendar.MONTH);
-        year = cal.get(Calendar.YEAR);
+        cal     = Calendar.getInstance();
+        day     = cal.get(Calendar.DAY_OF_MONTH);
+        month   = cal.get(Calendar.MONTH);
+        year    = cal.get(Calendar.YEAR);
 
-        setDate(year, month, day);
+        setDate(year,month,day);
 
         final LinearLayout linearView = findViewById(R.id.choreView);
 
@@ -153,53 +155,52 @@ public class ChoreList extends AppCompatActivity {
         Calendar tempCal = Calendar.getInstance();
         tempCal.setTimeInMillis(millis);
 
-        Integer choreYear = cal.get(Calendar.YEAR);
-        Integer choreMonth = cal.get(Calendar.MONTH);
-        Integer choreDay = cal.get(Calendar.DAY_OF_MONTH);
-        Integer choreHour = cal.get(Calendar.HOUR);
+        Integer choreYear   = cal.get(Calendar.YEAR);
+        Integer choreMonth  = cal.get(Calendar.MONTH);
+        Integer choreDay    = cal.get(Calendar.DAY_OF_MONTH);
+        Integer choreHour   = cal.get(Calendar.HOUR);
         Integer choreMinute = cal.get(Calendar.MINUTE);
 
-        if ((choreYear.equals(year)) && (choreDay.equals(day)) && (choreMonth.equals(month))) {
+        if ((choreYear.equals(year)) && (choreDay.equals(day)) && (choreMonth.equals(month))){
             LinearLayout linearView = findViewById(R.id.choreView);
-            linearView.addView(layoutTest(choreSubmit.getChoreName(), choreHour + ":" + choreMinute, choreSubmit.getDescription()));
+            linearView.addView( layoutTest(choreSubmit.getChoreName(), choreHour+ ":" + choreMinute, choreSubmit.getDescription() ) );
         }
 
     }
 
-    public void displaySampleChores() {
-        //Calendar tempCal = Calendar.getInstance();
-        //long millis = tempCal.getTimeInMillis();
+    public void displaySampleChores(){
         LinearLayout linearView = findViewById(R.id.choreView);
 
-        for (int i = 0; i < 5; i++) {
-            linearView.addView(layoutTest("Chore" + i, "12:00", "Description"));
+        for (int i = 0 ; i <5;i++){
+            linearView.addView( layoutTest("Chore"+i, "12:00", "Name" ) );
         }
 
     }
 
     public void sumbitChore(Chore chore) {
         choreSubmit = chore;
-
     }
 
     public void add_OnClick(View view) {
-//        startActivity(new Intent(this,ChoreEdit.class));
+
     }
 
     /**
-     * @param name        name of chore to be created
-     * @param time        time that chore is to be completed
-     * @param description description of chore
+     *
+     * @param name name of chore to be created
+     * @param time time that chore is to be completed
+     * @param userName User assigned to chore
      * @return returns a grid layout with chore added into it
      */
-    private GridLayout layoutTest(String name, String time, String description) { //, Drawable colorTemp){
+
+    private GridLayout layoutTest(String name, String time, String userName){ //, Drawable colorTemp){
 
         //Create grid layout and textviews
-        GridLayout tempLayout = new GridLayout(this);
-        Point point = new Point();                  //required for to get display size
-        TextView text1 = textTest(name, 18);
-        TextView text2 = textTest(time, 14);
-        TextView text3 = textTest(description, 14);
+        GridLayout tempLayout   = new GridLayout(this);
+        Point point             = new Point();                  //required for to get display size
+        TextView text1          = textTest(name,18);
+        TextView text2          = textTest(time, 14);
+        TextView text3          = textTest(userName, 14);
 
         //set grid layout size
         tempLayout.setColumnCount(2);
@@ -207,16 +208,16 @@ public class ChoreList extends AppCompatActivity {
 
         //set textview position
         text1.setGravity(Gravity.LEFT);
-        text2.setGravity(Gravity.TOP | Gravity.RIGHT);
+        text2.setGravity(Gravity.TOP | Gravity.LEFT);
         text3.setGravity(Gravity.LEFT);
 
         //text1.setTextColor(Color.parseColor(colorTemp));
 
         //get display size and use it to set textbox size.
         getWindowManager().getDefaultDisplay().getSize(point);
-        text1.setWidth(point.x - 140);
-        text2.setWidth(140);
-        text3.setWidth(point.x - 140);
+        text1.setWidth(point.x - 160);
+        text2.setWidth( 160 );
+        text3.setWidth(point.x - 160);
 
         text1.setTypeface(Typeface.DEFAULT_BOLD);
         text3.setTypeface(Typeface.DEFAULT_BOLD);
@@ -234,9 +235,9 @@ public class ChoreList extends AppCompatActivity {
         tempLayout.setTag(name);
 
         // Create a listener for touch screen events;
-        tempLayout.setOnClickListener(new View.OnClickListener() {
+        tempLayout.setOnClickListener( new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view){
 
                 Toast.makeText(getBaseContext(), " " + view.getTag(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(ChoreList.this, showDetailDialog.class);
@@ -251,7 +252,8 @@ public class ChoreList extends AppCompatActivity {
             @Override
             public boolean onLongClick(View view) {
                 Toast.makeText(getBaseContext(), "It is a long click event", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(ChoreList.this, showDetailDialog.class);
+                Intent intent = new Intent(ChoreList.this, ChoreEdit.class);
+                intent.putExtra("SUBMIT",choreSubmit);
                 startActivity(intent);
                 return true;
 
@@ -267,7 +269,7 @@ public class ChoreList extends AppCompatActivity {
      * @param textSize size of the font of the text
      * @return
      */
-    private TextView textTest(String text, int textSize) {
+    private TextView textTest(String text, int textSize){
         TextView tempText = new TextView(this);
         tempText.setTextSize(textSize);
         tempText.setText(text);
@@ -333,5 +335,16 @@ public class ChoreList extends AppCompatActivity {
         Intent intent = new Intent(ChoreList.this, ChoreEdit.class); //switch homepage to edit chore page
         startActivity(intent);
     }
+
+
+    //https://developer.android.com/reference/android/app/DatePickerDialog.OnDateSetListener.html
+    private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
+
+        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+            //the selected month (0-11 for compatibility with MONTH)
+            updateDate(year, month, dayOfMonth);
+            setDate(year, month, dayOfMonth);
+        }
+    };
 
 }
