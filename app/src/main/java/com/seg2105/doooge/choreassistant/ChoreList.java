@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 public class ChoreList extends AppCompatActivity {
 
+    private static Chore choreSubmit;
     private final String CHORE_RED = "#ffff4444";
     private final String CHORE_PURPLE = "#ffaa66cc";
     private final String CHORE_ORANGE = "#ffff8800";
@@ -33,9 +34,6 @@ public class ChoreList extends AppCompatActivity {
     private int month;
     private int year;
     private Calendar cal;
-    private Chore choreSubmit;
-
-
     //https://developer.android.com/reference/android/app/DatePickerDialog.OnDateSetListener.html
     private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
 
@@ -79,12 +77,12 @@ public class ChoreList extends AppCompatActivity {
 
         // check if admin, if not ,set invisible for add button and edit button
         Intent intent = getIntent();
-        if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE) == "admin") {
+        if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE).equals("user")) {
             Button add = (Button) findViewById(R.id.btnAdd);
             Button edit = (Button) findViewById(R.id.btnEdit);
             add.setVisibility(View.INVISIBLE);
             edit.setVisibility(View.INVISIBLE);
-        } else if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE) == "user") {
+        } else if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE).equals("admin")) {
             Button add = (Button) findViewById(R.id.btnAdd);
             Button edit = (Button) findViewById(R.id.btnEdit);
             add.setVisibility(View.VISIBLE);
@@ -95,6 +93,13 @@ public class ChoreList extends AppCompatActivity {
 
 
     }
+
+    public void sumbitChore(Chore chore) {
+        choreSubmit = chore;
+
+    }
+
+
 
     public void add_OnClick(View view) {
 //        startActivity(new Intent(this,ChoreEdit.class));
