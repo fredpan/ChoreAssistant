@@ -15,13 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 
 
@@ -31,6 +24,7 @@ import java.util.Calendar;
 
 public class ChoreList extends AppCompatActivity {
 
+    private static Chore choreSubmit;
     private final String CHORE_RED = "#ffff4444";
     private final String CHORE_PURPLE = "#ffaa66cc";
     private final String CHORE_ORANGE = "#ffff8800";
@@ -41,9 +35,6 @@ public class ChoreList extends AppCompatActivity {
     private int month;
     private int year;
     private Calendar cal;
-    private Chore choreSubmit;
-
-
     //https://developer.android.com/reference/android/app/DatePickerDialog.OnDateSetListener.html
     private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
 
@@ -112,22 +103,33 @@ public class ChoreList extends AppCompatActivity {
 
         // check if admin, if not ,set invisible for add button and edit button
         Intent intent = getIntent();
-        if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE) == "admin") {
-            Button add = findViewById(R.id.btnAdd);
-            Button edit = findViewById(R.id.btnEdit);
-            add.setVisibility(View.INVISIBLE);
-            edit.setVisibility(View.INVISIBLE);
-        } else if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE) == "user") {
-            Button add = findViewById(R.id.btnAdd);
-            Button edit = findViewById(R.id.btnEdit);
-            add.setVisibility(View.VISIBLE);
-            edit.setVisibility(View.VISIBLE);
+
+        if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE) != null) {
+
+            if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE).equals("user")) {
+                Button add = (Button) findViewById(R.id.btnAdd);
+                Button edit = (Button) findViewById(R.id.btnEdit);
+                add.setVisibility(View.INVISIBLE);
+                edit.setVisibility(View.INVISIBLE);
+            } else if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE).equals("admin")) {
+                Button add = (Button) findViewById(R.id.btnAdd);
+                Button edit = (Button) findViewById(R.id.btnEdit);
+                add.setVisibility(View.VISIBLE);
+                edit.setVisibility(View.VISIBLE);
+            }
         } else {
             choreSubmit = (Chore) intent.getSerializableExtra("SUBMIT");
         }
 
 
     }
+
+    public void sumbitChore(Chore chore) {
+        choreSubmit = chore;
+
+    }
+
+
 
     public void add_OnClick(View view) {
 //        startActivity(new Intent(this,ChoreEdit.class));

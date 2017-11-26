@@ -113,7 +113,8 @@ public class WelcomePageActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(WelcomePageActivity.this, ChoreList.class);
-                    intent.putExtra(EXTRA_MASSAGE, "user");
+                    String message = "user";
+                    intent.putExtra(EXTRA_MASSAGE, message);
                     startActivity(intent);
                 }
             });
