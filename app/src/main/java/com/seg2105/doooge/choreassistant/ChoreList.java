@@ -144,8 +144,6 @@ public class ChoreList extends AppCompatActivity {
         //get the PersonRule from Welcomepage
         testRule = (PersonRule) intent.getSerializableExtra("test");
 
-
-        System.out.println("!!!" + (choreSubmit == null));
         if (choreSubmit != null) {
             displayChore(choreSubmit);
         }
@@ -287,7 +285,7 @@ public class ChoreList extends AppCompatActivity {
 
     private void updateDate(int year, int month, int day){
 
-        if ((year==this.year) && (month==this.month)&&(day==this.day)){
+        if ((year == this.year) && (month == this.month) && (day == this.day)) {
             return;
         }
 
@@ -341,14 +339,6 @@ public class ChoreList extends AppCompatActivity {
         DatePickerDialog temp = new DatePickerDialog(this, tempListen, year, month, day);
         temp.show();
     }
-
-    //add on click listener for editing chore button
-    public void editChore(View view) {
-        Intent intent = new Intent(ChoreList.this, ChoreEdit.class); //switch homepage to edit chore page
-        startActivity(intent);
-    }
-
-
 
 
 }
