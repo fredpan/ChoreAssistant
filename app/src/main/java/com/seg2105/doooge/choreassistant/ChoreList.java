@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.GridLayout;
 import android.widget.TextView;
@@ -75,8 +76,17 @@ public class ChoreList extends AppCompatActivity {
 
         // check if admin, if not ,set invisible for add button and edit button
         Intent intent = getIntent();
-
-
+        if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE) == "admin") {
+            Button add = (Button) findViewById(R.id.btnAdd);
+            Button edit = (Button) findViewById(R.id.btnEdit);
+            add.setVisibility(View.INVISIBLE);
+            edit.setVisibility(View.INVISIBLE);
+        } else {
+            Button add = (Button) findViewById(R.id.btnAdd);
+            Button edit = (Button) findViewById(R.id.btnEdit);
+            add.setVisibility(View.VISIBLE);
+            edit.setVisibility(View.VISIBLE);
+        }
     }
 
     public void add_OnClick(View view) {
