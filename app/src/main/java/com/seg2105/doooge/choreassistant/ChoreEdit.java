@@ -6,6 +6,7 @@ package com.seg2105.doooge.choreassistant;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -15,11 +16,13 @@ import android.widget.TimePicker;
 import java.util.Calendar;
 
 
-public class ChoreEdit  extends AppCompatActivity {
+public class ChoreEdit extends AppCompatActivity {
 
-    private int day;
-    private int month;
-    private int year;
+    private int day = -1;
+    private int month = -1;
+    private int year = -1;
+    private int hour =-1;
+    private int minute=-1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +85,8 @@ public class ChoreEdit  extends AppCompatActivity {
      */
     private void setTime(int hour, int minute) {
         TextView textTime = (TextView) findViewById(R.id.textTime);
+        this.hour = hour;
+        this.minute = minute;
         textTime.setText(hour + ":" + minute);
     }
 
@@ -134,4 +139,39 @@ public class ChoreEdit  extends AppCompatActivity {
         }
 
     };
+
+
+    public void btnSubmit_OnClick(View view){
+
+        TextView txtName        = (TextView) findViewById(R.id.textName);
+        TextView txtDescription = (TextView) findViewById(R.id.textDescription);
+        TextView txtTime        = (TextView) findViewById(R.id.textTime);
+        TextView txtDate        = (TextView) findViewById(R.id.textDate);
+
+        Boolean allPass = true;
+
+        if (txtName.getText().equals("")) {
+            allPass = false;
+            txtName.setBackgroundColor(Color.parseColor("#ffff4444"));
+        }
+        if (hour == -1){
+            allPass = false;
+            txtTime.setBackgroundColor(Color.parseColor("#ffff4444"));
+        }
+        if (year == -1){
+            allPass = false;
+            txtDate.setBackgroundColor(Color.parseColor("#ffff4444"));
+        }
+
+        if (allPass){
+            String name = txtName.getText().toString();
+            String description = txtDescription.getText().toString();
+
+            //Create a chore and set parameters
+            Chore chore = new Chore(name,description,day,month,year,hour,minute);
+
+        }
+
+    }
+
 }
