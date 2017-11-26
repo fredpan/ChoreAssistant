@@ -33,6 +33,8 @@ public class ChoreList extends AppCompatActivity {
     private int month;
     private int year;
     private Calendar cal;
+
+
     //https://developer.android.com/reference/android/app/DatePickerDialog.OnDateSetListener.html
     private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
 
@@ -167,11 +169,10 @@ public class ChoreList extends AppCompatActivity {
 
 
 
-
-
-
         return tempLayout;
     }
+
+
 
     /**
      *
