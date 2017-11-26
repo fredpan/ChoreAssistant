@@ -28,6 +28,9 @@ import java.util.ArrayList;
  */
 
 public class WelcomePageActivity extends AppCompatActivity {
+    public final static String EXTRA_MASSAGE = "Tag"; // the name of intent for this class
+
+
 
     // The Contacts rows that we will retrieve
     static final String[] PROJECTION = new String[]{ContactsContract.Data._ID,
@@ -61,6 +64,18 @@ public class WelcomePageActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter = new HomeAdapter());
 
     }
+
+    public void adminLogin(View view) {
+        Intent intent = new Intent(WelcomePageActivity.this, ChoreList.class);
+        String message = "adimin";
+        intent.putExtra(EXTRA_MASSAGE, message);
+        startActivity(intent);
+
+    }
+
+    /*
+    create listener for adminLogin button
+     */
 
     /*
     ** To createa adapter control each user in the recyclerView.
@@ -97,8 +112,8 @@ public class WelcomePageActivity extends AppCompatActivity {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-
+                    Intent intent = new Intent(WelcomePageActivity.this, ChoreList.class);
+                    startActivity(intent);
                 }
             });
         }

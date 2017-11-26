@@ -1,6 +1,7 @@
 package com.seg2105.doooge.choreassistant;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -22,16 +23,26 @@ import android.widget.Toast;
 
 public class ChoreList extends AppCompatActivity {
 
-    private int day;
-    private int month;
-    private int year;
-    private Calendar cal;
-
     private final String CHORE_RED = "#ffff4444";
     private final String CHORE_PURPLE = "#ffaa66cc";
     private final String CHORE_ORANGE = "#ffff8800";
     private final String CHORE_GREEN = "#ff99cc00";
     private final String CHORE_BLUE = "#ff0099cc";
+    private int day;
+    private int month;
+    private int year;
+    private Calendar cal;
+    //https://developer.android.com/reference/android/app/DatePickerDialog.OnDateSetListener.html
+    private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
+
+        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+            //the selected month (0-11 for compatibility with MONTH)
+            updateDate(year, month, dayOfMonth);
+            setDate(year, month, dayOfMonth);
+
+        }
+
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +65,7 @@ public class ChoreList extends AppCompatActivity {
         };
         */
 
-        for (int i = 0 ; i < 5; i++){
+        for (int i = 0; i < 5; i++){
             GridLayout temp = layoutTest("Chore" + i,"TIME", "Name"); //, draw[i%5]);
 
             temp.setTag("chore" +i);
@@ -62,8 +73,11 @@ public class ChoreList extends AppCompatActivity {
 
         }
 
-    }
+        // check if admin, if not ,set invisible for add button and edit button
+        Intent intent = getIntent();
 
+
+    }
 
     public void add_OnClick(View view) {
 //        startActivity(new Intent(this,ChoreEdit.class));
@@ -122,13 +136,32 @@ public class ChoreList extends AppCompatActivity {
             @Override
             public void onClick(View view){
                 Toast.makeText(getBaseContext(), " " + view.getTag(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ChoreList.this, showDetailDialog.class);
+                startActivity(intent);
             }
 
         } );
 
+        //Create a listener for long touch screen events;
+        tempLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Toast.makeText(getBaseContext(), "It is a long click event", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ChoreList.this, showDetailDialog.class);
+                startActivity(intent);
+                return true;
+
+            }
+        });
+
+
+
+
+
+
+
         return tempLayout;
     }
-
 
     /**
      *
@@ -142,7 +175,6 @@ public class ChoreList extends AppCompatActivity {
         tempText.setText(text);
         return tempText;
     }
-
 
     public void textDate_OnClick(View view) {
         datePick();
@@ -198,17 +230,14 @@ public class ChoreList extends AppCompatActivity {
         temp.show();
     }
 
+    //add on click listener for editing chore button
+    public void editChore(View view) {
+        Intent intent = new Intent(ChoreList.this, ChoreEdit.class); //switch homepage to edit chore page
+        startActivity(intent);
+    }
 
-    //https://developer.android.com/reference/android/app/DatePickerDialog.OnDateSetListener.html
-    private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
 
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            //the selected month (0-11 for compatibility with MONTH)
-            updateDate(year,month,dayOfMonth);
-            setDate(year, month, dayOfMonth);
 
-        }
 
-    };
 
 }
