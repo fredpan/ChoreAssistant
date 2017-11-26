@@ -65,6 +65,7 @@
             android:background="@drawable/back"
             android:ems="10"
             android:inputType="textPersonName"
+            android:onClick="textName_OnClick"
             android:textSize="24sp" />
 
         <Space
@@ -194,6 +195,7 @@
             android:id="@+id/btnSubmit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:onClick="btnSubmit_OnClick"
             android:text="Submit"
             android:textSize="24sp"
             android:textStyle="bold" />

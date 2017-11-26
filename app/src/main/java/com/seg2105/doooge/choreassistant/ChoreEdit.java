@@ -48,13 +48,34 @@ public class ChoreEdit extends AppCompatActivity {
 
     }
 
+
     //public void btnSelectDate(View view) {
+
+
+
     public void textDate_OnClick(View view) {
+        TextView txtView = (TextView) view;
+        txtView.setText("");
+        view.setBackgroundDrawable(getResources().getDrawable(R.drawable.back));
         datePick();
     }
 
+
+
+
+    public void textName_OnClick(View view) {
+        TextView txtView = (TextView) view;
+        txtView.setText("");
+        view.setBackgroundDrawable(getResources().getDrawable(R.drawable.back));
+    }
+
+
+
     //public void btnTime(View view){
     public void textTimne_OnClick(View view) {
+        TextView txtView = (TextView) view;
+        txtView.setText("");
+        view.setBackgroundDrawable(getResources().getDrawable(R.drawable.back));
         timePick();
     }
 
@@ -144,17 +165,20 @@ public class ChoreEdit extends AppCompatActivity {
 
         Boolean allPass = true;
 
-        if (txtName.getText().equals("")) {
+        if (txtName.getText().toString().equals("")) {
             allPass = false;
-            txtName.setBackgroundColor(Color.parseColor("#ffff4444"));
+            txtName.setBackgroundColor(Color.parseColor("#ffcc0000"));
+            txtName.setText("Enter a name.");
         }
         if (hour == -1){
             allPass = false;
-            txtTime.setBackgroundColor(Color.parseColor("#ffff4444"));
+            txtTime.setBackgroundColor(Color.parseColor("#ffcc0000"));
+            txtTime.setText("Enter a time.");
         }
         if (year == -1){
             allPass = false;
-            txtDate.setBackgroundColor(Color.parseColor("#ffff4444"));
+            txtDate.setBackgroundColor(Color.parseColor("#ffcc0000"));
+            txtDate.setText("Enter a date.");
         }
 
         if (allPass){
