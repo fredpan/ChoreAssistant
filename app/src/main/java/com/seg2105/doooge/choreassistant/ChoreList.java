@@ -15,6 +15,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 
 
@@ -107,13 +114,13 @@ public class ChoreList extends AppCompatActivity {
         if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE) != null) {
 
             if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE).equals("user")) {
-                Button add = (Button) findViewById(R.id.btnAdd);
-                Button edit = (Button) findViewById(R.id.btnEdit);
+                Button add = findViewById(R.id.btnAdd);
+                Button edit = findViewById(R.id.btnEdit);
                 add.setVisibility(View.INVISIBLE);
                 edit.setVisibility(View.INVISIBLE);
             } else if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE).equals("admin")) {
-                Button add = (Button) findViewById(R.id.btnAdd);
-                Button edit = (Button) findViewById(R.id.btnEdit);
+                Button add = findViewById(R.id.btnAdd);
+                Button edit = findViewById(R.id.btnEdit);
                 add.setVisibility(View.VISIBLE);
                 edit.setVisibility(View.VISIBLE);
             }
