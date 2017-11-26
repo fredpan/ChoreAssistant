@@ -61,7 +61,7 @@ public class ChoreList extends AppCompatActivity {
 
         //############################## FUNCTION FOR SAMPLE CHORES####################
         displaySampleChores();
-
+        //##########################################################################
 
 
         databaseChore.addValueEventListener(new ValueEventListener() {
@@ -113,7 +113,6 @@ public class ChoreList extends AppCompatActivity {
         }
 
 
-        System.out.println("!!!"+(choreSubmit==null));
         if (choreSubmit != null) {
             dateFromMillis(choreSubmit);
         }
@@ -139,19 +138,16 @@ public class ChoreList extends AppCompatActivity {
     }
 
     public void displaySampleChores(){
-        //Calendar tempCal = Calendar.getInstance();
-        //long millis = tempCal.getTimeInMillis();
         LinearLayout linearView = findViewById(R.id.choreView);
 
         for (int i = 0 ; i <5;i++){
-            linearView.addView( layoutTest("Chore"+i, "12:00", "Description" ) );
+            linearView.addView( layoutTest("Chore"+i, "12:00", "Name" ) );
         }
 
     }
 
     public void sumbitChore(Chore chore) {
         choreSubmit = chore;
-
     }
 
 
@@ -164,17 +160,17 @@ public class ChoreList extends AppCompatActivity {
      *
      * @param name name of chore to be created
      * @param time time that chore is to be completed
-     * @param description description of chore
+     * @param userName User assigned to chore
      * @return returns a grid layout with chore added into it
      */
-    private GridLayout layoutTest(String name, String time, String description){ //, Drawable colorTemp){
+    private GridLayout layoutTest(String name, String time, String userName){ //, Drawable colorTemp){
 
         //Create grid layout and textviews
         GridLayout tempLayout   = new GridLayout(this);
         Point point             = new Point();                  //required for to get display size
         TextView text1          = textTest(name,18);
         TextView text2          = textTest(time, 14);
-        TextView text3          = textTest(description, 14);
+        TextView text3          = textTest(userName, 14);
 
         //set grid layout size
         tempLayout.setColumnCount(2);
@@ -182,16 +178,16 @@ public class ChoreList extends AppCompatActivity {
 
         //set textview position
         text1.setGravity(Gravity.LEFT);
-        text2.setGravity(Gravity.TOP | Gravity.RIGHT);
+        text2.setGravity(Gravity.TOP | Gravity.LEFT);
         text3.setGravity(Gravity.LEFT);
 
         //text1.setTextColor(Color.parseColor(colorTemp));
 
         //get display size and use it to set textbox size.
         getWindowManager().getDefaultDisplay().getSize(point);
-        text1.setWidth(point.x - 140);
-        text2.setWidth( 140 );
-        text3.setWidth(point.x - 140);
+        text1.setWidth(point.x - 160);
+        text2.setWidth( 160 );
+        text3.setWidth(point.x - 160);
 
         text1.setTypeface(Typeface.DEFAULT_BOLD);
         text3.setTypeface(Typeface.DEFAULT_BOLD);
@@ -221,7 +217,8 @@ public class ChoreList extends AppCompatActivity {
             @Override
             public boolean onLongClick(View view) {
                 Toast.makeText(getBaseContext(), "It is a long click event", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(ChoreList.this, showDetailDialog.class);
+                Intent intent = new Intent(ChoreList.this, ChoreEdit.class);
+                intent.putExtra("SUBMIT",choreSubmit);
                 startActivity(intent);
                 return true;
 

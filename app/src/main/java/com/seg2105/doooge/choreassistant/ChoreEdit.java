@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
@@ -27,7 +26,7 @@ public class ChoreEdit extends AppCompatActivity {
     private int year = -1;
     private int hour =-1;
     private int minute=-1;
-
+    private Chore choreSubmit;
 
     //https://developer.android.com/reference/android/app/TimePickerDialog.OnTimeSetListener.html
     private TimePickerDialog.OnTimeSetListener timeListen = new TimePickerDialog.OnTimeSetListener() {
@@ -46,10 +45,38 @@ public class ChoreEdit extends AppCompatActivity {
 
     };
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chore_edit);
+
+        Intent intent = getIntent();
+        choreSubmit = (Chore) intent.getSerializableExtra("SUBMIT");
+
+        if (choreSubmit!=null){
+            TextView txtName        = findViewById(R.id.textName);
+            TextView txtDescription = findViewById(R.id.textDescription);
+
+            txtName.setText(choreSubmit.getChoreName());
+            txtDescription.setText(choreSubmit.getDescription());
+
+            Calendar tempCal    = Calendar.getInstance();
+            long millis         = choreSubmit.getTimeInMillis();
+
+            tempCal.setTimeInMillis(millis);
+
+            int calYear         = tempCal.get(Calendar.YEAR);
+            int calMonth        = tempCal.get(Calendar.MONTH);
+            int calDay          = tempCal.get(Calendar.DAY_OF_MONTH);
+            int calHour         = tempCal.get(Calendar.HOUR);
+            int calMinute       = tempCal.get(Calendar.MINUTE);
+
+            setDate(calYear, calMonth,calDay);
+            setTime(calHour, calMinute);
+
+        }
 
     }
 
@@ -90,8 +117,6 @@ public class ChoreEdit extends AppCompatActivity {
     private void setDate(int year, int month, int day) {
         TextView textDate = findViewById(R.id.textDate);
 
-        //Calendar cal = Calendar.getInstance();
-
         this.day = day;
         this.month = month;
         this.year = year;
@@ -127,16 +152,13 @@ public class ChoreEdit extends AppCompatActivity {
         textTime.setText(hour + ":" + minute);
     }
 
+
     //https://developer.android.com/reference/android/app/TimePickerDialog.html
     private void timePick() {
 
         Calendar cal = Calendar.getInstance();
         int hour = cal.get(Calendar.HOUR);
         int minute = cal.get(Calendar.MINUTE);
-
-        //Time time = new Time();
-        //int hour = time.hour;
-        //int minute = time.minute;
 
         TimePickerDialog temp = new TimePickerDialog(this, timeListen, hour, minute, false);
         temp.show();
