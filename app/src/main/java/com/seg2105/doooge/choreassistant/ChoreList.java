@@ -42,6 +42,7 @@ public class ChoreList extends AppCompatActivity {
     private int month;
     private int year;
     private Calendar cal;
+    private PersonRule testRule;
 
     private Responsibility responsibility;
     //DatabaseReference databaseChore = FirebaseDatabase.getInstance().getReference("Chore");
@@ -138,6 +139,10 @@ public class ChoreList extends AppCompatActivity {
         } else {
             choreSubmit = (Chore) intent.getSerializableExtra("SUBMIT");
         }
+
+
+        //get the PersonRule from Welcomepage
+        testRule = (PersonRule) intent.getSerializableExtra("test");
 
 
         System.out.println("!!!" + (choreSubmit == null));

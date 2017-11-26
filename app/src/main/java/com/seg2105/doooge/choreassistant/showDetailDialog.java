@@ -2,6 +2,7 @@ package com.seg2105.doooge.choreassistant;
 
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -19,13 +20,16 @@ import java.util.TimerTask;
 
 public class showDetailDialog extends AppCompatActivity {
     Dialog dialog;
+    private Chore chore;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.choredetail_dialog);
-        initialData();
+        Intent intent = getIntent();
+        chore = (Chore) intent.getSerializableExtra("SUBMIT");
+        initialData(chore);
 
         final ImageButton finish_button = (ImageButton) findViewById(R.id.finishButton);
         finish_button.setOnClickListener(new View.OnClickListener() {
@@ -59,7 +63,7 @@ public class showDetailDialog extends AppCompatActivity {
     }
 
 
-    public void initialData() {
+    public void initialData(Chore chore) {
         TextView choreName = (TextView) findViewById(R.id.printChoreName);
         choreName.setText("Clean the Garage");
         TextView time = (TextView) findViewById(R.id.printTime);
@@ -68,6 +72,12 @@ public class showDetailDialog extends AppCompatActivity {
         description.setText("Please be careful !!!");
         TextView reward = (TextView) findViewById(R.id.printReward);
         reward.setText("You will get 10 dollars!");
+        if (chore != null) {
+            choreName.setText(chore.getChoreName());
+            time.setText(chore.getCalendar() + "" + "\n" + "" + chore.getTimeInMillis());
+            description.setText(chore.getDescription());
+
+        }
 
 
     }
