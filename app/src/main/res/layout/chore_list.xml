@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="54dp"
+        android:layout_height="0dp"
         android:gravity="start"
         android:orientation="horizontal">
 
@@ -60,7 +60,7 @@
 
         <ImageView
             android:id="@+id/imgDateDown"
-            android:layout_width="110dp"
+            android:layout_width="80dp"
             android:layout_height="69dp"
             android:layout_weight="0"
             android:background="@drawable/chevron_prev"
@@ -76,12 +76,12 @@
             android:gravity="center_vertical|center_horizontal"
             android:onClick="textDate_OnClick"
             android:text="September 31, 1900"
-            android:textSize="36sp"
+            android:textSize="24sp"
             android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/imgDateUp"
-            android:layout_width="110dp"
+            android:layout_width="80dp"
             android:layout_height="69dp"
             android:layout_weight="0"
             android:background="@drawable/chevron_next"
@@ -104,8 +104,8 @@
             android:id="@+id/choreView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:divider="@drawable/divider8p"
             android:orientation="vertical"
             android:showDividers="middle"></LinearLayout>

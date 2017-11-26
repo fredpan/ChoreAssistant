@@ -16,24 +16,20 @@ public class Chore implements Serializable {
 
     private String description;
     private String choreName;
+    private Long timeInMillis;
     private Calendar cal;
-    private String choreIdentification;
+    private String choreIdentification="TO BE IMPLEMENTED";
     private int choreID;
+    private Boolean complete;
 
-    public Chore(String choreName, String description, Calendar cal) throws NoSuchAlgorithmException {
-        this.choreName = choreName;
-        this.description = description;
-        this.cal = cal;
-        this.choreID = choreID;
-        generateChoreCharacIdentification();
+    public Chore(String choreName, String description, long timeInMillis, int choreID) throws NoSuchAlgorithmException {
+        this.choreName      = choreName;
+        this.description    = description;
+        this.timeInMillis   = timeInMillis;
+        this.choreID        = choreID;
 
-        /*
-        this.day = day;
-        this.month = month;
-        this.year = year;
-        this.hour = hour;
-        this.minute = minute;
-        */
+        complete = false;
+        //generateChoreCharacIdentification();
     }
 
     @Exclude
@@ -41,15 +37,13 @@ public class Chore implements Serializable {
         return cal;
     }
 
-    /*
-    private int day;
-    private int month;
-    private int year;
-    private int hour;
-    private int minute;
-    */
+    public long getTimeInMillis(){
+        return timeInMillis;
+    }
 
-    //public Chore(String choreName, String description, int day, int month, int year, int hour, int minute ){
+    public void setTimeInMillis(long timeInMillis){
+        this.timeInMillis = timeInMillis;
+    }
 
     public int getChoreID() {
         return choreID;
@@ -79,6 +73,15 @@ public class Chore implements Serializable {
         this.cal = cal;
     }
 
+    public void setComplete(boolean value){
+        this.complete = value;
+    }
+
+    public Boolean getComplete(){
+        return complete;
+    }
+
+
     private void generateChoreCharacIdentification() throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("MD5");
         byte[] choreNameInByte = choreName.getBytes();
@@ -107,47 +110,5 @@ public class Chore implements Serializable {
     public String getChoreIdentification() {
         return choreIdentification;
     }
-    /*
-
-    public int getDay(){
-        return day;
-    }
-
-    public void setDay(int day){
-        this.day = day;
-    }
-
-    public int getMonth(){
-        return month;
-    }
-
-    public void setMonth(int month){
-        this.month = month;
-    }
-
-    public int getYear(){
-        return year;
-    }
-
-    public void setYear(int year){
-        this.year = year;
-    }
-
-    public int getHour(){
-        return hour;
-    }
-
-    public void setHour(int hour){
-        this.hour= hour;
-    }
-
-    public int getMinute(){
-        return minute;
-    }
-
-    public void setMinute(int minute){
-        this.minute = minute;
-    }
-    */
 
 }

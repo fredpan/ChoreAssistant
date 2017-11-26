@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
@@ -26,6 +27,8 @@ public class ChoreEdit extends AppCompatActivity {
     private int year = -1;
     private int hour =-1;
     private int minute=-1;
+
+
     //https://developer.android.com/reference/android/app/TimePickerDialog.OnTimeSetListener.html
     private TimePickerDialog.OnTimeSetListener timeListen = new TimePickerDialog.OnTimeSetListener() {
 
@@ -49,10 +52,6 @@ public class ChoreEdit extends AppCompatActivity {
         setContentView(R.layout.chore_edit);
 
     }
-
-
-    //public void btnSelectDate(View view) {
-
 
 
     public void textDate_OnClick(View view) {
@@ -190,11 +189,9 @@ public class ChoreEdit extends AppCompatActivity {
             Calendar calChore = Calendar.getInstance();
             calChore.set(year,month,day,hour,minute);
 
-            //Create a chore and set parameters
+            long millis = calChore.getTimeInMillis();
 
-            Chore chore = new Chore(name,description,calChore);
-
-            //Chore chore = new Chore(name,description,day,month,year,hour,minute);
+            Chore chore = new Chore(name,description,millis, 1);
 
 
             Intent intent = new Intent(ChoreEdit.this, ChoreList.class);

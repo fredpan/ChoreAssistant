@@ -11,8 +11,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.GridLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+import java.util.Calendar;
+
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -21,9 +23,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.security.NoSuchAlgorithmException;
-import java.util.Calendar;
-
 
 /**
  * Created by dustin on 11/22/17.
@@ -31,28 +30,20 @@ import java.util.Calendar;
 
 public class ChoreList extends AppCompatActivity {
 
-    private static Chore choreSubmit;
     private final String CHORE_RED = "#ffff4444";
     private final String CHORE_PURPLE = "#ffaa66cc";
     private final String CHORE_ORANGE = "#ffff8800";
     private final String CHORE_GREEN = "#ff99cc00";
     private final String CHORE_BLUE = "#ff0099cc";
-    DatabaseReference databaseChore = FirebaseDatabase.getInstance().getReference("Chore");
     private int day;
     private int month;
     private int year;
     private Calendar cal;
-    //https://developer.android.com/reference/android/app/DatePickerDialog.OnDateSetListener.html
-    private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
+    private Chore choreSubmit;
+    //private Responsibility responsibility;
+    DatabaseReference databaseChore = FirebaseDatabase.getInstance().getReference("Chore");
 
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            //the selected month (0-11 for compatibility with MONTH)
-            updateDate(year, month, dayOfMonth);
-            setDate(year, month, dayOfMonth);
 
-        }
-
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,44 +58,37 @@ public class ChoreList extends AppCompatActivity {
 
         setDate(year,month,day);
 
-        final LinearLayout linearView = findViewById(R.id.choreView);
 
-        /*
-        Drawable[] draw = {
-                getResources().getDrawable(R.drawable.back),
-        };
-        */
+        //############################## FUNCTION FOR SAMPLE CHORES####################
+        displaySampleChores();
 
-
-        //SAMPLE CHOREs
-        try {
-            Chore chore1 = new Chore("Chore 1", "THis is a fake chore", cal);
-            Chore chore2 = new Chore("Chore 2", "THis is a fake chore", cal);
-            Chore chore3 = new Chore("Chore 3", "THis is a fake chore", cal);
-            databaseChore.child(chore1.getChoreIdentification()).setValue(chore1);
-            databaseChore.child(chore2.getChoreIdentification()).setValue(chore2);
-            databaseChore.child(chore3.getChoreIdentification()).setValue(chore3);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
 
 
         databaseChore.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (long i = 0; i < dataSnapshot.getChildrenCount(); i++) {
-                    GridLayout temp = layoutTest("Chore" + i, "TIME", "Name"); //, draw[i%5]);
 
-                    temp.setTag("chore" + i);
-                    linearView.addView(temp);
 
-                }
+//                for (long i = 0; i < dataSnapshot.getChildrenCount(); i++) {
+//                    GridLayout temp = layoutTest("Chore" + i, "TIME", "Name"); //, draw[i%5]);
+//
+//                    temp.setTag("chore" + i);
+//                    linearView.addView(temp);
+//
+//                }
+
+//                for (long i = 0; i < dataSnapshot.getChildrenCount(); i++) {
+//                    Chore tempChore = responsibility.getChore();
+//                    dissassembleChore(tempChore);
+
+//                }
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled (DatabaseError databaseError){
 
             }
+
         });
 
 
@@ -114,13 +98,13 @@ public class ChoreList extends AppCompatActivity {
         if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE) != null) {
 
             if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE).equals("user")) {
-                Button add = (Button) findViewById(R.id.btnAdd);
-                Button edit = (Button) findViewById(R.id.btnEdit);
+                Button add = findViewById(R.id.btnAdd);
+                Button edit = findViewById(R.id.btnEdit);
                 add.setVisibility(View.INVISIBLE);
                 edit.setVisibility(View.INVISIBLE);
             } else if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE).equals("admin")) {
-                Button add = (Button) findViewById(R.id.btnAdd);
-                Button edit = (Button) findViewById(R.id.btnEdit);
+                Button add = findViewById(R.id.btnAdd);
+                Button edit = findViewById(R.id.btnEdit);
                 add.setVisibility(View.VISIBLE);
                 edit.setVisibility(View.VISIBLE);
             }
@@ -128,6 +112,40 @@ public class ChoreList extends AppCompatActivity {
             choreSubmit = (Chore) intent.getSerializableExtra("SUBMIT");
         }
 
+
+        System.out.println("!!!"+(choreSubmit==null));
+        if (choreSubmit != null) {
+            dateFromMillis(choreSubmit);
+        }
+
+    }
+
+    private void dateFromMillis(Chore chore){
+        long millis = chore.getTimeInMillis();
+        Calendar tempCal = Calendar.getInstance();
+        tempCal.setTimeInMillis(millis);
+
+        Integer choreYear   = cal.get(Calendar.YEAR);
+        Integer choreMonth  = cal.get(Calendar.MONTH);
+        Integer choreDay    = cal.get(Calendar.DAY_OF_MONTH);
+        Integer choreHour   = cal.get(Calendar.HOUR);
+        Integer choreMinute = cal.get(Calendar.MINUTE);
+
+        if ((choreYear.equals(year)) && (choreDay.equals(day)) && (choreMonth.equals(month))){
+            LinearLayout linearView = findViewById(R.id.choreView);
+            linearView.addView( layoutTest(choreSubmit.getChoreName(), choreHour+ ":" + choreMinute, choreSubmit.getDescription() ) );
+        }
+
+    }
+
+    public void displaySampleChores(){
+        //Calendar tempCal = Calendar.getInstance();
+        //long millis = tempCal.getTimeInMillis();
+        LinearLayout linearView = findViewById(R.id.choreView);
+
+        for (int i = 0 ; i <5;i++){
+            linearView.addView( layoutTest("Chore"+i, "12:00", "Description" ) );
+        }
 
     }
 
@@ -139,7 +157,6 @@ public class ChoreList extends AppCompatActivity {
 
 
     public void add_OnClick(View view) {
-//        startActivity(new Intent(this,ChoreEdit.class));
 
     }
 
@@ -155,9 +172,9 @@ public class ChoreList extends AppCompatActivity {
         //Create grid layout and textviews
         GridLayout tempLayout   = new GridLayout(this);
         Point point             = new Point();                  //required for to get display size
-        TextView text1          = textTest(name,30);
-        TextView text2          = textTest(time, 24);
-        TextView text3          = textTest(description, 24);
+        TextView text1          = textTest(name,18);
+        TextView text2          = textTest(time, 14);
+        TextView text3          = textTest(description, 14);
 
         //set grid layout size
         tempLayout.setColumnCount(2);
@@ -165,16 +182,16 @@ public class ChoreList extends AppCompatActivity {
 
         //set textview position
         text1.setGravity(Gravity.LEFT);
-        text2.setGravity(Gravity.TOP); // | Gravity.RIGHT);
+        text2.setGravity(Gravity.TOP | Gravity.RIGHT);
         text3.setGravity(Gravity.LEFT);
 
         //text1.setTextColor(Color.parseColor(colorTemp));
 
         //get display size and use it to set textbox size.
         getWindowManager().getDefaultDisplay().getSize(point);
-        text1.setWidth(point.x - 100);
-        text2.setWidth( 100 );
-        text3.setWidth(point.x - 100);
+        text1.setWidth(point.x - 140);
+        text2.setWidth( 140 );
+        text3.setWidth(point.x - 140);
 
         text1.setTypeface(Typeface.DEFAULT_BOLD);
         text3.setTypeface(Typeface.DEFAULT_BOLD);
@@ -184,20 +201,17 @@ public class ChoreList extends AppCompatActivity {
         tempLayout.addView(text2);
         tempLayout.addView(text3);
 
-
-        //tempLayout.setBackgroundDrawable(colorTemp);
-        //tempLayout.setBackgroundColor(Color.parseColor(colorTemp));
-
-
         tempLayout.setTag(name);
 
         // Create a listener for touch screen events;
         tempLayout.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view){
+
                 Toast.makeText(getBaseContext(), " " + view.getTag(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(ChoreList.this, showDetailDialog.class);
                 startActivity(intent);
+
             }
 
         } );
@@ -213,8 +227,6 @@ public class ChoreList extends AppCompatActivity {
 
             }
         });
-
-
 
 
         return tempLayout;
@@ -296,7 +308,14 @@ public class ChoreList extends AppCompatActivity {
     }
 
 
+    //https://developer.android.com/reference/android/app/DatePickerDialog.OnDateSetListener.html
+    private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
 
-
+        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+            //the selected month (0-11 for compatibility with MONTH)
+            updateDate(year, month, dayOfMonth);
+            setDate(year, month, dayOfMonth);
+        }
+    };
 
 }
