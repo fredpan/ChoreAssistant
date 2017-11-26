@@ -21,6 +21,7 @@ public class Chore implements Serializable {
     private String choreIdentification="TO BE IMPLEMENTED";
     private int choreID;
     private Boolean complete;
+    private ChoreType type;
 
     public Chore(String choreName, String description, long timeInMillis, int choreID) throws NoSuchAlgorithmException {
         this.choreName      = choreName;
@@ -35,6 +36,14 @@ public class Chore implements Serializable {
     @Exclude
     public Calendar getCal() {
         return cal;
+    }
+
+    public ChoreType getType(){
+        return type;
+    }
+
+    public void setChoreType(ChoreType type){
+        this.type = type;
     }
 
     public long getTimeInMillis(){

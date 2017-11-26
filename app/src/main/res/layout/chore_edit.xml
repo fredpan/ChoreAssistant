@@ -17,15 +17,16 @@
         android:layout_centerInParent="true"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp">
 
         <EditText
-            android:id="@+id/editText4"
+            android:id="@+id/textCaption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:background="@android:drawable/screen_background_light_transparent"
             android:clickable="false"
             android:ems="10"
@@ -33,9 +34,9 @@
             android:focusableInTouchMode="false"
             android:inputType="textPersonName"
             android:linksClickable="false"
-            android:text="Edit chore"
+            android:text="Create chore"
             android:textAllCaps="false"
-            android:textSize="36sp"
+            android:textSize="24sp"
             android:textStyle="bold" />
 
         <Space
@@ -47,6 +48,8 @@
             android:id="@+id/editText5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:background="@android:drawable/screen_background_light_transparent"
             android:clickable="false"
             android:ems="10"
@@ -54,19 +57,23 @@
             android:focusableInTouchMode="false"
             android:inputType="textPersonName"
             android:linksClickable="false"
-            android:text="Name"
-            android:textSize="24sp"
+            android:text="Chore"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <EditText
             android:id="@+id/textName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:background="@drawable/back"
             android:ems="10"
             android:inputType="textPersonName"
+            android:maxLength="20"
             android:onClick="textName_OnClick"
-            android:textSize="24sp" />
+            android:paddingLeft="3dp"
+            android:textSize="18sp" />
 
         <Space
             android:layout_width="match_parent"
@@ -77,6 +84,8 @@
             android:id="@+id/editText7"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:background="@android:drawable/screen_background_light_transparent"
             android:clickable="false"
             android:ems="10"
@@ -85,17 +94,21 @@
             android:inputType="textPersonName"
             android:linksClickable="false"
             android:text="Description"
-            android:textSize="24sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <EditText
             android:id="@+id/textDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:background="@drawable/back"
             android:ems="10"
             android:inputType="textPersonName"
-            android:textSize="24sp" />
+            android:maxLength="40"
+            android:paddingLeft="3dp"
+            android:textSize="18sp" />
 
         <Space
             android:layout_width="match_parent"
@@ -106,6 +119,8 @@
             android:id="@+id/editText9"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:background="@android:drawable/screen_background_light_transparent"
             android:clickable="false"
             android:ems="10"
@@ -114,20 +129,23 @@
             android:inputType="textPersonName"
             android:linksClickable="false"
             android:text="Date"
-            android:textSize="24sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <EditText
             android:id="@+id/textDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:background="@drawable/back"
             android:ems="10"
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:inputType="textPersonName"
             android:onClick="textDate_OnClick"
-            android:textSize="24sp" />
+            android:paddingLeft="3dp"
+            android:textSize="18sp" />
 
         <Space
             android:layout_width="match_parent"
@@ -138,6 +156,8 @@
             android:id="@+id/editText11"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:background="@android:drawable/screen_background_light_transparent"
             android:clickable="false"
             android:ems="10"
@@ -146,20 +166,23 @@
             android:inputType="textPersonName"
             android:linksClickable="false"
             android:text="Time"
-            android:textSize="24sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <EditText
             android:id="@+id/textTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:background="@drawable/back"
             android:ems="10"
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:inputType="textPersonName"
             android:onClick="textTimne_OnClick"
-            android:textSize="24sp" />
+            android:paddingLeft="3dp"
+            android:textSize="18sp" />
 
         <Space
             android:layout_width="match_parent"
@@ -170,6 +193,8 @@
             android:id="@+id/editText16"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:background="@android:drawable/screen_background_light_transparent"
             android:clickable="false"
             android:ems="10"
@@ -178,13 +203,16 @@
             android:inputType="textPersonName"
             android:linksClickable="false"
             android:text="Assignment"
-            android:textSize="24sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <Spinner
-            android:id="@+id/spinner2"
+            android:id="@+id/spnType"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/back" />
 
         <Space
             android:layout_width="match_parent"
@@ -195,10 +223,10 @@
             android:id="@+id/btnSubmit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/back"
             android:onClick="btnSubmit_OnClick"
             android:text="Submit"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+            android:textSize="24sp" />
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
