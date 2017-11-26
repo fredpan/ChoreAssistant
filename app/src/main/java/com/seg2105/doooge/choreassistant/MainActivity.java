@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 //    protected void onStart() {
 //        super.onStart();
 //
-//        ChildEventListener childEventListener = databaseLoginInfo.addChildEventListener(new ChildEventListener() {
+//        ChildEventListener childEventListener = databaseChore.addChildEventListener(new ChildEventListener() {
 //
 //            @Override
 //            public void onChildAdded(DataSnapshot dataSnapshot, String s) {

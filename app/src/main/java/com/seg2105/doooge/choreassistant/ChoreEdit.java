@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 
 
@@ -87,7 +89,7 @@ public class ChoreEdit extends AppCompatActivity {
      * @param day   calendar day
      */
     private void setDate(int year, int month, int day) {
-        TextView textDate = (TextView) findViewById(R.id.textDate);
+        TextView textDate = findViewById(R.id.textDate);
 
         //Calendar cal = Calendar.getInstance();
 
@@ -120,7 +122,7 @@ public class ChoreEdit extends AppCompatActivity {
      * @param minute time in minutes
      */
     private void setTime(int hour, int minute) {
-        TextView textTime = (TextView) findViewById(R.id.textTime);
+        TextView textTime = findViewById(R.id.textTime);
         this.hour = hour;
         this.minute = minute;
         textTime.setText(hour + ":" + minute);
@@ -156,12 +158,12 @@ public class ChoreEdit extends AppCompatActivity {
         temp.show();
     }
 
-    public void btnSubmit_OnClick(View view){
+    public void btnSubmit_OnClick(View view) throws NoSuchAlgorithmException {
 
-        TextView txtName        = (TextView) findViewById(R.id.textName);
-        TextView txtDescription = (TextView) findViewById(R.id.textDescription);
-        TextView txtTime        = (TextView) findViewById(R.id.textTime);
-        TextView txtDate        = (TextView) findViewById(R.id.textDate);
+        TextView txtName = findViewById(R.id.textName);
+        TextView txtDescription = findViewById(R.id.textDescription);
+        TextView txtTime = findViewById(R.id.textTime);
+        TextView txtDate = findViewById(R.id.textDate);
 
         Boolean allPass = true;
 
