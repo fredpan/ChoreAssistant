@@ -6,27 +6,22 @@ package com.seg2105.doooge.choreassistant;
 
 public class Responsibility {
 
-    private Chore chore;
-    private PersonRule person;
+    private int userId;
+    private String choreIdentification;
 
-    public void Responsibility(Chore chore){
-        this.chore = chore;
+    public Responsibility(int userId, String choreIdentification ){
+        this.userId = userId;
+        this.choreIdentification = choreIdentification;
     }
 
+    /*
     public Chore getChore(){
         return chore;
     }
 
-    public void setPerson(PersonRule person){
-        this.person = person;
-    }
 
     public PersonRule getPerson(){
         return person;
     }
-
-    public void setChore(Chore chore){
-        this.chore = chore;
-    }
-
+    */
 }

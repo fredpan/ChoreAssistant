@@ -104,8 +104,8 @@
             android:id="@+id/choreView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:divider="@drawable/divider8p"
             android:orientation="vertical"
             android:showDividers="middle"></LinearLayout>
