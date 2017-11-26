@@ -14,11 +14,11 @@ import java.util.ArrayList;
  * Created by fredpan on 2017/11/24.
  */
 
-public class RewardAdapter extends ArrayAdapter<Identification> {
-    private ArrayList<Identification> listOfUser;
+public class RewardAdapter extends ArrayAdapter<PersonRule> {
+    private ArrayList<PersonRule> listOfUser;
     private Activity context;
 
-    public RewardAdapter(ArrayList<Identification> list, Activity context) {
+    public RewardAdapter(ArrayList<PersonRule> list, Activity context) {
         super(context, R.layout.single_user_info, list);
         this.listOfUser = list;
         this.context = context;
@@ -36,7 +36,7 @@ public class RewardAdapter extends ArrayAdapter<Identification> {
 //        listItemText.setText(list.get(position));
 
         //Handle buttons and add onClickListeners
-        Identification user = listOfUser.get(position);
+        PersonRule user = listOfUser.get(position);
         TextView displayName = view.findViewById(R.id.displayName);
         TextView userAuth = view.findViewById(R.id.userAuth);
         displayName.setText(user.getUserName());

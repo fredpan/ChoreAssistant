@@ -15,7 +15,17 @@ import android.widget.TextView;
 import java.util.Calendar;
 
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.security.NoSuchAlgorithmException;
+import java.util.Calendar;
 
 
 /**
@@ -29,6 +39,7 @@ public class ChoreList extends AppCompatActivity {
     private final String CHORE_ORANGE = "#ffff8800";
     private final String CHORE_GREEN = "#ff99cc00";
     private final String CHORE_BLUE = "#ff0099cc";
+    DatabaseReference databaseChore = FirebaseDatabase.getInstance().getReference("Chore");
     private int day;
     private int month;
     private int year;
@@ -62,6 +73,7 @@ public class ChoreList extends AppCompatActivity {
 
         setDate(year,month,day);
 
+        final LinearLayout linearView = findViewById(R.id.choreView);
 
         //########################TESTING###################################
         responsibility=new Responsibility();
@@ -69,7 +81,34 @@ public class ChoreList extends AppCompatActivity {
             Chore tempChore = new Chore("Chore"+i, "description", cal);
             responsibility.addChore( tempChore );
         }
+        /*
+        Drawable[] draw = {
+                getResources().getDrawable(R.drawable.back),
+        };
+        */
 
+
+        //SAMPLE CHOREs
+        try {
+            Chore chore1 = new Chore("Chore 1", "THis is a fake chore", cal);
+            Chore chore2 = new Chore("Chore 2", "THis is a fake chore", cal);
+            Chore chore3 = new Chore("Chore 3", "THis is a fake chore", cal);
+            databaseChore.child(chore1.getChoreIdentification()).setValue(chore1);
+            databaseChore.child(chore2.getChoreIdentification()).setValue(chore2);
+            databaseChore.child(chore3.getChoreIdentification()).setValue(chore3);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+
+        databaseChore.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (long i = 0; i < dataSnapshot.getChildrenCount(); i++) {
+                    GridLayout temp = layoutTest("Chore" + i, "TIME", "Name"); //, draw[i%5]);
+
+                    temp.setTag("chore" + i);
+                    linearView.addView(temp);
         //##################################################################
 
 
@@ -79,7 +118,15 @@ public class ChoreList extends AppCompatActivity {
             Chore tempChore = responsibility.getChore(i);
             dissassembleChore(tempChore);
 
-        }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 
         // check if admin, if not ,set invisible for add button and edit button
         Intent intent = getIntent();
@@ -87,13 +134,13 @@ public class ChoreList extends AppCompatActivity {
         if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE) != null) {
 
             if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE).equals("user")) {
-                Button add = (Button) findViewById(R.id.btnAdd);
-                Button edit = (Button) findViewById(R.id.btnEdit);
+                Button add = findViewById(R.id.btnAdd);
+                Button edit = findViewById(R.id.btnEdit);
                 add.setVisibility(View.INVISIBLE);
                 edit.setVisibility(View.INVISIBLE);
             } else if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE).equals("admin")) {
-                Button add = (Button) findViewById(R.id.btnAdd);
-                Button edit = (Button) findViewById(R.id.btnEdit);
+                Button add = findViewById(R.id.btnAdd);
+                Button edit = findViewById(R.id.btnEdit);
                 add.setVisibility(View.VISIBLE);
                 edit.setVisibility(View.VISIBLE);
             }
@@ -141,7 +188,6 @@ public class ChoreList extends AppCompatActivity {
      * @param description description of chore
      * @return returns a grid layout with chore added into it
      */
-
     private GridLayout layoutTest(String name, String time, String description){ //, Drawable colorTemp){
 
         //Create grid layout and textviews
@@ -256,7 +302,7 @@ public class ChoreList extends AppCompatActivity {
     }
 
     private void setDate(int year, int month, int day) {
-        TextView textDate = (TextView) findViewById(R.id.textDate);
+        TextView textDate = findViewById(R.id.textDate);
 
         String[] monthString = {
                 "January",

@@ -4,31 +4,38 @@ package com.seg2105.doooge.choreassistant;
  * Created by fredpan on 2017/11/21.
  */
 
-public class Identification {
-    private final String userName;
-    private final long userID;
-    private final boolean isAdmin;
-    private final String encrypted;
-    private final String color;
+public class PersonRule {
+    private String userName;
+    private boolean admin;
+    private String encrypted;
+    private String color;
+    private int userID;
 
-    public Identification(String userName, String encrypted, long userID, boolean isAdmin, String color) {
+
+    public PersonRule() {
+    }
+
+    public PersonRule(String userName, String encrypted, boolean admin, String color, int userID) {
         this.userName = userName;
+
+
         this.userID = userID;
-        this.isAdmin = isAdmin;
+        this.admin = admin;
         this.encrypted = encrypted;
         this.color = color;
+
     }
 
     public String getUserName() {
         return userName;
     }
 
-    public long getUserID() {
+    public int getUserID() {
         return userID;
     }
 
     public boolean isAdmin() {
-        return isAdmin;
+        return admin;
     }
 
     public String getEncrypted() {
@@ -38,5 +45,6 @@ public class Identification {
     public String getColor() {
         return color;
     }
+
 
 }
