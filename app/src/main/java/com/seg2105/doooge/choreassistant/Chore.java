@@ -12,7 +12,9 @@ public class Chore implements Serializable {
 
     private String description;
     private String choreName;
+    private Long timeInMillis;
     private Calendar cal;
+    private Boolean complete;
 
     /*
     private int day;
@@ -24,10 +26,13 @@ public class Chore implements Serializable {
 
     //public Chore(String choreName, String description, int day, int month, int year, int hour, int minute ){
 
-    public Chore(String choreName, String description, Calendar cal){
+    //public Chore(String choreName, String description, Calendar cal){
+    public Chore(String choreName, String description, long timeInMillis){
         this.choreName = choreName;
         this.description = description;
-        this.cal = cal;
+        //this.cal = cal;
+        this.timeInMillis = timeInMillis;
+        complete = false;
 
 
         /*
@@ -62,6 +67,15 @@ public class Chore implements Serializable {
     public void setCalendar(Calendar cal){
         this.cal = cal;
     }
+
+    public void setComplete(boolean value){
+        this.complete = value;
+    }
+
+    public Boolean getComplete(){
+        return complete;
+    }
+
 
 
     /*

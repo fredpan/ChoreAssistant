@@ -24,7 +24,6 @@ import android.widget.Toast;
 
 public class ChoreList extends AppCompatActivity {
 
-    private static Chore choreSubmit;
     private final String CHORE_RED = "#ffff4444";
     private final String CHORE_PURPLE = "#ffaa66cc";
     private final String CHORE_ORANGE = "#ffff8800";
@@ -34,6 +33,10 @@ public class ChoreList extends AppCompatActivity {
     private int month;
     private int year;
     private Calendar cal;
+    private Chore choreSubmit;
+    private Responsibility responsibility;
+
+
     //https://developer.android.com/reference/android/app/DatePickerDialog.OnDateSetListener.html
     private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
 
@@ -59,19 +62,22 @@ public class ChoreList extends AppCompatActivity {
 
         setDate(year,month,day);
 
-        LinearLayout linearView = (LinearLayout) findViewById(R.id.choreView);
 
-        /*
-        Drawable[] draw = {
-                getResources().getDrawable(R.drawable.back),
-        };
-        */
+        //########################TESTING###################################
+        responsibility=new Responsibility();
+        for (int i =0 ; i < 5; i++){
+            Chore tempChore = new Chore("Chore"+i, "description", cal);
+            responsibility.addChore( tempChore );
+        }
 
-        for (int i = 0; i < 5; i++){
-            GridLayout temp = layoutTest("Chore" + i,"TIME", "Name"); //, draw[i%5]);
+        //##################################################################
 
-            temp.setTag("chore" +i);
-            linearView.addView( temp );
+
+
+        //LinearLayout linearView = (LinearLayout) findViewById(R.id.choreView);
+        for ( int i = 0 ; i < responsibility.getSize() ; i++ ){
+            Chore tempChore = responsibility.getChore(i);
+            dissassembleChore(tempChore);
 
         }
 
@@ -95,6 +101,25 @@ public class ChoreList extends AppCompatActivity {
             choreSubmit = (Chore) intent.getSerializableExtra("SUBMIT");
         }
 
+        if (choreSubmit != null){
+            dissassembleChore(choreSubmit);
+            responsibility.addChore(choreSubmit);
+        }
+
+    }
+
+    private void dissassembleChore(Chore chore){
+        Calendar cal = chore.getCalendar();
+        int choreYear = cal.get(Calendar.YEAR);
+        int choreMonth = cal.get(Calendar.MONTH);
+        int choreDay = cal.get(Calendar.DAY_OF_MONTH);
+        int choreHour = cal.get(Calendar.HOUR);
+        int choreMinute = cal.get(Calendar.MINUTE);
+
+        if ((choreYear == year) && (choreDay == day) && (choreMonth == month)){
+            LinearLayout linearView = (LinearLayout) findViewById(R.id.choreView);
+            linearView.addView( layoutTest(choreSubmit.getChoreName(), choreHour+ ":" + choreMinute, choreSubmit.getDescription() ) );
+        }
 
     }
 
@@ -116,14 +141,15 @@ public class ChoreList extends AppCompatActivity {
      * @param description description of chore
      * @return returns a grid layout with chore added into it
      */
+
     private GridLayout layoutTest(String name, String time, String description){ //, Drawable colorTemp){
 
         //Create grid layout and textviews
         GridLayout tempLayout   = new GridLayout(this);
         Point point             = new Point();                  //required for to get display size
-        TextView text1          = textTest(name,30);
-        TextView text2          = textTest(time, 24);
-        TextView text3          = textTest(description, 24);
+        TextView text1          = textTest(name,18);
+        TextView text2          = textTest(time, 14);
+        TextView text3          = textTest(description, 14);
 
         //set grid layout size
         tempLayout.setColumnCount(2);
@@ -138,9 +164,9 @@ public class ChoreList extends AppCompatActivity {
 
         //get display size and use it to set textbox size.
         getWindowManager().getDefaultDisplay().getSize(point);
-        text1.setWidth(point.x - 100);
-        text2.setWidth( 100 );
-        text3.setWidth(point.x - 100);
+        text1.setWidth(point.x - 140);
+        text2.setWidth( 140 );
+        text3.setWidth(point.x - 140);
 
         text1.setTypeface(Typeface.DEFAULT_BOLD);
         text3.setTypeface(Typeface.DEFAULT_BOLD);

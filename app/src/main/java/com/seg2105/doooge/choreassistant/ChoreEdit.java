@@ -24,6 +24,10 @@ public class ChoreEdit extends AppCompatActivity {
     private int year = -1;
     private int hour =-1;
     private int minute=-1;
+
+
+
+
     //https://developer.android.com/reference/android/app/TimePickerDialog.OnTimeSetListener.html
     private TimePickerDialog.OnTimeSetListener timeListen = new TimePickerDialog.OnTimeSetListener() {
 
