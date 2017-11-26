@@ -39,26 +39,15 @@ public class ChoreList extends AppCompatActivity {
     private final String CHORE_ORANGE = "#ffff8800";
     private final String CHORE_GREEN = "#ff99cc00";
     private final String CHORE_BLUE = "#ff0099cc";
-    DatabaseReference databaseChore = FirebaseDatabase.getInstance().getReference("Chore");
     private int day;
     private int month;
     private int year;
     private Calendar cal;
     private Chore choreSubmit;
     private Responsibility responsibility;
+    DatabaseReference databaseChore = FirebaseDatabase.getInstance().getReference("Chore");
 
 
-    //https://developer.android.com/reference/android/app/DatePickerDialog.OnDateSetListener.html
-    private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
-
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            //the selected month (0-11 for compatibility with MONTH)
-            updateDate(year, month, dayOfMonth);
-            setDate(year, month, dayOfMonth);
-
-        }
-
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,15 +66,20 @@ public class ChoreList extends AppCompatActivity {
 
         //########################TESTING###################################
         responsibility=new Responsibility();
+
+
+
+
+
         for (int i =0 ; i < 5; i++){
-            Chore tempChore = new Chore("Chore"+i, "description", cal);
+            Chore tempChore = null;
+            try {
+                tempChore = new Chore("Chore"+i, "description", cal);
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
             responsibility.addChore( tempChore );
         }
-        /*
-        Drawable[] draw = {
-                getResources().getDrawable(R.drawable.back),
-        };
-        */
 
 
         //SAMPLE CHOREs
@@ -104,27 +98,27 @@ public class ChoreList extends AppCompatActivity {
         databaseChore.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
+
+//                for (long i = 0; i < dataSnapshot.getChildrenCount(); i++) {
+//                    GridLayout temp = layoutTest("Chore" + i, "TIME", "Name"); //, draw[i%5]);
+//
+//                    temp.setTag("chore" + i);
+//                    linearView.addView(temp);
+//
+//                }
                 for (long i = 0; i < dataSnapshot.getChildrenCount(); i++) {
-                    GridLayout temp = layoutTest("Chore" + i, "TIME", "Name"); //, draw[i%5]);
-
-                    temp.setTag("chore" + i);
-                    linearView.addView(temp);
-        //##################################################################
-
-
-
-        //LinearLayout linearView = (LinearLayout) findViewById(R.id.choreView);
-        for ( int i = 0 ; i < responsibility.getSize() ; i++ ){
-            Chore tempChore = responsibility.getChore(i);
-            dissassembleChore(tempChore);
+                    Chore tempChore = responsibility.getChore((int)i);
+                    dissassembleChore(tempChore);
 
                 }
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled (DatabaseError databaseError){
 
             }
+
         });
 
 
@@ -334,6 +328,17 @@ public class ChoreList extends AppCompatActivity {
     }
 
 
+//https://developer.android.com/reference/android/app/DatePickerDialog.OnDateSetListener.html
+private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
+
+public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        //the selected month (0-11 for compatibility with MONTH)
+        updateDate(year, month, dayOfMonth);
+        setDate(year, month, dayOfMonth);
+
+        }
+
+        };
 
 
 
