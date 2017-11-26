@@ -45,9 +45,20 @@ public class ChoreList extends AppCompatActivity {
     private int month;
     private int year;
     private Calendar cal;
-    //private Responsibility responsibility;
+    private PersonRule testRule;
 
+    private Responsibility responsibility;
+    //DatabaseReference databaseChore = FirebaseDatabase.getInstance().getReference("Chore");
 
+    //https://developer.android.com/reference/android/app/DatePickerDialog.OnDateSetListener.html
+    private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
+
+        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+            //the selected month (0-11 for compatibility with MONTH)
+            updateDate(year, month, dayOfMonth);
+            setDate(year, month, dayOfMonth);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,6 +141,11 @@ public class ChoreList extends AppCompatActivity {
         }
 
 
+        //get the PersonRule from Welcomepage
+        testRule = (PersonRule) intent.getSerializableExtra("test");
+
+
+        System.out.println("!!!" + (choreSubmit == null));
         if (choreSubmit != null) {
             displayChore(choreSubmit);
         }
@@ -154,7 +170,6 @@ public class ChoreList extends AppCompatActivity {
     public void sumbitChore(Chore chore) {
         choreSubmit = chore;
     }
-
 
     public void add_OnClick(View view) {
         Intent intent = new Intent(ChoreList.this, ChoreEdit.class); //switch homepage to edit chore page
@@ -262,16 +277,15 @@ public class ChoreList extends AppCompatActivity {
         datePick();
     }
 
-    public void imgDateUp_OnClick(View view){
+    public void imgDateUp_OnClick(View view) {
         buildNewDate(1);
     }
 
-    public void imgDateDown_OnClick(View view){
+    public void imgDateDown_OnClick(View view) {
         buildNewDate(-1);
     }
 
     private void updateDate(int year, int month, int day){
-
 
         if ((year==this.year) && (month==this.month)&&(day==this.day)){
             return;
@@ -286,7 +300,7 @@ public class ChoreList extends AppCompatActivity {
         scrubChoreView();
     }
 
-    private void buildNewDate(int upDown){
+    private void buildNewDate(int upDown) {
         cal.add(Calendar.DATE, upDown);
 
         year    = cal.get(Calendar.YEAR);
@@ -295,7 +309,6 @@ public class ChoreList extends AppCompatActivity {
 
         updateDate(year, month, day);
         setDate(year, month, day);
-
     }
 
     private void scrubChoreView(){
@@ -336,14 +349,6 @@ public class ChoreList extends AppCompatActivity {
     }
 
 
-    //https://developer.android.com/reference/android/app/DatePickerDialog.OnDateSetListener.html
-    private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
 
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            //the selected month (0-11 for compatibility with MONTH)
-            updateDate(year, month, dayOfMonth);
-            setDate(year, month, dayOfMonth);
-        }
-    };
 
 }
