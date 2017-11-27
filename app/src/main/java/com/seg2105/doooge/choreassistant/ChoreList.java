@@ -76,6 +76,7 @@ public class ChoreList extends AppCompatActivity {
 
 
             Chore chore1 = new Chore("Chore1", "Displayed!! 1/2", 123);
+            displayChore(chore1);
             Chore chore2 = new Chore("Chore2", "Displayed!! 2/2", 456);
             Chore chore3 = new Chore("Chore3", "Should not display!!!", 789);
             databaseChore.child(chore1.getChoreIdentification()).setValue(chore1);
