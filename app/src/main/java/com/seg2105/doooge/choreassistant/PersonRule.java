@@ -15,6 +15,7 @@ public class PersonRule implements Serializable {
 
 
     public PersonRule() {
+        //Keep for Firebase only
     }
 
     public PersonRule(String userName, String encrypted, boolean admin, String color, int userID) {
