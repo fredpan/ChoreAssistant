@@ -60,8 +60,6 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                         enableCreateNormalUser = enableCreateNormalUser || true;
                     }
 
-                    System.out.println("HIIIIIIIII: I CALL THIS FUNC!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-
                 }
 
                 Random rd = new Random();

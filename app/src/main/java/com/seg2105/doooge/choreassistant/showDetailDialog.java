@@ -31,7 +31,7 @@ public class showDetailDialog extends AppCompatActivity {
         chore = (Chore) intent.getSerializableExtra("SUBMIT");
         initialData(chore);
 
-        final ImageButton finish_button = (ImageButton) findViewById(R.id.finishButton);
+        final ImageButton finish_button = findViewById(R.id.finishButton);
         finish_button.setOnClickListener(new View.OnClickListener() {
             boolean click = false;
 
@@ -64,13 +64,13 @@ public class showDetailDialog extends AppCompatActivity {
 
 
     public void initialData(Chore chore) {
-        TextView choreName = (TextView) findViewById(R.id.printChoreName);
+        TextView choreName = findViewById(R.id.printChoreName);
         choreName.setText("Clean the Garage");
-        TextView time = (TextView) findViewById(R.id.printTime);
+        TextView time = findViewById(R.id.printTime);
         time.setText("2017/11/22" + "\n" + "18:00");
-        TextView description = (TextView) findViewById(R.id.printDescription);
+        TextView description = findViewById(R.id.printDescription);
         description.setText("Please be careful !!!");
-        TextView reward = (TextView) findViewById(R.id.printReward);
+        TextView reward = findViewById(R.id.printReward);
         reward.setText("You will get 10 dollars!");
         if (chore != null) {
             choreName.setText(chore.getChoreName());
@@ -90,7 +90,7 @@ public class showDetailDialog extends AppCompatActivity {
         dialog.setTitle("ChoreDetail");
 
 
-        final ImageButton imageButton = (ImageButton) dialogView.findViewById(R.id.finishButton);
+        final ImageButton imageButton = dialogView.findViewById(R.id.finishButton);
         imageButton.setOnClickListener(new View.OnClickListener() {
             boolean click = false;
 

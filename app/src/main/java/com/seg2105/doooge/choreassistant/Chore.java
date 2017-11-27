@@ -1,12 +1,8 @@
 package com.seg2105.doooge.choreassistant;
 
 
-import com.google.firebase.database.Exclude;
-
 import java.io.Serializable;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Calendar;
 
 /**
  * Created by dustin on 11/25/17.
@@ -17,32 +13,22 @@ public class Chore implements Serializable {
     private String description;
     private String choreName;
     private Long timeInMillis;
-    private Calendar cal;
-    private String choreIdentification="TO BE IMPLEMENTED";
-    private int choreID;
-    private Boolean complete;
-    private ChoreType type;
+    private String choreIdentification;
 
-    public Chore(String choreName, String description, long timeInMillis, int choreID) throws NoSuchAlgorithmException {
+    private Boolean complete;
+
+    public Chore() {
+        //Keep for Firebase only
+    }
+
+    public Chore(String choreName, String description, long timeInMillis) throws NoSuchAlgorithmException {
         this.choreName      = choreName;
         this.description    = description;
         this.timeInMillis   = timeInMillis;
-        this.choreID        = choreID;
+        complete = false;
+        choreIdentification = IdentificationUtility.generateIdentification(choreName, String.valueOf(timeInMillis), description);
 
         complete = false;
-    }
-
-    @Exclude
-    public Calendar getCal() {
-        return cal;
-    }
-
-    public ChoreType getType(){
-        return type;
-    }
-
-    public void setChoreType(ChoreType type){
-        this.type = type;
     }
 
     public long getTimeInMillis(){
@@ -51,10 +37,6 @@ public class Chore implements Serializable {
 
     public void setTimeInMillis(long timeInMillis){
         this.timeInMillis = timeInMillis;
-    }
-
-    public int getChoreID() {
-        return choreID;
     }
 
     public String getDescription(){
@@ -73,39 +55,12 @@ public class Chore implements Serializable {
         this.choreName = choreName;
     }
 
-
-    public void setComplete(boolean value){
-        this.complete = value;
-    }
-
     public Boolean getComplete(){
         return complete;
     }
 
-
-    private void generateChoreCharacIdentification() throws NoSuchAlgorithmException {
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        byte[] choreNameInByte = choreName.getBytes();
-        byte[] descriptionInByte = description.getBytes();
-        byte[] calInByte = cal.getTime().toString().getBytes();
-
-        md.update(concatenation(concatenation(choreNameInByte, descriptionInByte), calInByte));
-        byte[] choreIdentification = md.digest();
-
-        choreIdentification.toString();
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < choreIdentification.length; i++) {
-            sb.append(Integer.toString((choreIdentification[i] & 0xff) + 0x100, 16).toUpperCase().substring(1));
-        }
-        this.choreIdentification = sb.toString();
-    }
-
-
-    private byte[] concatenation(byte[] a, byte[] b) {
-        byte[] c = new byte[a.length + b.length];
-        System.arraycopy(a, 0, c, 0, a.length);
-        System.arraycopy(b, 0, c, a.length, b.length);
-        return c;
+    public void setComplete(boolean value) {
+        this.complete = value;
     }
 
     public String getChoreIdentification() {

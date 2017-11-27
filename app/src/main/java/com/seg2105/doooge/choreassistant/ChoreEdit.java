@@ -227,7 +227,7 @@ public class ChoreEdit extends AppCompatActivity {
 
             long millis = calChore.getTimeInMillis();
 
-            Chore chore = new Chore(name,description,millis, 99);
+            Chore chore = new Chore(name, description, millis);
 
 
             Intent intent = new Intent(ChoreEdit.this, ChoreList.class);
