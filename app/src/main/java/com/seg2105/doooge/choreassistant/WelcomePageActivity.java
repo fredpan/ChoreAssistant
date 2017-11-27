@@ -43,22 +43,14 @@ public class WelcomePageActivity extends AppCompatActivity {
     private final DatabaseReference databaseLoginInfo = FirebaseDatabase.getInstance().getReference("PersonRule");
     private RecyclerView mRecyclerView; //This view for display each user.
     private HomeAdapter mAdapter; //This adapter for control the recyclerView.
-    private ArrayList<String> buttonList; //This list for save user.
     private PersonRule testRule;  // This is for test
-    private ArrayList<PersonRule> personRulesList = new ArrayList<>();
+    private ArrayList<PersonRule> personRulesList; //This is for save user
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcomepage);
-
-
-        buttonList = new ArrayList<>();
-        buttonList.add("Vison1");
-        buttonList.add("Dustin");
-        buttonList.add("Fred");
-        buttonList.add("Vison2");
 
 
         //Create a dapter to control the recyclerView.
@@ -69,13 +61,15 @@ public class WelcomePageActivity extends AppCompatActivity {
         databaseLoginInfo.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                personRulesList = new ArrayList<>();
                 for (DataSnapshot personRoleInstance : dataSnapshot.getChildren()) {
                     PersonRule personRule = personRoleInstance.getValue(PersonRule.class);
                     personRulesList.add(personRule);
-                    mRecyclerView = findViewById(R.id.id_recyclerview);
-                    mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
-                    mRecyclerView.setAdapter(mAdapter = new HomeAdapter());
+
                 }
+                mRecyclerView = findViewById(R.id.id_recyclerview);
+                mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
+                mRecyclerView.setAdapter(mAdapter = new HomeAdapter());
             }
 
             @Override
@@ -109,16 +103,16 @@ public class WelcomePageActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (userName.getText().toString().equals("") || password.getText().toString().equals("")) {
-                    warm.setText("Your userID or Password is wrong !!");
-                    warm.setVisibility(View.VISIBLE);
-
-                } else {
+//                if (userName.getText().toString().equals("") || password.getText().toString().equals("")) {
+//                    warm.setText("Your userID or Password is wrong !!");
+//                    warm.setVisibility(View.VISIBLE);
+//
+//                } else {
                     Intent intent = new Intent(WelcomePageActivity.this, ControlPanelActivity.class);
                     startActivity(intent);
                     warm.setVisibility(View.INVISIBLE);
                     dialog.dismiss();
-                }
+                //               }
             }
         });
 
@@ -128,6 +122,14 @@ public class WelcomePageActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
+
+    }
+
+    public void delete(View view) {
+        EditText text = findViewById(R.id.deleteText);
+        String username = String.valueOf(text.getText());
+        databaseLoginInfo.child(username).removeValue();
+        text.setText("");
 
     }
 

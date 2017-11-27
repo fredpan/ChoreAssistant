@@ -326,7 +326,7 @@ public class ChoreEdit extends AppCompatActivity {
             //intent.putExtra("USERS", userList);
 
             intent.putExtra("currentUser",currentUser);
-
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }
     }

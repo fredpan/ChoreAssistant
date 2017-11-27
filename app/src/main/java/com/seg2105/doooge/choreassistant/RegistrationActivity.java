@@ -1,7 +1,10 @@
 package com.seg2105.doooge.choreassistant;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,6 +50,8 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         //init
         setContentView(R.layout.registration);
 
+        //set the defaut color ;
+        color = getResources().getColor(R.color.black);
 
         createUser = findViewById(R.id.createUser);
         createUser.setOnClickListener(this);
@@ -112,6 +117,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                     try {
                         storeAccountInfo();
                         createUser.setClickable(false);
+
                     } catch (NoSuchAlgorithmException e) {
                         e.printStackTrace();
                     }
@@ -126,6 +132,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                 try {
                     isAdmin = true;
                     storeAccountInfo();
+
                     isAdmin = false;
                     createUser.setClickable(false);
                 } catch (NoSuchAlgorithmException e) {
@@ -136,19 +143,23 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 
             case R.id.blue_4169E1:
                 color = getResources().getColor(R.color.blue);
+                Toast.makeText(getApplicationContext(), "choose blue success !", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.green_32CD32:
                 color = getResources().getColor(R.color.green);
+                Toast.makeText(getApplicationContext(), "choose green success !", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.yellow_FFA500:
                 color = getResources().getColor(R.color.yellow);
-                System.out.println("=========" + color);
+                Toast.makeText(getApplicationContext(), "choose yellow success !", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.violet_8A2BE2:
                 color = getResources().getColor(R.color.violet);
+                Toast.makeText(getApplicationContext(), "choose violet success !", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.red_FF0000:
                 color = getResources().getColor(R.color.red);
+                Toast.makeText(getApplicationContext(), "choose red success !", Toast.LENGTH_SHORT).show();
                 break;
 
         }
@@ -162,9 +173,20 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         String username = String.valueOf(obtainedUsername.getText());
         String password = String.valueOf(obtainedPassword.getText());
         String encrypted = IdentificationUtility.generateIdentification(username, password);
-        //color = "Some COLOR TO BE IMPLEMENTED";
-        PersonRule personRule = new PersonRule(username, encrypted, isAdmin, color, userID);
-        databaseLoginInfo.child(username).setValue(personRule);
+
+        if (username.equals("") || password.equals("")) {
+            obtainedUsername.setError("Enter a name.");
+            obtainedUsername.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
+            obtainedPassword.setError("Enter a password.");
+            obtainedPassword.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
+
+        } else {
+            PersonRule personRule = new PersonRule(username, encrypted, isAdmin, color, userID);
+            databaseLoginInfo.child(username).setValue(personRule);
+        }
+        obtainedPassword.setText("");
+        obtainedUsername.setText("");
+        Toast.makeText(getApplicationContext(), "create success !!!!", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -180,4 +202,26 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         }
         return false;
     }
+
+    //create a menu for switch page to home
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.Home:
+
+                Intent intent = new Intent(RegistrationActivity.this, WelcomePageActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                break;
+        }
+        return true;
+    }
+
+
+
 }
