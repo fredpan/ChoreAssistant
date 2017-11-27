@@ -28,7 +28,6 @@ public class Chore implements Serializable {
         choreIdentification = IdentificationUtility.generateIdentification(choreName, String.valueOf(choreID), description);
 
         complete = false;
-        //generateChoreCharacIdentification();
     }
 
     public long getTimeInMillis(){
