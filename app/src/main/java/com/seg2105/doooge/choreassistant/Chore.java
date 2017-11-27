@@ -14,18 +14,15 @@ public class Chore implements Serializable {
     private String choreName;
     private Long timeInMillis;
     private String choreIdentification="TO BE IMPLEMENTED";
-    private int choreID;
+
     private Boolean complete;
 
-    public Chore(String choreName, String description, long timeInMillis, int choreID) throws NoSuchAlgorithmException {
+    public Chore(String choreName, String description, long timeInMillis) throws NoSuchAlgorithmException {
         this.choreName      = choreName;
         this.description    = description;
         this.timeInMillis   = timeInMillis;
-        this.choreID        = choreID;
         complete = false;
-
-        this.choreID = choreID;
-        choreIdentification = IdentificationUtility.generateIdentification(choreName, String.valueOf(choreID), description);
+        choreIdentification = IdentificationUtility.generateIdentification(choreName, String.valueOf(timeInMillis), description);
 
         complete = false;
     }
@@ -36,10 +33,6 @@ public class Chore implements Serializable {
 
     public void setTimeInMillis(long timeInMillis){
         this.timeInMillis = timeInMillis;
-    }
-
-    public int getChoreID() {
-        return choreID;
     }
 
     public String getDescription(){
