@@ -338,6 +338,10 @@ public class ChoreEdit extends AppCompatActivity {
             //TODO need to create responsibility if they do no have one and link it to the newly createed chore
             //TODO if responsibility exists, then update it's link to new chore.
 
+            //for ( PersonRule selected : personRulesList ){
+            //    selected
+            //}
+
             databaseChore.child(chore.getChoreIdentification()).setValue(chore); //update the Chore
             databaseChore.child(choreSubmit.getChoreIdentification()).removeValue();
 

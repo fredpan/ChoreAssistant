@@ -14,6 +14,12 @@ public class Responsibility {
     private String responsibilityID;
     private Chore chore;
 
+
+    //############### UPDATE IF USERROLE CLASS IS IMPLEMENTED ###############
+    private PersonRule personRule;
+    //#######################################################################
+
+
     public Responsibility() {
         //Keep for Firebase only
     }
@@ -32,6 +38,20 @@ public class Responsibility {
     public Chore getChore(){
         return chore;
     }
+
+
+
+    //############### UPDATE IF USERROLE CLASS IS IMPLEMENTED ###############
+    public void setPersonRule(PersonRule personRule){
+        this.personRule = personRule;
+    }
+
+    public PersonRule getPersonRule(){
+        return personRule;
+    }
+    //#######################################################################
+
+
 
     public int getUserID() {
         return userID;
