@@ -129,6 +129,7 @@ public class WelcomePageActivity extends AppCompatActivity {
         EditText text = findViewById(R.id.deleteText);
         String username = String.valueOf(text.getText());
         databaseLoginInfo.child(username).removeValue();
+        text.setText("");
 
     }
 

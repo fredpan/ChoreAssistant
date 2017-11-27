@@ -47,7 +47,7 @@
             android:layout_margin="10dp"
             android:background="@drawable/back"
             android:ems="10"
-            android:inputType="text"
+            android:inputType="textPassword"
             android:lines="1"
             android:textSize="25dp" />
 

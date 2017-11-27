@@ -132,6 +132,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                 try {
                     isAdmin = true;
                     storeAccountInfo();
+
                     isAdmin = false;
                     createUser.setClickable(false);
                 } catch (NoSuchAlgorithmException e) {
@@ -142,18 +143,23 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 
             case R.id.blue_4169E1:
                 color = getResources().getColor(R.color.blue);
+                Toast.makeText(getApplicationContext(), "choose blue success !", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.green_32CD32:
                 color = getResources().getColor(R.color.green);
+                Toast.makeText(getApplicationContext(), "choose green success !", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.yellow_FFA500:
                 color = getResources().getColor(R.color.yellow);
+                Toast.makeText(getApplicationContext(), "choose yellow success !", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.violet_8A2BE2:
                 color = getResources().getColor(R.color.violet);
+                Toast.makeText(getApplicationContext(), "choose violet success !", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.red_FF0000:
                 color = getResources().getColor(R.color.red);
+                Toast.makeText(getApplicationContext(), "choose red success !", Toast.LENGTH_SHORT).show();
                 break;
 
         }
@@ -167,9 +173,20 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         String username = String.valueOf(obtainedUsername.getText());
         String password = String.valueOf(obtainedPassword.getText());
         String encrypted = IdentificationUtility.generateIdentification(username, password);
-        //color = "Some COLOR TO BE IMPLEMENTED";
-        PersonRule personRule = new PersonRule(username, encrypted, isAdmin, color, userID);
-        databaseLoginInfo.child(username).setValue(personRule);
+
+        if (username.equals("") || password.equals("")) {
+            obtainedUsername.setError("Enter a name.");
+            obtainedUsername.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
+            obtainedPassword.setError("Enter a password.");
+            obtainedPassword.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
+
+        } else {
+            PersonRule personRule = new PersonRule(username, encrypted, isAdmin, color, userID);
+            databaseLoginInfo.child(username).setValue(personRule);
+        }
+        obtainedPassword.setText("");
+        obtainedUsername.setText("");
+        Toast.makeText(getApplicationContext(), "create success !!!!", Toast.LENGTH_SHORT).show();
     }
 
 
