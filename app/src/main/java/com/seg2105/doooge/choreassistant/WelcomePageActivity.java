@@ -57,7 +57,7 @@ public class WelcomePageActivity extends AppCompatActivity {
 
 
         //Create a dapter to control the recyclerView.
-        mRecyclerView = (RecyclerView) findViewById(R.id.id_recyclerview);
+        mRecyclerView = findViewById(R.id.id_recyclerview);
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(mAdapter = new HomeAdapter());
 
@@ -87,8 +87,8 @@ public class WelcomePageActivity extends AppCompatActivity {
         final EditText userName = dialogView.findViewById(R.id.editID);
         final EditText password = dialogView.findViewById(R.id.editPassword);
 
-        final Button login = (Button) dialogView.findViewById(R.id.LoginButton);
-        final Button exist = (Button) dialogView.findViewById(R.id.ExistButton);
+        final Button login = dialogView.findViewById(R.id.LoginButton);
+        final Button exist = dialogView.findViewById(R.id.ExistButton);
         final TextView warm = dialogView.findViewById(R.id.warm);
         final AlertDialog dialog = dialogBuilder.create();
         dialog.show();
@@ -155,9 +155,9 @@ public class WelcomePageActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     Intent intent = new Intent(WelcomePageActivity.this, ChoreList.class);
                     String message = "user";
-                    testRule = new PersonRule("Vison", "Vison", true, "red", 1);
+                    testRule = new PersonRule("testPerson", "9AA89E5D307B196612696C5586954A6C", false, "Some COLOR TO BE IMPLEMENTED", 605228);
                     intent.putExtra(EXTRA_MASSAGE, message);
-                    intent.putExtra("test", testRule);
+                    intent.putExtra("currentUser", testRule);
                     startActivity(intent);
                 }
             });
