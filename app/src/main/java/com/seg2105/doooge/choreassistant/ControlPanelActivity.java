@@ -17,6 +17,7 @@ import java.util.ArrayList;
 public class ControlPanelActivity extends AppCompatActivity {
 
     ListView controlPanelListView;
+    private PersonRule personRule;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -26,22 +27,23 @@ public class ControlPanelActivity extends AppCompatActivity {
 
 
         //FAKE!!!!!
-        PersonRule a = new PersonRule("Vison1 cleans the garage", "nejrfnlkfn", false, getResources().getColor(R.color.blue), 12345);
+        PersonRule a = new PersonRule("test", "nejrfnlkfn", false, getResources().getColor(R.color.blue), 12345);
         PersonRule b = new PersonRule("Fred cooks the dinner", "nejrfnlkfn", false, getResources().getColor(R.color.green), 12345);
         PersonRule c = new PersonRule("Dustin washes the dishes", "nejrfnlkfn", false, getResources().getColor(R.color.yellow), 12345);
         PersonRule d = new PersonRule("Vison2 cleans the drive way", "nejrfnlkfn", false, getResources().getColor(R.color.red), 12345);
         //PersonRule e = new PersonRule(" Miguel A. Garzón","nejrfnlkfn",123456,true,"#999999");
+        personRule = a;
         ArrayList<PersonRule> identificationsList = new ArrayList<>();
         identificationsList.add(a);
         identificationsList.add(b);
         identificationsList.add(c);
         identificationsList.add(d);
 
-        RewardAdapter rewardAdapter = new RewardAdapter(identificationsList, ControlPanelActivity.this);
-        controlPanelListView.setAdapter(rewardAdapter);
+        UserInfoAdapter userInfoAdapter = new UserInfoAdapter(identificationsList, ControlPanelActivity.this, personRule);
+        controlPanelListView.setAdapter(userInfoAdapter);
 
         // creat a listener for addUser button
-        Button addUserButton = (Button) this.findViewById(R.id.addUser);
+        Button addUserButton = this.findViewById(R.id.addUser);
         addUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
