@@ -32,6 +32,11 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     private Boolean isAdmin = false;
     private Button createUser;
     private Button createAdmin;
+    private Button blue;
+    private Button green;
+    private Button yellow;
+    private Button violet;
+    private Button red;
     private int color;
 
 
@@ -49,6 +54,17 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 
         createAdmin = findViewById(R.id.createAdmin);
         createAdmin.setOnClickListener(this);
+
+        blue = findViewById(R.id.blue_4169E1);
+        blue.setOnClickListener(this);
+        green = findViewById(R.id.green_32CD32);
+        green.setOnClickListener(this);
+        yellow = findViewById(R.id.yellow_FFA500);
+        yellow.setOnClickListener(this);
+        violet = findViewById(R.id.violet_8A2BE2);
+        violet.setOnClickListener(this);
+        red = findViewById(R.id.red_FF0000);
+        red.setOnClickListener(this);
 
         databaseLoginInfo.addValueEventListener(new ValueEventListener() {
             @Override
@@ -123,19 +139,16 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                 break;
             case R.id.green_32CD32:
                 color = getResources().getColor(R.color.green);
-                ;
                 break;
             case R.id.yellow_FFA500:
                 color = getResources().getColor(R.color.yellow);
-                ;
+                System.out.println("=========" + color);
                 break;
             case R.id.violet_8A2BE2:
                 color = getResources().getColor(R.color.violet);
-                ;
                 break;
             case R.id.red_FF0000:
                 color = getResources().getColor(R.color.red);
-                ;
                 break;
 
         }
