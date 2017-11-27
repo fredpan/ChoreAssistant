@@ -68,7 +68,7 @@ public class showDetailDialog extends AppCompatActivity {
 
     }
 
-
+    // intial all the informatioin of chore
     public void initialData(Chore chore) {
         TextView choreName = findViewById(R.id.printChoreName);
         choreName.setText("Clean the Garage");
@@ -103,8 +103,6 @@ public class showDetailDialog extends AppCompatActivity {
             time.setText(Date + "\n" + times);
 
         }
-
-
     }
 
     /**

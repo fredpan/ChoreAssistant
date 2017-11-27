@@ -260,6 +260,7 @@ public class ChoreList extends AppCompatActivity {
 
                 Toast.makeText(getBaseContext(), " " + view.getTag(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(ChoreList.this, showDetailDialog.class);
+                intent.putExtra("SUBMIT", (Chore) view.getTag());
                 startActivity(intent);
 
             }
