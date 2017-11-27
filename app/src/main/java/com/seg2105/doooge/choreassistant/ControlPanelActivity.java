@@ -8,11 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -35,6 +32,7 @@ public class ControlPanelActivity extends AppCompatActivity {
         personRules = (ArrayList<PersonRule>) intent.getSerializableExtra("userList");
 
 
+        System.out.println("==========================" + personRules.get(0).getUserName());
         UserInfoAdapter userInfoAdapter = new UserInfoAdapter(personRules, ControlPanelActivity.this);
         controlPanelListView.setAdapter(userInfoAdapter);
 

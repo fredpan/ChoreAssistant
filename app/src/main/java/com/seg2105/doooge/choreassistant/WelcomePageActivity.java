@@ -113,6 +113,11 @@ public class WelcomePageActivity extends AppCompatActivity {
                                     personRules.add(personRule);
 
                                 }
+                                Intent intent = new Intent(WelcomePageActivity.this, ControlPanelActivity.class);
+                                intent.putExtra("userList", personRules);
+                                startActivity(intent);
+                                warm.setVisibility(View.INVISIBLE);
+                                dialog.dismiss();
                             }
 
                             @Override
@@ -126,11 +131,7 @@ public class WelcomePageActivity extends AppCompatActivity {
 //                    warm.setVisibility(View.VISIBLE);
 //
 //                } else {
-                Intent intent = new Intent(WelcomePageActivity.this, ControlPanelActivity.class);
-                intent.putExtra("userList", personRules);
-                startActivity(intent);
-                warm.setVisibility(View.INVISIBLE);
-                dialog.dismiss();
+
                 //               }
             }
         });

@@ -117,6 +117,8 @@ public class ChoreEdit extends AppCompatActivity {
             }
         });
 
+        //Listener for giving all the responsibility that relate to a specifc chore.
+
     }
 
     /**
