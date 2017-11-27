@@ -47,7 +47,7 @@ public class UserInfoAdapter extends ArrayAdapter<PersonRule> {
             public void onClick(View view) {
 
                 Intent intent = new Intent(context, EditUserActivity.class);
-                intent.putExtra("u", user);
+                intent.putExtra("userInfo", user);
                 context.startActivity(intent);
             }
         });

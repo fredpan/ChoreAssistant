@@ -23,35 +23,41 @@ import java.util.ArrayList;
 public class ControlPanelActivity extends AppCompatActivity {
 
     private final DatabaseReference databaseLoginInfo = FirebaseDatabase.getInstance().getReference("PersonRule");
+    ArrayList<PersonRule> personRules = new ArrayList<>();
     private ListView controlPanelListView;
-    private PersonRule personRule;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.control_panel);
         controlPanelListView = findViewById(R.id.controlPanelListView);
+        Intent intent = getIntent();
+        personRules = (ArrayList<PersonRule>) intent.getSerializableExtra("userList");
 
-        databaseLoginInfo.addValueEventListener(new ValueEventListener() {
-            ArrayList<PersonRule> identificationsList = new ArrayList<>();
 
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot userInfoInstance : dataSnapshot.getChildren()) {
-                    PersonRule personRule = userInfoInstance.getValue(PersonRule.class);
-                    identificationsList.add(personRule);
-                }
+        UserInfoAdapter userInfoAdapter = new UserInfoAdapter(personRules, ControlPanelActivity.this);
+        controlPanelListView.setAdapter(userInfoAdapter);
 
-                UserInfoAdapter userInfoAdapter = new UserInfoAdapter(identificationsList, ControlPanelActivity.this);
-                controlPanelListView.setAdapter(userInfoAdapter);
-                identificationsList.clear();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+//        databaseLoginInfo.addValueEventListener(new ValueEventListener() {
+//            ArrayList<PersonRule> identificationsList = new ArrayList<>();
+//
+////            @Override
+////            public void onDataChange(DataSnapshot dataSnapshot) {
+////                for (DataSnapshot userInfoInstance : dataSnapshot.getChildren()) {
+////                    PersonRule personRule = userInfoInstance.getValue(PersonRule.class);
+////                    identificationsList.add(personRule);
+////                }
+////
+////                UserInfoAdapter userInfoAdapter = new UserInfoAdapter(identificationsList, ControlPanelActivity.this);
+////                controlPanelListView.setAdapter(userInfoAdapter);
+////                identificationsList.clear();
+////            }
+////
+////            @Override
+////            public void onCancelled(DatabaseError databaseError) {
+////
+////            }
+////        });
 
 
 //        //FAKE!!!!!

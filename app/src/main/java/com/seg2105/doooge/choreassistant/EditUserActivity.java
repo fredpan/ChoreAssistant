@@ -33,7 +33,7 @@ public class EditUserActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_user_info);
         Intent intent = getIntent();
-        personRule = (PersonRule) intent.getSerializableExtra("u");
+        personRule = (PersonRule) intent.getSerializableExtra("userInfo");
 
         update = findViewById(R.id.updateUserInfo);
         update.setOnClickListener(this);

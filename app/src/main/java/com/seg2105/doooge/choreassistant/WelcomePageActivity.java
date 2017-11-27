@@ -121,13 +121,13 @@ public class WelcomePageActivity extends AppCompatActivity {
                             }
                         }
                 );
-
 //                if (userName.getText().toString().equals("") || password.getText().toString().equals("")) {
 //                    warm.setText("Your userID or Password is wrong !!");
 //                    warm.setVisibility(View.VISIBLE);
 //
 //                } else {
                 Intent intent = new Intent(WelcomePageActivity.this, ControlPanelActivity.class);
+                intent.putExtra("userList", personRules);
                 startActivity(intent);
                 warm.setVisibility(View.INVISIBLE);
                 dialog.dismiss();
