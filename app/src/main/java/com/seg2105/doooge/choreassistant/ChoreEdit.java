@@ -30,6 +30,8 @@ import java.util.Calendar;
 public class ChoreEdit extends AppCompatActivity {
 
     private final DatabaseReference databaseLoginInfo = FirebaseDatabase.getInstance().getReference("PersonRule");
+    private final DatabaseReference databaseChore = FirebaseDatabase.getInstance().getReference("Chore");
+    private final DatabaseReference databaseResponsibility = FirebaseDatabase.getInstance().getReference("Responsibility");
 
     //stores calendar information if a chore was passed through intent, these will be updated
     private int day = -1;
@@ -315,6 +317,9 @@ public class ChoreEdit extends AppCompatActivity {
             long millis = calChore.getTimeInMillis();
 
             Chore chore = new Chore(name, description, millis);
+
+            databaseChore.child(chore.getChoreIdentification()).setValue(chore);//update the Chore
+
 
             Intent intent = new Intent(ChoreEdit.this, ChoreList.class);
             //intent.putExtra("SUBMIT", chore);
