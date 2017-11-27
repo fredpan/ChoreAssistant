@@ -7,10 +7,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -19,8 +21,12 @@ import java.util.TimerTask;
  */
 
 public class showDetailDialog extends AppCompatActivity {
-    Dialog dialog;
-    private Chore chore;
+    private int day = -1;
+    private int month = -1;
+    private int year = -1;
+    private int hour = -1;
+    private int minute = -1;
+    private Chore choreSubmit;
 
 
     @Override
@@ -28,8 +34,8 @@ public class showDetailDialog extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.choredetail_dialog);
         Intent intent = getIntent();
-        chore = (Chore) intent.getSerializableExtra("SUBMIT");
-        initialData(chore);
+        choreSubmit = (Chore) intent.getSerializableExtra("SUBMIT");
+        initialData(choreSubmit);
 
         final ImageButton finish_button = findViewById(R.id.finishButton);
         finish_button.setOnClickListener(new View.OnClickListener() {
@@ -72,54 +78,85 @@ public class showDetailDialog extends AppCompatActivity {
         description.setText("Please be careful !!!");
         TextView reward = findViewById(R.id.printReward);
         reward.setText("You will get 10 dollars!");
-        if (chore != null) {
-            choreName.setText(chore.getChoreName());
-            //time.setText(chore.getCalendar() + "" + "\n" + "" + chore.getTimeInMillis());
-            description.setText(chore.getDescription());
+        Intent intent = getIntent();
+        choreSubmit = (Chore) intent.getSerializableExtra("SUBMIT");
+
+        if (choreSubmit != null) {
+
+            choreName.setText(choreSubmit.getChoreName());
+            description.setText(choreSubmit.getDescription());
+
+            Calendar tempCal = Calendar.getInstance();
+            long millis = choreSubmit.getTimeInMillis();
+
+            tempCal.setTimeInMillis(millis);
+
+            int calYear = tempCal.get(Calendar.YEAR);
+            int calMonth = tempCal.get(Calendar.MONTH);
+            int calDay = tempCal.get(Calendar.DAY_OF_MONTH);
+            int calHour = tempCal.get(Calendar.HOUR);
+            int calMinute = tempCal.get(Calendar.MINUTE);
+
+            String Date = setDate(calYear, calMonth, calDay);
+            String times = setTime(calHour, calMinute);
+
+            time.setText(Date + "\n" + times);
 
         }
 
 
     }
 
-    public void showDialog() {
+    /**
+     * Set the text of the textDate field.
+     *
+     * @param year  calendar year
+     * @param month calendar month
+     * @param day   calendar day
+     */
+    private String setDate(int year, int month, int day) {
+        TextView textDate = findViewById(R.id.textDate);
 
-        dialog = new Dialog(this);
-        final View dialogView = LayoutInflater.from(this).inflate(R.layout.choredetail_dialog, null);
-        dialog.setContentView(dialogView);
-        dialog.setTitle("ChoreDetail");
+        this.day = day;
+        this.month = month;
+        this.year = year;
 
-
-        final ImageButton imageButton = dialogView.findViewById(R.id.finishButton);
-        imageButton.setOnClickListener(new View.OnClickListener() {
-            boolean click = false;
-
-            @Override
-            public void onClick(View view) {
-                click = !click;
-                if (click) {
-
-                    imageButton.setBackgroundResource(R.drawable.finish_button);
-                    final Timer t = new Timer();
-                    t.schedule(new TimerTask() {
-                        public void run() {
-                            dialog.dismiss();
-                            t.cancel();
-                        }
-                    }, 2000); // after 2 second (or 2000 miliseconds), the task will be active.
-
-                } else {
-
-                    imageButton.setBackgroundResource(R.drawable.finish_button2);
-                }
-            }
-        });
+        String[] monthString = {
+                "January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December"};
 
 
-        dialog.show();
-
-
+        return (monthString[month] + " " + day + ", " + year);
     }
+
+    /**
+     * Set the text of the textTime field.
+     *
+     * @param hour   time in hours
+     * @param minute time in minutes
+     */
+    private String setTime(int hour, int minute) {
+        TextView textTime = findViewById(R.id.textTime);
+        this.hour = hour;
+        this.minute = minute;
+        return (String.format("%02d:%02d", hour, minute));
+    }
+
+
+
+
+
+
 
     public void closeDialog(View view) throws Exception {
         try {
