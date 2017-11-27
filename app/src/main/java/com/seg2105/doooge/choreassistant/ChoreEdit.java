@@ -30,6 +30,8 @@ import java.util.Calendar;
 public class ChoreEdit extends AppCompatActivity {
 
     private final DatabaseReference databaseLoginInfo = FirebaseDatabase.getInstance().getReference("PersonRule");
+    private final DatabaseReference databaseChore = FirebaseDatabase.getInstance().getReference("Chore");
+    private final DatabaseReference databaseResponsibility = FirebaseDatabase.getInstance().getReference("Responsibility");
 
     //stores calendar information if a chore was passed through intent, these will be updated
     private int day = -1;
@@ -38,6 +40,8 @@ public class ChoreEdit extends AppCompatActivity {
     private int hour =-1;
     private int minute=-1;
     private Chore choreSubmit;
+
+    private PersonRule currentUser;
 
     private ArrayList<String> personRulesList = new ArrayList<>();
     private String[] userList;
@@ -68,6 +72,7 @@ public class ChoreEdit extends AppCompatActivity {
 
         Intent intent = getIntent();
         choreSubmit = (Chore) intent.getSerializableExtra("SUBMIT");
+        currentUser = (PersonRule) intent.getSerializableExtra("currentUser");
 
         if (choreSubmit != null){
             TextView txtCaption     = findViewById(R.id.textCaption);
@@ -176,7 +181,7 @@ public class ChoreEdit extends AppCompatActivity {
         userList.show();
 
     }
-    
+
 
     private void setUserList(String[] userList){
         this.userList = userList;
@@ -313,10 +318,14 @@ public class ChoreEdit extends AppCompatActivity {
 
             Chore chore = new Chore(name, description, millis);
 
-            Intent intent = new Intent(ChoreEdit.this, ChoreList.class);
-            intent.putExtra("SUBMIT", chore);
-            intent.putExtra("USERS", userList);
+            databaseChore.child(chore.getChoreIdentification()).setValue(chore);//update the Chore
 
+
+            Intent intent = new Intent(ChoreEdit.this, ChoreList.class);
+            //intent.putExtra("SUBMIT", chore);
+            //intent.putExtra("USERS", userList);
+
+            intent.putExtra("currentUser",currentUser);
 
             startActivity(intent);
         }

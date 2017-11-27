@@ -2,7 +2,6 @@ package com.seg2105.doooge.choreassistant;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +14,12 @@ import java.util.ArrayList;
  * Created by fredpan on 2017/11/24.
  */
 
-public class RewardAdapter extends ArrayAdapter<PersonRule> {
+public class UserInfoAdapter extends ArrayAdapter<PersonRule> {
     private ArrayList<PersonRule> listOfUser;
     private Activity context;
 
-    public RewardAdapter(ArrayList<PersonRule> list, Activity context) {
+
+    public UserInfoAdapter(ArrayList<PersonRule> list, Activity context) {
         super(context, R.layout.single_user_info, list);
         this.listOfUser = list;
         this.context = context;
@@ -37,7 +37,7 @@ public class RewardAdapter extends ArrayAdapter<PersonRule> {
 //        listItemText.setText(list.get(position));
 
         //Handle buttons and add onClickListeners
-        PersonRule user = listOfUser.get(position);
+        final PersonRule user = listOfUser.get(position);
         TextView displayName = view.findViewById(R.id.displayName);
         TextView userAuth = view.findViewById(R.id.userAuth);
         displayName.setText(user.getUserName());
@@ -47,6 +47,7 @@ public class RewardAdapter extends ArrayAdapter<PersonRule> {
             public void onClick(View view) {
 
                 Intent intent = new Intent(context, EditUserActivity.class);
+                intent.putExtra("u", user);
                 context.startActivity(intent);
             }
         });

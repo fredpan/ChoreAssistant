@@ -34,18 +34,14 @@ public class ChoreList extends AppCompatActivity {
 
     //Stores user information
     private static String currentOperator;
+    DatabaseReference databaseResponsibility = FirebaseDatabase.getInstance().getReference("Responsibility");
+    DatabaseReference databaseChore = FirebaseDatabase.getInstance().getReference("Chore");
     private PersonRule currentUser;
-
     //stores the current date
     private int day;
     private int month;
     private int year;
     private Calendar cal;
-
-    DatabaseReference databaseResponsibility = FirebaseDatabase.getInstance().getReference("Responsibility");
-    DatabaseReference databaseChore = FirebaseDatabase.getInstance().getReference("Chore");
-
-
     /**
      * Displays the a date picker dialog and sets the current date.
      */
@@ -65,6 +61,7 @@ public class ChoreList extends AppCompatActivity {
 
         Intent intent = getIntent();
         currentUser = (PersonRule) intent.getSerializableExtra("currentUser");
+        System.out.println("==================" + (currentUser == null));
 
         //setting up calendar
         cal = Calendar.getInstance();
@@ -175,6 +172,7 @@ public class ChoreList extends AppCompatActivity {
 
     public void add_OnClick(View view) {
         Intent intent = new Intent(ChoreList.this, ChoreEdit.class); //switch homepage to edit chore page
+        intent.putExtra("currentUser",currentUser);
         startActivity(intent);
     }
 
@@ -258,6 +256,7 @@ public class ChoreList extends AppCompatActivity {
                     Toast.makeText(getBaseContext(), "It is a long click event", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(ChoreList.this, ChoreEdit.class);
                     intent.putExtra("SUBMIT", (Chore) view.getTag());
+                    intent.putExtra("currentUser",currentUser);
                     startActivity(intent);
                 }
                 return true;
