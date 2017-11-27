@@ -212,7 +212,23 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:background="@drawable/back" />
+            android:background="@drawable/back"
+            android:spinnerMode="dialog" />
+
+        <EditText
+            android:id="@+id/textSelectUsers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/back"
+            android:ems="10"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:inputType="textPersonName"
+            android:onClick="selectedUsers"
+            android:paddingLeft="3dp"
+            android:textSize="18sp" />
 
         <Space
             android:layout_width="match_parent"

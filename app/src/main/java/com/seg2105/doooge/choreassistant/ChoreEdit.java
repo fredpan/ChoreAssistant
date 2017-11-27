@@ -4,15 +4,15 @@ package com.seg2105.doooge.choreassistant;
  * Created by dustin on 11/22/17.
  */
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -30,13 +30,18 @@ import java.util.Calendar;
 public class ChoreEdit extends AppCompatActivity {
 
     private final DatabaseReference databaseLoginInfo = FirebaseDatabase.getInstance().getReference("PersonRule");
+
+    //stores calendar information if a chore was passed through intent, these will be updated
     private int day = -1;
     private int month = -1;
     private int year = -1;
     private int hour =-1;
     private int minute=-1;
     private Chore choreSubmit;
-    private ArrayList<PersonRule> personRulesList = new ArrayList<>();
+
+    private ArrayList<String> personRulesList = new ArrayList<>();
+    private String[] userList;
+
 
     //https://developer.android.com/reference/android/app/TimePickerDialog.OnTimeSetListener.html
     private TimePickerDialog.OnTimeSetListener timeListen = new TimePickerDialog.OnTimeSetListener() {
@@ -56,26 +61,10 @@ public class ChoreEdit extends AppCompatActivity {
     };
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chore_edit);
-
-        Spinner spin = findViewById(R.id.spnType);
-        String[] options = {
-                "",
-                "General Cleaning",
-                "Yard work",
-                "Laundry",
-                "Pets and Plants",
-                "Cooking"
-        };
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, options);
-        spin.setAdapter(adapter);
-
-
 
         Intent intent = getIntent();
         choreSubmit = (Chore) intent.getSerializableExtra("SUBMIT");
@@ -109,8 +98,9 @@ public class ChoreEdit extends AppCompatActivity {
         databaseLoginInfo.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                personRulesList = new ArrayList<>();
                 for (DataSnapshot personRoleInstance : dataSnapshot.getChildren()) {
-                    PersonRule personRule = personRoleInstance.getValue(PersonRule.class);
+                    String personRule = (String) personRoleInstance.child("userName").getValue();
                     personRulesList.add(personRule);
                 }
             }
@@ -121,6 +111,75 @@ public class ChoreEdit extends AppCompatActivity {
             }
         });
 
+    }
+
+    /**
+     * Displays alert dialog of users in the database
+     *
+     * @param view current
+     */
+    public void selectedUsers(View view){
+        //https://developer.android.com/reference/android/app/AlertDialog.Builder.html
+
+        //used in the creating of userList, list of all selected users
+        final String[] users            = new String[personRulesList.size()];
+        final ArrayList selectedUsers   = new ArrayList();
+
+        //pass personRulist list to a string Array for functionality in alert dialog
+        for (int i = 0; i < personRulesList.size(); i++){
+            users[i] = personRulesList.get(i);
+        }
+
+
+
+        AlertDialog.Builder userList = new AlertDialog.Builder(this);
+        userList.setTitle("Select who should complete the chore.");
+
+        //detect which users were selected for a task
+        userList.setMultiChoiceItems(users, null, new DialogInterface.OnMultiChoiceClickListener() {
+
+            //auto-filled... when finishing above line
+            @Override
+            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                if(isChecked) {
+                    selectedUsers.add(which);
+                } else {
+                    selectedUsers.remove(which);
+                }
+            }
+        });
+
+        //add all selected users to a list and pass it to an instance variable
+        userList.setPositiveButton("Sumbit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                //build a new list
+                String[] tempUsers  = new String[selectedUsers.size()];
+                StringBuilder sb    = new StringBuilder();
+
+                for (int i = 0; i < selectedUsers.size();i++){
+                    tempUsers[i] = users[ Integer.valueOf( selectedUsers.get(i).toString() ) ];
+                    sb.append(users[ Integer.valueOf( selectedUsers.get(i).toString() ) ]);
+
+                    if (i+1 < selectedUsers.size() ) { sb.append(", "); }
+                }
+
+                TextView textSelect = findViewById(R.id.textSelectUsers);
+                textSelect.setText( sb.toString() );
+
+                setUserList(tempUsers);
+
+            }
+        });
+
+        userList.show();
+
+    }
+    
+
+    private void setUserList(String[] userList){
+        this.userList = userList;
     }
 
 
@@ -138,7 +197,6 @@ public class ChoreEdit extends AppCompatActivity {
         txtName.setError(null);
     }
 
-    //public void btnTime(View view){
     public void textTimne_OnClick(View view) {
         view.setBackgroundDrawable(getResources().getDrawable(R.drawable.back));
         TextView txtTime = findViewById(R.id.textTime);
@@ -192,12 +250,13 @@ public class ChoreEdit extends AppCompatActivity {
     }
 
 
-    //https://developer.android.com/reference/android/app/TimePickerDialog.html
-    private void timePick() {
 
-        Calendar cal = Calendar.getInstance();
-        int hour = cal.get(Calendar.HOUR);
-        int minute = cal.get(Calendar.MINUTE);
+    private void timePick() {
+        //https://developer.android.com/reference/android/app/TimePickerDialog.html
+
+        Calendar cal    = Calendar.getInstance();
+        int hour        = cal.get(Calendar.HOUR);
+        int minute      = cal.get(Calendar.MINUTE);
 
         TimePickerDialog temp = new TimePickerDialog(this, timeListen, hour, minute, false);
         temp.show();
@@ -254,14 +313,14 @@ public class ChoreEdit extends AppCompatActivity {
 
             Chore chore = new Chore(name, description, millis);
 
-
             Intent intent = new Intent(ChoreEdit.this, ChoreList.class);
             intent.putExtra("SUBMIT", chore);
+            intent.putExtra("USERS", userList);
+
+
             startActivity(intent);
-
-
         }
-
     }
 
 }
+
