@@ -7,16 +7,12 @@ package com.seg2105.doooge.choreassistant;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.DatePicker;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -34,12 +30,15 @@ import java.util.Calendar;
 public class ChoreEdit extends AppCompatActivity {
 
     private final DatabaseReference databaseLoginInfo = FirebaseDatabase.getInstance().getReference("PersonRule");
+
+    //stores calendar information if a chore was passed through intent, these will be updated
     private int day = -1;
     private int month = -1;
     private int year = -1;
     private int hour =-1;
     private int minute=-1;
     private Chore choreSubmit;
+
     private ArrayList<String> personRulesList = new ArrayList<>();
     private String[] userList;
 
@@ -114,21 +113,29 @@ public class ChoreEdit extends AppCompatActivity {
 
     }
 
-
+    /**
+     * Displays alert dialog of users in the database
+     *
+     * @param view current
+     */
     public void selectedUsers(View view){
         //https://developer.android.com/reference/android/app/AlertDialog.Builder.html
 
-        final String[] users = new String[personRulesList.size()];
+        //used in the creating of userList, list of all selected users
+        final String[] users            = new String[personRulesList.size()];
+        final ArrayList selectedUsers   = new ArrayList();
 
+        //pass personRulist list to a string Array for functionality in alert dialog
         for (int i = 0; i < personRulesList.size(); i++){
             users[i] = personRulesList.get(i);
         }
 
-        final ArrayList selectedUsers = new ArrayList();
+
 
         AlertDialog.Builder userList = new AlertDialog.Builder(this);
         userList.setTitle("Select who should complete the chore.");
 
+        //detect which users were selected for a task
         userList.setMultiChoiceItems(users, null, new DialogInterface.OnMultiChoiceClickListener() {
 
             //auto-filled... when finishing above line
@@ -142,6 +149,7 @@ public class ChoreEdit extends AppCompatActivity {
             }
         });
 
+        //add all selected users to a list and pass it to an instance variable
         userList.setPositiveButton("Sumbit", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -168,6 +176,7 @@ public class ChoreEdit extends AppCompatActivity {
         userList.show();
 
     }
+    
 
     private void setUserList(String[] userList){
         this.userList = userList;
@@ -188,7 +197,6 @@ public class ChoreEdit extends AppCompatActivity {
         txtName.setError(null);
     }
 
-    //public void btnTime(View view){
     public void textTimne_OnClick(View view) {
         view.setBackgroundDrawable(getResources().getDrawable(R.drawable.back));
         TextView txtTime = findViewById(R.id.textTime);
@@ -242,12 +250,13 @@ public class ChoreEdit extends AppCompatActivity {
     }
 
 
-    //https://developer.android.com/reference/android/app/TimePickerDialog.html
-    private void timePick() {
 
-        Calendar cal = Calendar.getInstance();
-        int hour = cal.get(Calendar.HOUR);
-        int minute = cal.get(Calendar.MINUTE);
+    private void timePick() {
+        //https://developer.android.com/reference/android/app/TimePickerDialog.html
+
+        Calendar cal    = Calendar.getInstance();
+        int hour        = cal.get(Calendar.HOUR);
+        int minute      = cal.get(Calendar.MINUTE);
 
         TimePickerDialog temp = new TimePickerDialog(this, timeListen, hour, minute, false);
         temp.show();
@@ -304,18 +313,14 @@ public class ChoreEdit extends AppCompatActivity {
 
             Chore chore = new Chore(name, description, millis);
 
-
             Intent intent = new Intent(ChoreEdit.this, ChoreList.class);
             intent.putExtra("SUBMIT", chore);
             intent.putExtra("USERS", userList);
 
+
             startActivity(intent);
         }
     }
-
-
-
-
 
 }
 
