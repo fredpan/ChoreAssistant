@@ -16,18 +16,27 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 
 public class ChoreEdit extends AppCompatActivity {
 
+    private final DatabaseReference databaseLoginInfo = FirebaseDatabase.getInstance().getReference("PersonRule");
     private int day = -1;
     private int month = -1;
     private int year = -1;
     private int hour =-1;
     private int minute=-1;
     private Chore choreSubmit;
+    private ArrayList<PersonRule> personRulesList = new ArrayList<>();
 
     //https://developer.android.com/reference/android/app/TimePickerDialog.OnTimeSetListener.html
     private TimePickerDialog.OnTimeSetListener timeListen = new TimePickerDialog.OnTimeSetListener() {
@@ -95,6 +104,22 @@ public class ChoreEdit extends AppCompatActivity {
             setTime(calHour, calMinute);
 
         }
+
+
+        databaseLoginInfo.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot personRoleInstance : dataSnapshot.getChildren()) {
+                    PersonRule personRule = personRoleInstance.getValue(PersonRule.class);
+                    personRulesList.add(personRule);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
