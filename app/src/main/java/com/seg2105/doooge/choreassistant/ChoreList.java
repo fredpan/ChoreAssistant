@@ -34,26 +34,13 @@ public class ChoreList extends AppCompatActivity {
 
 
     private static Chore choreSubmit;
-    private final String CHORE_RED = "#ffff4444";
-    private final String CHORE_PURPLE = "#ffaa66cc";
-    private final String CHORE_ORANGE = "#ffff8800";
-    private final String CHORE_GREEN = "#ff99cc00";
-    private final String CHORE_BLUE = "#ff0099cc";
     DatabaseReference databaseResponsibility = FirebaseDatabase.getInstance().getReference("Responsibility");
     DatabaseReference databaseChore = FirebaseDatabase.getInstance().getReference("Chore");
     private int day;
     private int month;
     private int year;
     private Calendar cal;
-    private PersonRule testRule;
-    private PersonRule testPerson = new PersonRule("testPerson", "9AA89E5D307B196612696C5586954A6C", false, "Some COLOR TO BE IMPLEMENTED", 605228);//Wait for vison
 
-
-    private Responsibility responsibility;
-    //DatabaseReference databaseChore = FirebaseDatabase.getInstance().getReference("Chore");
-
-    //DatabaseReference databaseResponsibility = FirebaseDatabase.getInstance().getReference("Chore");
-    //https://developer.android.com/reference/android/app/DatePickerDialog.OnDateSetListener.html
     private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
 
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -76,60 +63,63 @@ public class ChoreList extends AppCompatActivity {
 
         setDate(year, month, day);
 
-
-        //############################## FUNCTION FOR SAMPLE CHORES####################
-        //displaySampleChores();
-
-
-        //SAMPLE Responsibility
+        //FAKE CHORE AND RESPONSIBILITY
         try {
-            String a = "Resp1: This is the Chore Identification";
-            String b = "Resp2: This is the Chore Identification";
-            String c = "Resp3: This is the Chore Identification";
-            Responsibility chore1 = new Responsibility(123, a);
-            Responsibility chore2 = new Responsibility(321, b);
-            Responsibility chore3 = new Responsibility(213, c);
-            databaseResponsibility.child(a).setValue(chore1);
-            databaseResponsibility.child(b).setValue(chore2);
-            databaseResponsibility.child(c).setValue(chore3);
+
+
+            Chore chore1 = new Chore("Chore1", "This is a faked chore with ID \"TB IMPLEMENT\"", 123);
+            Chore chore2 = new Chore("Chore2", "This is a faked chore with ID \"TB IMPLEMENT\"", 456);
+            Chore chore3 = new Chore("Chore3", "This is a faked chore with ID \"TB IMPLEMENT\"", 789);
+            databaseChore.child(chore1.getChoreIdentification()).setValue(chore1);
+            databaseChore.child(chore2.getChoreIdentification()).setValue(chore2);
+            databaseChore.child(chore3.getChoreIdentification()).setValue(chore3);
+
+
+            String a = chore1.getChoreIdentification();
+            String b = chore2.getChoreIdentification();
+            String c = chore3.getChoreIdentification();
+            Responsibility responsibility1 = new Responsibility(123, a);
+            Responsibility responsibility2 = new Responsibility(321, b);
+            Responsibility responsibility3 = new Responsibility(213, c);
+            databaseResponsibility.child(a).setValue(responsibility1);
+            databaseResponsibility.child(b).setValue(responsibility2);
+            databaseResponsibility.child(c).setValue(responsibility3);
+
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-
+        //================================
 
         databaseResponsibility.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    //getting product
-                    Responsibility responsibility = postSnapshot.getValue(Responsibility.class);
+                for (DataSnapshot responsibility : dataSnapshot.getChildren()) {
 
+                    final String correspondingChoreID = (String) responsibility.child("choreIdentification").getValue();
+
+                    databaseChore.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot singleChore : dataSnapshot.getChildren()) {
+                                if (singleChore.child("choreIdentification").getValue().equals(correspondingChoreID)) {
+                                    Chore chore = singleChore.getValue(Chore.class);
+                                    displayChore(chore);
+                                }
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
 
                 }
 
-
-                //System.out.println((dataSnapshot.getValue(Responsibility.class)).getChoreIdentification());
-
-                    //GET THE CORRESPONDING USERINFO AND CHOREINFO
-
-
-                System.out.println("++++++++++++++++++++++" + dataSnapshot.getValue());
-
-                    //=============================================
-                    //GridLayout temp = layoutTest(Long.toString((long) dataSnapshot.child("Resp Identification1").child("userId").getValue()), "TIME", "Name"); //, draw[i%5]);
-
-                    //temp.setTag("chore" + i);
-                    //
-                    // linearView.addView(temp);
-
                 }
 
-//                for (long i = 0; i < dataSnapshot.getChildrenCount(); i++) {
-//                    Chore tempChore = responsibility.getChore();
-//                    dissassembleChore(tempChore);
-
-//                }
 
 
             @Override
@@ -158,7 +148,7 @@ public class ChoreList extends AppCompatActivity {
 
 
         //get the PersonRule from Welcomepage
-        testRule = (PersonRule) intent.getSerializableExtra("test");
+        //testRule = (PersonRule) intent.getSerializableExtra("test");
 
         if (choreSubmit != null) {
             displayChore(choreSubmit);
@@ -174,7 +164,7 @@ public class ChoreList extends AppCompatActivity {
 
         for (int i = 0 ; i <5;i++){
             try {
-                Chore tempChore = new Chore("Chore" + i, "Description of the chore", millis, i);
+                Chore tempChore = new Chore("Chore" + i, "Description of the chore", millis);
                 displayChore(tempChore);
             } catch (NoSuchAlgorithmException ex) {
                 System.out.println("ooops");
@@ -205,9 +195,9 @@ public class ChoreList extends AppCompatActivity {
         int choreDay            = tempCal.get(Calendar.DAY_OF_MONTH);
 
         //if chores day doesn't match the current displayed day exit
-        if ((choreYear != year) || (choreMonth != month) || (choreDay != day)){
-            return;
-        }
+        //if ((choreYear != year) || (choreMonth != month) || (choreDay != day)){
+        //    return ;
+        //}
 
         LinearLayout linearView = findViewById(R.id.choreView);
 
