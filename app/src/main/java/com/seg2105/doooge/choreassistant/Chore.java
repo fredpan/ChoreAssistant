@@ -13,9 +13,13 @@ public class Chore implements Serializable {
     private String description;
     private String choreName;
     private Long timeInMillis;
-    private String choreIdentification="TO BE IMPLEMENTED";
+    private String choreIdentification;
 
     private Boolean complete;
+
+    public Chore() {
+        //Keep for Firebase only
+    }
 
     public Chore(String choreName, String description, long timeInMillis) throws NoSuchAlgorithmException {
         this.choreName      = choreName;
