@@ -315,7 +315,6 @@ public class ChoreEdit extends AppCompatActivity {
             calChore.set(year,month,day,hour,minute);
 
             long millis = calChore.getTimeInMillis();
-
             Chore chore = new Chore(name, description, millis);
 
             databaseChore.child(chore.getChoreIdentification()).setValue(chore);//update the Chore

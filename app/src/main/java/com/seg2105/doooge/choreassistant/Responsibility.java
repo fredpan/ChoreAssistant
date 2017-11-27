@@ -12,6 +12,7 @@ public class Responsibility {
     private int userID;
     private String choreIdentification;
     private String responsibilityID;
+    private Chore chore;
 
     public Responsibility() {
         //Keep for Firebase only
@@ -22,6 +23,14 @@ public class Responsibility {
         this.userID = userID;
         this.choreIdentification = choreIdentification;
         this.responsibilityID = IdentificationUtility.generateIdentification(Integer.toString(userID), choreIdentification);
+    }
+
+    public void setChore(Chore chore){
+        this.chore = chore;
+    }
+
+    public Chore getChore(){
+        return chore;
     }
 
     public int getUserID() {
