@@ -41,6 +41,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     private Button violet;
     private Button red;
     private int color;
+    private boolean createUserIsClickable;
 
 
 
@@ -55,7 +56,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 
         createUser = findViewById(R.id.createUser);
         createUser.setOnClickListener(this);
-        createUser.setClickable(false);
+        //createUser.setClickable(false);
 
         createAdmin = findViewById(R.id.createAdmin);
         createAdmin.setOnClickListener(this);
@@ -91,13 +92,16 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                     userID = 000000 + rd.nextInt(999999);
                 }
 
-                if (enableCreateNormalUser) {
-                    createUser.setClickable(true);
-                    System.out.println("createUser has been enabled");
-                } else {
-                    createUser.setClickable(false);
-                    System.out.println("createUser has been disabled");
-                }
+                createUserIsClickable = enableCreateNormalUser;
+//                if (enableCreateNormalUser) {
+//                    createUser.setClickable(true);
+//                    System.out.println("createUser has been enabled");
+//                } else {
+//                    createUser.setClickable(false);
+//                    System.out.println("createUser has been disabled");
+//                    Toast.makeText(getApplicationContext(), "Please create admin first !!!!", Toast.LENGTH_SHORT).show();
+//
+//                }
 
             }
             @Override
@@ -110,21 +114,26 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 
 
     public void onClick(View view) {
+
         switch (view.getId()) {
 
             case R.id.createUser:
-                if (createUser.isClickable()) {
+//                if (createUser.isClickable()) {
                     try {
-                        storeAccountInfo();
-                        createUser.setClickable(false);
+                        if (createUserIsClickable) {
+                            storeAccountInfo();
+//                        createUser.setClickable(false);
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Please create admin first !!!!", Toast.LENGTH_SHORT).show();
+                        }
 
                     } catch (NoSuchAlgorithmException e) {
                         e.printStackTrace();
                     }
-                } else {
-                    Toast.makeText(getApplicationContext(), "Please create admin first !!!!", Toast.LENGTH_SHORT).show();
-                    System.out.println("TO BE IMPLEMENT: POP UP: PLZ CREATE ADMIN FIRST!!!!!");
-                }
+//                } else {
+//                    System.out.println("TO BE IMPLEMENT: POP UP: PLZ CREATE ADMIN FIRST!!!!!");
+//
+//                }
                 break;
 
             case R.id.createAdmin:
@@ -134,7 +143,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                     storeAccountInfo();
 
                     isAdmin = false;
-                    createUser.setClickable(false);
+                    //createUser.setClickable(false);
                 } catch (NoSuchAlgorithmException e) {
                     e.printStackTrace();
                 }
