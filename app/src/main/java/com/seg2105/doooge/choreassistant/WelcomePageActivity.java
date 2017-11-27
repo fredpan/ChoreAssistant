@@ -2,6 +2,7 @@ package com.seg2105.doooge.choreassistant;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.LightingColorFilter;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
@@ -61,9 +62,7 @@ public class WelcomePageActivity extends AppCompatActivity {
 
 
         //Create a dapter to control the recyclerView.
-        mRecyclerView = findViewById(R.id.id_recyclerview);
-        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
-        mRecyclerView.setAdapter(mAdapter = new HomeAdapter());
+
 
         //Getting users from db
 
@@ -73,6 +72,9 @@ public class WelcomePageActivity extends AppCompatActivity {
                 for (DataSnapshot personRoleInstance : dataSnapshot.getChildren()) {
                     PersonRule personRule = personRoleInstance.getValue(PersonRule.class);
                     personRulesList.add(personRule);
+                    mRecyclerView = findViewById(R.id.id_recyclerview);
+                    mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
+                    mRecyclerView.setAdapter(mAdapter = new HomeAdapter());
                 }
             }
 
@@ -84,17 +86,7 @@ public class WelcomePageActivity extends AppCompatActivity {
 
     }
 
-    public void adminLogin(View view) {
-        Intent intent = new Intent(WelcomePageActivity.this, ChoreList.class);
-        String message = "admin";
-        intent.putExtra(EXTRA_MASSAGE, message);
-        startActivity(intent);
 
-    }
-
-    /*
-    create listener for adminLogin button
-     */
 
     //create a listener to display login Dialog for admin button
     public void showLoginDialog(View view) {
@@ -155,14 +147,10 @@ public class WelcomePageActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(MyViewHolder holder, final int position) {
-            holder.userButton.setText(buttonList.get(position));
-            if (position == 0) {
-                holder.userButton.setBackgroundResource(R.drawable.login_icon_green);
-            } else if (position == 1) {
-                holder.userButton.setBackgroundResource(R.drawable.login_icon_blue);
-            } else if (position == 2) {
-                holder.userButton.setBackgroundResource(R.drawable.login_icon_red);
-            }
+            PersonRule user = personRulesList.get(position);
+            holder.userButton.setText(user.getUserName());
+            //holder.userButton.getBackground().setColorFilter(new LightingColorFilter(user.getColor(),user.getColor()));
+
 
             setOnClickListener(holder.userButton, position);
         }
@@ -171,14 +159,17 @@ public class WelcomePageActivity extends AppCompatActivity {
         */
 
         public void setOnClickListener(Button button, final int position) {
+            final PersonRule user = personRulesList.get(position);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(WelcomePageActivity.this, ChoreList.class);
-                    String message = "user";
-                    testRule = new PersonRule("testPerson", "9AA89E5D307B196612696C5586954A6C", false, "Some COLOR TO BE IMPLEMENTED", 605228);
-                    intent.putExtra(EXTRA_MASSAGE, message);
-                    intent.putExtra("currentUser", testRule);
+                    if (user.isAdmin()) {
+                        intent.putExtra(EXTRA_MASSAGE, "admin");
+                    } else {
+                        intent.putExtra(EXTRA_MASSAGE, "user");
+                    }
+                    intent.putExtra("currentUser", user);
                     startActivity(intent);
                 }
             });
@@ -190,7 +181,7 @@ public class WelcomePageActivity extends AppCompatActivity {
         @Override
         public int getItemCount() {
 
-            return buttonList.size();
+            return personRulesList.size();
         }
 
         class MyViewHolder extends RecyclerView.ViewHolder {

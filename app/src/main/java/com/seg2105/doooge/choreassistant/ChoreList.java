@@ -34,6 +34,7 @@ public class ChoreList extends AppCompatActivity {
 
 
     private static Chore choreSubmit;
+    private static String currentOperator;
     DatabaseReference databaseResponsibility = FirebaseDatabase.getInstance().getReference("Responsibility");
     DatabaseReference databaseChore = FirebaseDatabase.getInstance().getReference("Chore");
     private int day;
@@ -41,7 +42,6 @@ public class ChoreList extends AppCompatActivity {
     private int year;
     private Calendar cal;
     private PersonRule currentUser;
-
     private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
 
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -153,9 +153,11 @@ public class ChoreList extends AppCompatActivity {
         if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE) != null) {
 
             if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE).equals("user")) {
+                currentOperator = "user";
                 Button add = findViewById(R.id.btnAdd);
                 add.setVisibility(View.INVISIBLE);
             } else if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE).equals("admin")) {
+                currentOperator = "admin";
                 Button add = findViewById(R.id.btnAdd);
                 add.setVisibility(View.VISIBLE);
             }
@@ -271,10 +273,12 @@ public class ChoreList extends AppCompatActivity {
         gridLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                Toast.makeText(getBaseContext(), "It is a long click event", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(ChoreList.this, ChoreEdit.class);
-                intent.putExtra("SUBMIT", (Chore) view.getTag());
-                startActivity(intent);
+                if (currentOperator.equals("admin")) {
+                    Toast.makeText(getBaseContext(), "It is a long click event", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(ChoreList.this, ChoreEdit.class);
+                    intent.putExtra("SUBMIT", (Chore) view.getTag());
+                    startActivity(intent);
+                }
                 return true;
 
             }
