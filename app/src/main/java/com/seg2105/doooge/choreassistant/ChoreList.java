@@ -172,6 +172,7 @@ public class ChoreList extends AppCompatActivity {
 
     public void add_OnClick(View view) {
         Intent intent = new Intent(ChoreList.this, ChoreEdit.class); //switch homepage to edit chore page
+        intent.putExtra("currentUser",currentUser);
         startActivity(intent);
     }
 
@@ -255,6 +256,7 @@ public class ChoreList extends AppCompatActivity {
                     Toast.makeText(getBaseContext(), "It is a long click event", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(ChoreList.this, ChoreEdit.class);
                     intent.putExtra("SUBMIT", (Chore) view.getTag());
+                    intent.putExtra("currentUser",currentUser);
                     startActivity(intent);
                 }
                 return true;
