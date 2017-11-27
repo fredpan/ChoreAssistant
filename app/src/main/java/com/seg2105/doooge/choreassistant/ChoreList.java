@@ -40,6 +40,7 @@ public class ChoreList extends AppCompatActivity {
     private int month;
     private int year;
     private Calendar cal;
+    private PersonRule currentUser;
 
     private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
 
@@ -54,6 +55,11 @@ public class ChoreList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chore_list);
+
+        Intent intent = getIntent();
+        currentUser = (PersonRule) intent.getSerializableExtra("currentUser");
+
+        System.out.println("===================" + currentUser.getUserName());
 
         //setting up calendar
         cal = Calendar.getInstance();
@@ -131,7 +137,7 @@ public class ChoreList extends AppCompatActivity {
 
 
         // check if admin, if not ,set invisible for add button and edit button
-        Intent intent = getIntent();
+
 
         if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE) != null) {
 
