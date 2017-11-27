@@ -40,6 +40,7 @@ public class ChoreList extends AppCompatActivity {
     private int month;
     private int year;
     private Calendar cal;
+    private PersonRule currentUser;
 
     private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
 
@@ -55,6 +56,9 @@ public class ChoreList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chore_list);
 
+        Intent intent = getIntent();
+        currentUser = (PersonRule) intent.getSerializableExtra("currentUser");
+
         //setting up calendar
         cal = Calendar.getInstance();
         day = cal.get(Calendar.DAY_OF_MONTH);
@@ -67,9 +71,9 @@ public class ChoreList extends AppCompatActivity {
         try {
 
 
-            Chore chore1 = new Chore("Chore1", "This is a faked chore with ID \"TB IMPLEMENT\"", 123);
-            Chore chore2 = new Chore("Chore2", "This is a faked chore with ID \"TB IMPLEMENT\"", 456);
-            Chore chore3 = new Chore("Chore3", "This is a faked chore with ID \"TB IMPLEMENT\"", 789);
+            Chore chore1 = new Chore("Chore1", "Displayed!! 1/2", 123);
+            Chore chore2 = new Chore("Chore2", "Displayed!! 2/2", 456);
+            Chore chore3 = new Chore("Chore3", "Should not display!!!", 789);
             databaseChore.child(chore1.getChoreIdentification()).setValue(chore1);
             databaseChore.child(chore2.getChoreIdentification()).setValue(chore2);
             databaseChore.child(chore3.getChoreIdentification()).setValue(chore3);
@@ -78,9 +82,9 @@ public class ChoreList extends AppCompatActivity {
             String a = chore1.getChoreIdentification();
             String b = chore2.getChoreIdentification();
             String c = chore3.getChoreIdentification();
-            Responsibility responsibility1 = new Responsibility(123, a);
-            Responsibility responsibility2 = new Responsibility(321, b);
-            Responsibility responsibility3 = new Responsibility(213, c);
+            Responsibility responsibility1 = new Responsibility(605228, a);//Assign to Vison
+            Responsibility responsibility2 = new Responsibility(605228, b);//Assign to Vison
+            Responsibility responsibility3 = new Responsibility(123456, c);//Should not display
             databaseResponsibility.child(a).setValue(responsibility1);
             databaseResponsibility.child(b).setValue(responsibility2);
             databaseResponsibility.child(c).setValue(responsibility3);
@@ -96,25 +100,38 @@ public class ChoreList extends AppCompatActivity {
 
                 for (DataSnapshot responsibility : dataSnapshot.getChildren()) {
 
-                    final String correspondingChoreID = (String) responsibility.child("choreIdentification").getValue();
+                    int currentUserID = currentUser.getUserID();
+                    long userIDInDB = (long) responsibility.child("userID").getValue();
 
-                    databaseChore.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            for (DataSnapshot singleChore : dataSnapshot.getChildren()) {
-                                if (singleChore.child("choreIdentification").getValue().equals(correspondingChoreID)) {
-                                    Chore chore = singleChore.getValue(Chore.class);
-                                    displayChore(chore);
+                    System.out.println("=================================");
+                    System.out.println("currentUserID: " + currentUserID);
+                    System.out.println("userIDInDB: " + userIDInDB);
+                    System.out.println("IF: " + (currentUserID == userIDInDB));
+                    System.out.println("=================================");
+                    if (currentUserID == userIDInDB) {
+
+
+                        final String correspondingChoreID = (String) responsibility.child("choreIdentification").getValue();
+
+
+                        databaseChore.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (DataSnapshot singleChore : dataSnapshot.getChildren()) {
+                                    if (singleChore.child("choreIdentification").getValue().equals(correspondingChoreID)) {
+                                        Chore chore = singleChore.getValue(Chore.class);
+                                        displayChore(chore);
+                                    }
+
                                 }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
 
                             }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
+                        });
+                    }
 
                 }
 
@@ -131,7 +148,7 @@ public class ChoreList extends AppCompatActivity {
 
 
         // check if admin, if not ,set invisible for add button and edit button
-        Intent intent = getIntent();
+
 
         if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE) != null) {
 
