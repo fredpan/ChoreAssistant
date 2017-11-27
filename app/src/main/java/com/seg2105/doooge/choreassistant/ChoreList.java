@@ -12,12 +12,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.GridLayout;
-import android.widget.TextView;
-
-import java.security.NoSuchAlgorithmException;
-import java.util.Calendar;
-
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -26,6 +22,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.security.NoSuchAlgorithmException;
+import java.util.Calendar;
+
 
 /**
  * Created by dustin on 11/22/17.
@@ -33,23 +32,27 @@ import com.google.firebase.database.ValueEventListener;
 
 public class ChoreList extends AppCompatActivity {
 
-    private final String CHORE_RED      = "#ffff4444";
-    private final String CHORE_PURPLE   = "#ffaa66cc";
-    private final String CHORE_ORANGE   = "#ffff8800";
-    private final String CHORE_GREEN    = "#ff99cc00";
-    private final String CHORE_BLUE     = "#ff0099cc";
+
     private static Chore choreSubmit;
-    DatabaseReference databaseChore = FirebaseDatabase.getInstance().getReference("Responsibility");
-    DatabaseReference databaseInfo = FirebaseDatabase.getInstance().getReference("PersonRule");
+    private final String CHORE_RED = "#ffff4444";
+    private final String CHORE_PURPLE = "#ffaa66cc";
+    private final String CHORE_ORANGE = "#ffff8800";
+    private final String CHORE_GREEN = "#ff99cc00";
+    private final String CHORE_BLUE = "#ff0099cc";
+    DatabaseReference databaseResponsibility = FirebaseDatabase.getInstance().getReference("Responsibility");
+    DatabaseReference databaseChore = FirebaseDatabase.getInstance().getReference("Chore");
     private int day;
     private int month;
     private int year;
     private Calendar cal;
     private PersonRule testRule;
+    private PersonRule testPerson = new PersonRule("testPerson", "9AA89E5D307B196612696C5586954A6C", false, "Some COLOR TO BE IMPLEMENTED", 605228);//Wait for vison
+
 
     private Responsibility responsibility;
     //DatabaseReference databaseChore = FirebaseDatabase.getInstance().getReference("Chore");
 
+    //DatabaseReference databaseResponsibility = FirebaseDatabase.getInstance().getReference("Chore");
     //https://developer.android.com/reference/android/app/DatePickerDialog.OnDateSetListener.html
     private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
 
@@ -66,12 +69,12 @@ public class ChoreList extends AppCompatActivity {
         setContentView(R.layout.chore_list);
 
         //setting up calendar
-        cal     = Calendar.getInstance();
-        day     = cal.get(Calendar.DAY_OF_MONTH);
-        month   = cal.get(Calendar.MONTH);
-        year    = cal.get(Calendar.YEAR);
+        cal = Calendar.getInstance();
+        day = cal.get(Calendar.DAY_OF_MONTH);
+        month = cal.get(Calendar.MONTH);
+        year = cal.get(Calendar.YEAR);
 
-        setDate(year,month,day);
+        setDate(year, month, day);
 
 
         //############################## FUNCTION FOR SAMPLE CHORES####################
@@ -79,26 +82,39 @@ public class ChoreList extends AppCompatActivity {
 
 
         //SAMPLE Responsibility
-        Responsibility chore1 = new Responsibility(123, "Resp1: This is the Chore Identification");
-        Responsibility chore2 = new Responsibility(321, "Resp2: This is the Chore Identification");
-        Responsibility chore3 = new Responsibility(213, "Resp3: This is the Chore Identification");
-        databaseChore.child("Resp Identification1").setValue(chore1);
-        databaseChore.child("Resp Identification2").setValue(chore2);
-        databaseChore.child("Resp Identification3").setValue(chore3);
+        try {
+            String a = "Resp1: This is the Chore Identification";
+            String b = "Resp2: This is the Chore Identification";
+            String c = "Resp3: This is the Chore Identification";
+            Responsibility chore1 = new Responsibility(123, a);
+            Responsibility chore2 = new Responsibility(321, b);
+            Responsibility chore3 = new Responsibility(213, c);
+            databaseResponsibility.child(a).setValue(chore1);
+            databaseResponsibility.child(b).setValue(chore2);
+            databaseResponsibility.child(c).setValue(chore3);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
 
 
-        databaseChore.addValueEventListener(new ValueEventListener() {
+        databaseResponsibility.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    //getting product
+                    Responsibility responsibility = postSnapshot.getValue(Responsibility.class);
 
-                for (long i = 0; i < dataSnapshot.getChildrenCount(); i++) {
-                    System.out.println("=====================" + (dataSnapshot.child("Resp Identification1").child("userId").getValue()));
+
+                }
+
+
+                //System.out.println((dataSnapshot.getValue(Responsibility.class)).getChoreIdentification());
 
                     //GET THE CORRESPONDING USERINFO AND CHOREINFO
 
 
-                    System.out.println("++++++++++++++++++++++" + databaseInfo.child("admin"));
+                System.out.println("++++++++++++++++++++++" + dataSnapshot.getValue());
 
                     //=============================================
                     //GridLayout temp = layoutTest(Long.toString((long) dataSnapshot.child("Resp Identification1").child("userId").getValue()), "TIME", "Name"); //, draw[i%5]);
@@ -114,7 +130,7 @@ public class ChoreList extends AppCompatActivity {
 //                    dissassembleChore(tempChore);
 
 //                }
-            }
+
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -148,7 +164,9 @@ public class ChoreList extends AppCompatActivity {
             displayChore(choreSubmit);
         }
 
+
     }
+
 
 
     public void displaySampleChores(){
