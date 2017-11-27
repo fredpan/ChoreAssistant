@@ -319,6 +319,7 @@ public class ChoreEdit extends AppCompatActivity {
             Chore chore = new Chore(name, description, millis);
 
             databaseChore.child(chore.getChoreIdentification()).setValue(chore);//update the Chore
+            databaseChore.child(choreSubmit.getChoreIdentification()).removeValue();
 
 
             Intent intent = new Intent(ChoreEdit.this, ChoreList.class);
