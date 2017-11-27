@@ -1,10 +1,12 @@
 package com.seg2105.doooge.choreassistant;
 
+import java.io.Serializable;
+
 /**
  * Created by fredpan on 2017/11/21.
  */
 
-public class PersonRule {
+public class PersonRule implements Serializable {
     private String userName;
     private boolean admin;
     private String encrypted;

@@ -40,6 +40,7 @@ public class WelcomePageActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView; //This view for display each user.
     private HomeAdapter mAdapter; //This adapter for control the recyclerView.
     private ArrayList<String> buttonList; //This list for save user.
+    private PersonRule testRule;  // This is for test
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,7 +155,9 @@ public class WelcomePageActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     Intent intent = new Intent(WelcomePageActivity.this, ChoreList.class);
                     String message = "user";
+                    testRule = new PersonRule("Vison", "Vison", true, "red", 1);
                     intent.putExtra(EXTRA_MASSAGE, message);
+                    intent.putExtra("test", testRule);
                     startActivity(intent);
                 }
             });
