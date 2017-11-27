@@ -20,6 +20,8 @@
         <activity android:name=".showDetailDialog"></activity>
         <activity android:name=".ChoreList"></activity>
         <activity android:name=".ControlPanelActivity"></activity>
+        <activity android:name=".RegistrationActivity"></activity>
+        <activity android:name=".EditUserActivity"></activity>
 
 
     </application>

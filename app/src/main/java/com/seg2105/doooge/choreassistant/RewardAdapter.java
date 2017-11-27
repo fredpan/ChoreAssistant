@@ -1,6 +1,7 @@
 package com.seg2105.doooge.choreassistant;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,8 +42,17 @@ public class RewardAdapter extends ArrayAdapter<PersonRule> {
         TextView userAuth = view.findViewById(R.id.userAuth);
         displayName.setText(user.getUserName());
         userAuth.setText("");
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(context, EditUserActivity.class);
+                context.startActivity(intent);
+            }
+        });
 
         view.setBackgroundColor(Color.parseColor(user.getColor()));
+
 
         return view;
     }

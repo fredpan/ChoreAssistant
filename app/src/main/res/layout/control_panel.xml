@@ -28,6 +28,7 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/addUser"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
@@ -35,6 +36,7 @@
                 android:text="Add New User" />
 
             <Button
+                android:id="@+id/createUser"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
@@ -42,6 +44,7 @@
                 android:text="Create Reward" />
 
             <Button
+                android:id="@+id/editReward"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"

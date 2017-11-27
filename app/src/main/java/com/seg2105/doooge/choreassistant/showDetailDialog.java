@@ -74,7 +74,7 @@ public class showDetailDialog extends AppCompatActivity {
         reward.setText("You will get 10 dollars!");
         if (chore != null) {
             choreName.setText(chore.getChoreName());
-            time.setText(chore.getCalendar() + "" + "\n" + "" + chore.getTimeInMillis());
+            //time.setText(chore.getCalendar() + "" + "\n" + "" + chore.getTimeInMillis());
             description.setText(chore.getDescription());
 
         }

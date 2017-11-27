@@ -33,12 +33,12 @@ import com.google.firebase.database.ValueEventListener;
 
 public class ChoreList extends AppCompatActivity {
 
+    private static Chore choreSubmit;
     private final String CHORE_RED      = "#ffff4444";
     private final String CHORE_PURPLE   = "#ffaa66cc";
     private final String CHORE_ORANGE   = "#ffff8800";
     private final String CHORE_GREEN    = "#ff99cc00";
     private final String CHORE_BLUE     = "#ff0099cc";
-    private static Chore choreSubmit;
     DatabaseReference databaseChore = FirebaseDatabase.getInstance().getReference("Responsibility");
     DatabaseReference databaseInfo = FirebaseDatabase.getInstance().getReference("PersonRule");
     private int day;
@@ -82,9 +82,9 @@ public class ChoreList extends AppCompatActivity {
         Responsibility chore1 = new Responsibility(123, "Resp1: This is the Chore Identification");
         Responsibility chore2 = new Responsibility(321, "Resp2: This is the Chore Identification");
         Responsibility chore3 = new Responsibility(213, "Resp3: This is the Chore Identification");
-        databaseChore.child("Resp Identification1").setValue(chore1);
-        databaseChore.child("Resp Identification2").setValue(chore2);
-        databaseChore.child("Resp Identification3").setValue(chore3);
+//        databaseChore.child("Resp Identification1").setValue(chore1);
+//        databaseChore.child("Resp Identification2").setValue(chore2);
+//        databaseChore.child("Resp Identification3").setValue(chore3);
 
 
         databaseChore.addValueEventListener(new ValueEventListener() {
@@ -131,7 +131,7 @@ public class ChoreList extends AppCompatActivity {
 
             if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE).equals("user")) {
                 Button add = findViewById(R.id.btnAdd);
-                add.setVisibility(View.INVISIBLE);
+                add.setVisibility(View.VISIBLE);
             } else if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE).equals("admin")) {
                 Button add = findViewById(R.id.btnAdd);
                 add.setVisibility(View.VISIBLE);

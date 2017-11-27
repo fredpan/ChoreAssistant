@@ -1,9 +1,11 @@
 package com.seg2105.doooge.choreassistant;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -38,10 +40,18 @@ public class ControlPanelActivity extends AppCompatActivity {
         RewardAdapter rewardAdapter = new RewardAdapter(identificationsList, ControlPanelActivity.this);
         controlPanelListView.setAdapter(rewardAdapter);
 
+        // creat a listener for addUser button
+        Button addUserButton = (Button) this.findViewById(R.id.addUser);
+        addUserButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ControlPanelActivity.this, RegistrationActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
     }
 
-    public void onClick(View view) {
-
-    }
 
 }
