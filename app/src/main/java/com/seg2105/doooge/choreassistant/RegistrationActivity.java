@@ -1,7 +1,10 @@
 package com.seg2105.doooge.choreassistant;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,6 +50,8 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         //init
         setContentView(R.layout.registration);
 
+        //set the defaut color ;
+        color = getResources().getColor(R.color.black);
 
         createUser = findViewById(R.id.createUser);
         createUser.setOnClickListener(this);
@@ -112,6 +117,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                     try {
                         storeAccountInfo();
                         createUser.setClickable(false);
+
                     } catch (NoSuchAlgorithmException e) {
                         e.printStackTrace();
                     }
@@ -142,7 +148,6 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                 break;
             case R.id.yellow_FFA500:
                 color = getResources().getColor(R.color.yellow);
-                System.out.println("=========" + color);
                 break;
             case R.id.violet_8A2BE2:
                 color = getResources().getColor(R.color.violet);
@@ -180,4 +185,26 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         }
         return false;
     }
+
+    //create a menu for switch page to home
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.Home:
+
+                Intent intent = new Intent(RegistrationActivity.this, WelcomePageActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                break;
+        }
+        return true;
+    }
+
+
+
 }

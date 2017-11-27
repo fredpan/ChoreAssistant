@@ -1,13 +1,12 @@
 package com.seg2105.doooge.choreassistant;
 
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
+
 import android.view.View;
-import android.widget.EditText;
+
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,11 +20,7 @@ import java.util.TimerTask;
  */
 
 public class showDetailDialog extends AppCompatActivity {
-    private int day = -1;
-    private int month = -1;
-    private int year = -1;
-    private int hour = -1;
-    private int minute = -1;
+
     private Chore choreSubmit;
 
 
@@ -111,9 +106,6 @@ public class showDetailDialog extends AppCompatActivity {
     private String setDate(int year, int month, int day) {
         TextView textDate = findViewById(R.id.textDate);
 
-        this.day = day;
-        this.month = month;
-        this.year = year;
 
         String[] monthString = {
                 "January",
@@ -141,14 +133,9 @@ public class showDetailDialog extends AppCompatActivity {
      */
     private String setTime(int hour, int minute) {
         TextView textTime = findViewById(R.id.textTime);
-        this.hour = hour;
-        this.minute = minute;
+
         return (String.format("%02d:%02d", hour, minute));
     }
-
-
-
-
 
 
 

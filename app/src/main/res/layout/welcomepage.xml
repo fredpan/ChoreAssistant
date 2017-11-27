@@ -53,6 +53,21 @@
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
+        <EditText
+            android:id="@+id/deleteText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="put the username u want to delete"
+            android:inputType="textPersonName" />
+
+        <Button
+            android:id="@+id/delete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="delete"
+            android:text="delete" />
+
 
     </LinearLayout>
 
