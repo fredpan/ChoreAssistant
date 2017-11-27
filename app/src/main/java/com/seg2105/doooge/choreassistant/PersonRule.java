@@ -10,7 +10,7 @@ public class PersonRule implements Serializable {
     private String userName;
     private boolean admin;
     private String encrypted;
-    private String color;
+    private int color;
     private int userID;
 
 
@@ -18,7 +18,7 @@ public class PersonRule implements Serializable {
         //Keep for Firebase only
     }
 
-    public PersonRule(String userName, String encrypted, boolean admin, String color, int userID) {
+    public PersonRule(String userName, String encrypted, boolean admin, int color, int userID) {
         this.userName = userName;
 
 
@@ -45,7 +45,7 @@ public class PersonRule implements Serializable {
         return encrypted;
     }
 
-    public String getColor() {
+    public int getColor() {
         return color;
     }
 

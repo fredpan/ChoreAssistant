@@ -47,6 +47,8 @@ public class showDetailDialog extends AppCompatActivity {
                 if (click) {
 
                     finish_button.setBackgroundResource(R.drawable.finish_button);
+
+
                     Toast.makeText(getApplicationContext(), "Congraduation, You finish !!!!", Toast.LENGTH_SHORT).show();
                     final Timer t = new Timer();
                     t.schedule(new TimerTask() {
@@ -55,13 +57,7 @@ public class showDetailDialog extends AppCompatActivity {
                             t.cancel();
                         }
                     }, 2000); // after 2 second (or 2000 miliseconds), the task will be active.
-
-                } else {
-
-                    finish_button.setBackgroundResource(R.drawable.finish_button2);
                 }
-
-
             }
         });
 

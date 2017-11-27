@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,6 +32,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     private Boolean isAdmin = false;
     private Button createUser;
     private Button createAdmin;
+    private int color;
 
 
 
@@ -98,6 +100,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                         e.printStackTrace();
                     }
                 } else {
+                    Toast.makeText(getApplicationContext(), "Please create admin first !!!!", Toast.LENGTH_SHORT).show();
                     System.out.println("TO BE IMPLEMENT: POP UP: PLZ CREATE ADMIN FIRST!!!!!");
                 }
                 break;
@@ -115,6 +118,26 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 
                 break;
 
+            case R.id.blue_4169E1:
+                color = getResources().getColor(R.color.blue);
+                break;
+            case R.id.green_32CD32:
+                color = getResources().getColor(R.color.green);
+                ;
+                break;
+            case R.id.yellow_FFA500:
+                color = getResources().getColor(R.color.yellow);
+                ;
+                break;
+            case R.id.violet_8A2BE2:
+                color = getResources().getColor(R.color.violet);
+                ;
+                break;
+            case R.id.red_FF0000:
+                color = getResources().getColor(R.color.red);
+                ;
+                break;
+
         }
     }
 
@@ -126,7 +149,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         String username = String.valueOf(obtainedUsername.getText());
         String password = String.valueOf(obtainedPassword.getText());
         String encrypted = IdentificationUtility.generateIdentification(username, password);
-        String color = "Some COLOR TO BE IMPLEMENTED";
+        //color = "Some COLOR TO BE IMPLEMENTED";
         PersonRule personRule = new PersonRule(username, encrypted, isAdmin, color, userID);
         databaseLoginInfo.child(username).setValue(personRule);
     }

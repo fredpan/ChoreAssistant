@@ -51,7 +51,7 @@ public class RewardAdapter extends ArrayAdapter<PersonRule> {
             }
         });
 
-        view.setBackgroundColor(Color.parseColor(user.getColor()));
+        view.setBackgroundColor(user.getColor());
 
 
         return view;

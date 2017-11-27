@@ -33,7 +33,7 @@ public class LoginInfoUtility {
         String hashed = (String) dataSnapshot.child("encrypted").getValue();
         int id = (int) dataSnapshot.child("userID").getValue();
         String username = (String) dataSnapshot.child("userName").getValue();
-        String color = (String) dataSnapshot.child("color").getValue();
+        int color = (int) dataSnapshot.child("color").getValue();
         PersonRule result = new PersonRule(username, hashed, isAdmin, color, id);
         return result;
     }

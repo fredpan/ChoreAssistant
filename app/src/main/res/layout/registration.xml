@@ -48,30 +48,35 @@
     android:orientation="horizontal">
 
     <Button
+        android:id="@+id/blue_4169E1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="#4169E1" />
 
     <Button
+        android:id="@+id/green_32CD32"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="#32CD32" />
 
     <Button
+        android:id="@+id/yellow_FFA500"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="#FFA500" />
 
     <Button
+        android:id="@+id/violet_8A2BE2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:background="#8A2BE2" />
 
     <Button
+        android:id="@+id/red_FF0000"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"

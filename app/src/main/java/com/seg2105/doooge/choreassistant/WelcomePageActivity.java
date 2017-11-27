@@ -2,7 +2,9 @@ package com.seg2105.doooge.choreassistant;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
@@ -149,9 +151,7 @@ public class WelcomePageActivity extends AppCompatActivity {
         public void onBindViewHolder(MyViewHolder holder, final int position) {
             PersonRule user = personRulesList.get(position);
             holder.userButton.setText(user.getUserName());
-            //holder.userButton.getBackground().setColorFilter(new LightingColorFilter(user.getColor(),user.getColor()));
-
-
+            holder.userButton.getBackground().setColorFilter(new LightingColorFilter(user.getColor(), user.getColor()));
             setOnClickListener(holder.userButton, position);
         }
         /*
