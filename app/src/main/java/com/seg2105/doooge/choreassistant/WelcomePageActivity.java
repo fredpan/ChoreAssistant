@@ -32,7 +32,6 @@ public class WelcomePageActivity extends AppCompatActivity {
     public final static String EXTRA_MASSAGE = "Tag"; // the name of intent for this class
 
 
-
     // The Contacts rows that we will retrieve
     static final String[] PROJECTION = new String[]{ContactsContract.Data._ID,
             ContactsContract.Data.DISPLAY_NAME};
@@ -70,6 +69,8 @@ public class WelcomePageActivity extends AppCompatActivity {
                 mRecyclerView = findViewById(R.id.id_recyclerview);
                 mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
                 mRecyclerView.setAdapter(mAdapter = new HomeAdapter());
+
+                System.out.println("11111111=========================");
             }
 
             @Override
@@ -77,9 +78,9 @@ public class WelcomePageActivity extends AppCompatActivity {
 
             }
         });
+        System.out.println("2222===================");
 
     }
-
 
 
     //create a listener to display login Dialog for admin button
@@ -102,16 +103,34 @@ public class WelcomePageActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final ArrayList<PersonRule> personRules = new ArrayList<>();
+                databaseLoginInfo.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (DataSnapshot personRoleInstance : dataSnapshot.getChildren()) {
+                                    PersonRule personRule = personRoleInstance.getValue(PersonRule.class);
+                                    personRules.add(personRule);
+
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        }
+                );
 
 //                if (userName.getText().toString().equals("") || password.getText().toString().equals("")) {
 //                    warm.setText("Your userID or Password is wrong !!");
 //                    warm.setVisibility(View.VISIBLE);
 //
 //                } else {
-                    Intent intent = new Intent(WelcomePageActivity.this, ControlPanelActivity.class);
-                    startActivity(intent);
-                    warm.setVisibility(View.INVISIBLE);
-                    dialog.dismiss();
+                Intent intent = new Intent(WelcomePageActivity.this, ControlPanelActivity.class);
+                startActivity(intent);
+                warm.setVisibility(View.INVISIBLE);
+                dialog.dismiss();
                 //               }
             }
         });
