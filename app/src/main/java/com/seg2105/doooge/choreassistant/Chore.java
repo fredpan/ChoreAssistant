@@ -67,6 +67,14 @@ public class Chore implements Serializable {
         return removed;
     }
 
+    public List<Responsibility> getResponsibilities() {
+        List<Responsibility> newResponsibilities = responsibilities;
+        return newResponsibilities;
+    }
+
+    public int numberOfResponsibilities() {
+        return responsibilities.size();
+    }
 
 
     public long getTimeInMillis(){

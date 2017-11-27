@@ -226,7 +226,7 @@
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:inputType="textPersonName"
-            android:onClick="selectedUsers"
+            android:onClick="textSelectUsers_OnClick"
             android:paddingLeft="3dp"
             android:textSize="18sp" />
 

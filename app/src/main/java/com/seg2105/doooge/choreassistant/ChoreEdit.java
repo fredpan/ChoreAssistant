@@ -25,6 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 
 public class ChoreEdit extends AppCompatActivity {
@@ -43,8 +44,8 @@ public class ChoreEdit extends AppCompatActivity {
 
     private PersonRule currentUser;
 
-    private ArrayList<String> personRulesList = new ArrayList<>();
-    private String[] userList;
+    private List<PersonRule> personRulesList;
+    private List<PersonRule> selectedPersonRuleList;
 
 
     //https://developer.android.com/reference/android/app/TimePickerDialog.OnTimeSetListener.html
@@ -105,8 +106,8 @@ public class ChoreEdit extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 personRulesList = new ArrayList<>();
                 for (DataSnapshot personRoleInstance : dataSnapshot.getChildren()) {
-                    String personRule = (String) personRoleInstance.child("userName").getValue();
-                    personRulesList.add(personRule);
+                    //String personRule = (String) personRoleInstance.child("userName").getValue();
+                    personRulesList.add(  personRoleInstance.getValue(PersonRule.class) );
                 }
             }
 
@@ -120,21 +121,19 @@ public class ChoreEdit extends AppCompatActivity {
 
     /**
      * Displays alert dialog of users in the database
-     *
-     * @param view current
      */
-    public void selectedUsers(View view){
+    public void selectUsers(){
         //https://developer.android.com/reference/android/app/AlertDialog.Builder.html
 
         //used in the creating of userList, list of all selected users
         final String[] users            = new String[personRulesList.size()];
         final ArrayList selectedUsers   = new ArrayList();
 
-        //pass personRulist list to a string Array for functionality in alert dialog
-        for (int i = 0; i < personRulesList.size(); i++){
-            users[i] = personRulesList.get(i);
+        for (int i = 0; i <personRulesList.size() ; i++){
+            users[i] = personRulesList.get(i).getUserName();
         }
 
+        //pass personRulist list to a string Array for functionality in alert dialog
 
 
         AlertDialog.Builder userList = new AlertDialog.Builder(this);
@@ -160,33 +159,45 @@ public class ChoreEdit extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
 
                 //build a new list
-                String[] tempUsers  = new String[selectedUsers.size()];
                 StringBuilder sb    = new StringBuilder();
 
                 for (int i = 0; i < selectedUsers.size();i++){
-                    tempUsers[i] = users[ Integer.valueOf( selectedUsers.get(i).toString() ) ];
                     sb.append(users[ Integer.valueOf( selectedUsers.get(i).toString() ) ]);
-
                     if (i+1 < selectedUsers.size() ) { sb.append(", "); }
                 }
 
                 TextView textSelect = findViewById(R.id.textSelectUsers);
                 textSelect.setText( sb.toString() );
 
-                setUserList(tempUsers);
+                setSelectedPersonRuleList(selectedUsers);
 
             }
         });
 
         userList.show();
+    }
+
+    public void setSelectedPersonRuleList(ArrayList selectedUserAtIndex){
+
+        selectedPersonRuleList= new ArrayList<>();
+
+        for (int i = 0 ; i < selectedUserAtIndex.size() ; i++ ){
+            selectedPersonRuleList
+                    .add(personRulesList
+                            .get( Integer.valueOf(selectedUserAtIndex.get(i).toString() )
+                    )
+            );
+        }
 
     }
 
 
-    private void setUserList(String[] userList){
-        this.userList = userList;
+    public void textSelectUsers_OnClick(View view) {
+        view.setBackgroundDrawable(getResources().getDrawable(R.drawable.back));
+        TextView txtSelect = findViewById(R.id.textSelectUsers);
+        txtSelect.setError(null);
+        selectUsers();
     }
-
 
     public void textDate_OnClick(View view) {
         view.setBackgroundDrawable(getResources().getDrawable(R.drawable.back));
@@ -288,6 +299,7 @@ public class ChoreEdit extends AppCompatActivity {
         TextView txtDescription = findViewById(R.id.textDescription);
         TextView txtTime = findViewById(R.id.textTime);
         TextView txtDate = findViewById(R.id.textDate);
+        TextView txtSelectedUsers = findViewById(R.id.textSelectUsers);
 
         Boolean allPass = true;
 
@@ -306,18 +318,27 @@ public class ChoreEdit extends AppCompatActivity {
             txtDate.setError("Enter a date.");
             txtDate.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
         }
+        if (selectedPersonRuleList.size() == 0){
+            allPass = false;
+            txtSelectedUsers.setError("Please assign a user.");
+            txtSelectedUsers.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
+        }
 
         if (allPass){
-            String name = txtName.getText().toString();
-            String description = txtDescription.getText().toString();
+            String name         = txtName.getText().toString();
+            String description  = txtDescription.getText().toString();
+            Calendar calChore   = Calendar.getInstance();
 
-            Calendar calChore = Calendar.getInstance();
             calChore.set(year,month,day,hour,minute);
 
             long millis = calChore.getTimeInMillis();
             Chore chore = new Chore(name, description, millis);
 
-            databaseChore.child(chore.getChoreIdentification()).setValue(chore);//update the Chore
+            //personRulesList contains all the users selected
+            //TODO need to create responsibility if they do no have one and link it to the newly createed chore
+            //TODO if responsibility exists, then update it's link to new chore.
+
+            databaseChore.child(chore.getChoreIdentification()).setValue(chore); //update the Chore
             databaseChore.child(choreSubmit.getChoreIdentification()).removeValue();
 
 
