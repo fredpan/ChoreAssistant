@@ -14,8 +14,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -36,11 +39,12 @@ public class WelcomePageActivity extends AppCompatActivity {
     static final String SELECTION = "((" +
             ContactsContract.Data.DISPLAY_NAME + " NOTNULL) AND (" +
             ContactsContract.Data.DISPLAY_NAME + " != '' ))";
-    DatabaseReference databaseLoginInfo = FirebaseDatabase.getInstance().getReference("Login");
+    private final DatabaseReference databaseLoginInfo = FirebaseDatabase.getInstance().getReference("PersonRule");
     private RecyclerView mRecyclerView; //This view for display each user.
     private HomeAdapter mAdapter; //This adapter for control the recyclerView.
     private ArrayList<String> buttonList; //This list for save user.
     private PersonRule testRule;  // This is for test
+    private ArrayList<PersonRule> personRulesList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +64,23 @@ public class WelcomePageActivity extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.id_recyclerview);
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(mAdapter = new HomeAdapter());
+
+        //Getting users from db
+
+        databaseLoginInfo.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot personRoleInstance : dataSnapshot.getChildren()) {
+                    PersonRule personRule = personRoleInstance.getValue(PersonRule.class);
+                    personRulesList.add(personRule);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
