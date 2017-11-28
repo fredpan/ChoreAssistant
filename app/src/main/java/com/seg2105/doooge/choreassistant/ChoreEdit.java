@@ -297,11 +297,11 @@ public class ChoreEdit extends AppCompatActivity {
 
     public void btnSubmit_OnClick(View view) throws NoSuchAlgorithmException {
 
-        TextView txtName = findViewById(R.id.textName);
-        TextView txtDescription = findViewById(R.id.textDescription);
-        TextView txtTime = findViewById(R.id.textTime);
-        TextView txtDate = findViewById(R.id.textDate);
-        TextView txtSelectedUsers = findViewById(R.id.textSelectUsers);
+        TextView txtName            = findViewById(R.id.textName);
+        TextView txtDescription     = findViewById(R.id.textDescription);
+        TextView txtTime            = findViewById(R.id.textTime);
+        TextView txtDate            = findViewById(R.id.textDate);
+        TextView txtSelectedUsers   = findViewById(R.id.textSelectUsers);
 
         Boolean allPass = true;
 
@@ -337,12 +337,34 @@ public class ChoreEdit extends AppCompatActivity {
             Chore chore = new Chore(name, description, millis);
 
             //personRulesList contains all the users selected
-            //TODO need to create responsibility if they do no have one and link it to the newly createed chore
+            //TODO need to create responsibility if they do no have one and link it to the newly created chore
             //TODO if responsibility exists, then update it's link to new chore.
 
-            //for ( PersonRule selected : personRulesList ){
-            //    selected
-            //}
+            if (choreSubmit != null) {
+                List<Responsibility> choresResponsibilities = choreSubmit.getResponsibilities();
+                for (Responsibility responsibility : choresResponsibilities) {
+
+                    if ( personRulesList.contains( responsibility.getPersonRule()) ){
+                        chore.addResponsibility(responsibility);
+                        personRulesList.remove(responsibility.getPersonRule());
+                    }
+                }
+
+                for (PersonRule person : personRulesList){
+                    Responsibility tempResponsibility = new Responsibility( person.getUserID(), chore.getChoreIdentification() );
+                    person.addResponsibility(tempResponsibility);
+                    chore.addResponsibility(tempResponsibility);
+                }
+
+            }
+
+
+
+
+            for ( PersonRule selected : personRulesList ){
+                List<Responsibility> slectedUsersResponsibilities = selected.getResponsibilities();
+
+            }
 
             databaseChore.child(chore.getChoreIdentification()).setValue(chore); //update the Chore
             databaseChore.child(choreSubmit.getChoreIdentification()).removeValue();
