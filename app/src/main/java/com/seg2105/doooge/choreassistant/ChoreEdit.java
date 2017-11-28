@@ -350,21 +350,19 @@ public class ChoreEdit extends AppCompatActivity {
                     }
                 }
 
-                for (PersonRule person : personRulesList){
-                    Responsibility tempResponsibility = new Responsibility( person.getUserID(), chore.getChoreIdentification() );
-                    person.addResponsibility(tempResponsibility);
-                    chore.addResponsibility(tempResponsibility);
-                }
+            }
 
+            for (PersonRule person : personRulesList){
+                Responsibility tempResponsibility = new Responsibility( person.getUserID(), chore.getChoreIdentification() );
+                person.addResponsibility(tempResponsibility);
+                chore.addResponsibility(tempResponsibility);
             }
 
 
+//            for ( PersonRule selected : personRulesList ){
+//                List<Responsibility> slectedUsersResponsibilities = selected.getResponsibilities();
 
-
-            for ( PersonRule selected : personRulesList ){
-                List<Responsibility> slectedUsersResponsibilities = selected.getResponsibilities();
-
-            }
+//            }
 
             databaseChore.child(chore.getChoreIdentification()).setValue(chore); //update the Chore
             databaseChore.child(choreSubmit.getChoreIdentification()).removeValue();
