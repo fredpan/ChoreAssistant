@@ -30,40 +30,20 @@ import java.util.List;
 
 public class ChoreEdit extends AppCompatActivity {
 
-    private final DatabaseReference databaseLoginInfo = FirebaseDatabase.getInstance().getReference("PersonRule");
-    private final DatabaseReference databaseChore = FirebaseDatabase.getInstance().getReference("Chore");
-    private final DatabaseReference databaseResponsibility = FirebaseDatabase.getInstance().getReference("Responsibility");
+    DatabaseReference databaseLoginInfo;
+    DatabaseReference databaseChores;
+    DatabaseReference databaseResponsibilities;     //database as final...lol
 
     //stores calendar information if a chore was passed through intent, these will be updated
-    private int day = -1;
-    private int month = -1;
-    private int year = -1;
-    private int hour =-1;
-    private int minute=-1;
-    private Chore choreSubmit;
+    private int day, month, year, hour, minute = -1;
 
+    private Chore choreSubmit;
     private PersonRule currentUser;
+
+    //private PersonRule currentUser;
 
     private List<PersonRule> personRulesList;
     private List<PersonRule> selectedPersonRuleList;
-
-
-    //https://developer.android.com/reference/android/app/TimePickerDialog.OnTimeSetListener.html
-    private TimePickerDialog.OnTimeSetListener timeListen = new TimePickerDialog.OnTimeSetListener() {
-
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            setTime(hourOfDay, minute);
-        }
-    };
-    //https://developer.android.com/reference/android/app/DatePickerDialog.OnDateSetListener.html
-    private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
-
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            //From article: the selected month (0-11 for compatibility with MONTH), so add 1...
-            setDate(year, month, dayOfMonth);
-        }
-
-    };
 
 
     @Override
@@ -75,39 +55,40 @@ public class ChoreEdit extends AppCompatActivity {
         choreSubmit = (Chore) intent.getSerializableExtra("SUBMIT");
         currentUser = (PersonRule) intent.getSerializableExtra("currentUser");
 
-        if (choreSubmit != null){
-            TextView txtCaption     = findViewById(R.id.textCaption);
-            TextView txtName        = findViewById(R.id.textName);
-            TextView txtDescription = findViewById(R.id.textDescription);
+        databaseResponsibilities    = FirebaseDatabase.getInstance().getReference("responsibility");
+        databaseChores              = FirebaseDatabase.getInstance().getReference("chore");
+        databaseLoginInfo           = FirebaseDatabase.getInstance().getReference("PersonRule");
 
-            txtCaption.setText("Edit Chore");
-            txtName.setText(choreSubmit.getChoreName());
-            txtDescription.setText(choreSubmit.getDescription());
+        userListen();
 
-            Calendar tempCal    = Calendar.getInstance();
-            long millis         = choreSubmit.getTimeInMillis();
-
-            tempCal.setTimeInMillis(millis);
-
-            int calYear         = tempCal.get(Calendar.YEAR);
-            int calMonth        = tempCal.get(Calendar.MONTH);
-            int calDay          = tempCal.get(Calendar.DAY_OF_MONTH);
-            int calHour         = tempCal.get(Calendar.HOUR);
-            int calMinute       = tempCal.get(Calendar.MINUTE);
-
-            setDate(calYear, calMonth,calDay);
-            setTime(calHour, calMinute);
-
-        }
+        if (choreSubmit != null){ choreFound(); }
+    }
 
 
+    public void userListen(){
         databaseLoginInfo.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
+                //clear and rebuild personRule list
                 personRulesList = new ArrayList<>();
                 for (DataSnapshot personRoleInstance : dataSnapshot.getChildren()) {
-                    //String personRule = (String) personRoleInstance.child("userName").getValue();
                     personRulesList.add(  personRoleInstance.getValue(PersonRule.class) );
+                }
+                if (choreSubmit!=null){
+                    StringBuilder userID = new StringBuilder();
+                    List<Responsibility> responsibilities = choreSubmit.getResponsibilities();
+                    for (int i = 0; i < responsibilities.size() ; i++){
+                        String tempID = responsibilities.get(i).getUserID();
+                        for (PersonRule user : personRulesList) {
+                            if (tempID.equals( user.getUserName() ) ){
+                                userID.append( user.getUserName() );
+                            }
+                        }
+                        if (i+1 < responsibilities.size() ){userID.append(", ");}
+                    }
+                    TextView textSelectedUsers = findViewById(R.id.textSelectUsers);
+                    textSelectedUsers.setText( userID.toString() );
                 }
             }
 
@@ -116,10 +97,34 @@ public class ChoreEdit extends AppCompatActivity {
 
             }
         });
-
-        //Listener for giving all the responsibility that relate to a specifc chore.
-
     }
+
+
+    public void choreFound(){
+        TextView txtCaption     = findViewById(R.id.textCaption);
+        TextView txtName        = findViewById(R.id.textName);
+        TextView txtDescription = findViewById(R.id.textDescription);
+
+        txtCaption.setText("Edit Chore");
+        txtName.setText(choreSubmit.getChoreName());
+        txtDescription.setText(choreSubmit.getDescription());
+
+        Calendar tempCal    = Calendar.getInstance();
+        long millis         = choreSubmit.getTimeInMillis();
+
+        tempCal.setTimeInMillis(millis);
+
+        int calYear         = tempCal.get(Calendar.YEAR);
+        int calMonth        = tempCal.get(Calendar.MONTH);
+        int calDay          = tempCal.get(Calendar.DAY_OF_MONTH);
+        int calHour         = tempCal.get(Calendar.HOUR);
+        int calMinute       = tempCal.get(Calendar.MINUTE);
+
+        setDate(calYear, calMonth,calDay);
+        setTime(calHour, calMinute);
+    }
+
+
 
     /**
      * Displays alert dialog of users in the database
@@ -136,15 +141,12 @@ public class ChoreEdit extends AppCompatActivity {
         }
 
         //pass personRulist list to a string Array for functionality in alert dialog
-
-
         AlertDialog.Builder userList = new AlertDialog.Builder(this);
         userList.setTitle("Select who should complete the chore.");
 
         //detect which users were selected for a task
         userList.setMultiChoiceItems(users, null, new DialogInterface.OnMultiChoiceClickListener() {
 
-            //auto-filled... when finishing above line
             @Override
             public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                 if(isChecked) {
@@ -172,7 +174,6 @@ public class ChoreEdit extends AppCompatActivity {
                 textSelect.setText( sb.toString() );
 
                 setSelectedPersonRuleList(selectedUsers);
-
             }
         });
 
@@ -320,63 +321,80 @@ public class ChoreEdit extends AppCompatActivity {
             txtDate.setError("Enter a date.");
             txtDate.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
         }
-        if (selectedPersonRuleList.size() == 0){
+        if ((selectedPersonRuleList !=null) && (selectedPersonRuleList.size() == 0)){
             allPass = false;
             txtSelectedUsers.setError("Please assign a user.");
             txtSelectedUsers.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
         }
 
         if (allPass){
-            String name         = txtName.getText().toString();
-            String description  = txtDescription.getText().toString();
+            String name         = txtName.getText().toString().trim();
+            String description  = txtDescription.getText().toString().trim();
             Calendar calChore   = Calendar.getInstance();
 
             calChore.set(year,month,day,hour,minute);
 
             long millis = calChore.getTimeInMillis();
-            Chore chore = new Chore(name, description, millis);
 
-            //personRulesList contains all the users selected
-            //TODO need to create responsibility if they do no have one and link it to the newly created chore
-            //TODO if responsibility exists, then update it's link to new chore.
 
-            if (choreSubmit != null) {
-                List<Responsibility> choresResponsibilities = choreSubmit.getResponsibilities();
-                for (Responsibility responsibility : choresResponsibilities) {
+            if (choreSubmit!=null){
+                for ( Responsibility responsibility : choreSubmit.getResponsibilities() ){
+                    String id = responsibility.getUserID();
+                    if(id == null) break;
 
-                    if ( personRulesList.contains( responsibility.getPersonRule()) ){
-                        chore.addResponsibility(responsibility);
-                        personRulesList.remove(responsibility.getPersonRule());
+                    for(PersonRule user : personRulesList){
+                        if(id.equals(user.getUserName())){
+                            user.removeResponsibility( responsibility );
+                            databaseLoginInfo.child(user.getUserName()).setValue(user);
+                        }
                     }
+
+                    databaseResponsibilities.child(responsibility.getResponsibilityID() ).removeValue();
                 }
 
+                databaseChores.child( choreSubmit.getChoreIdentification() ).removeValue();
             }
 
-            for (PersonRule person : personRulesList){
-                Responsibility tempResponsibility = new Responsibility( person.getUserID(), chore.getChoreIdentification() );
-                person.addResponsibility(tempResponsibility);
-                chore.addResponsibility(tempResponsibility);
+            Chore chore = new Chore(name, description, millis);
+
+            for ( PersonRule person : selectedPersonRuleList ){
+                Responsibility responsibility = new Responsibility( person.getUserName(), chore.getChoreIdentification() );
+                person.addResponsibility(responsibility);
+                chore.addResponsibility(responsibility);
+
+                databaseLoginInfo.child( person.getUserName() ).setValue(person);
+                databaseResponsibilities.child( responsibility.getResponsibilityID() ).setValue(responsibility);
             }
 
-
-//            for ( PersonRule selected : personRulesList ){
-//                List<Responsibility> slectedUsersResponsibilities = selected.getResponsibilities();
-
-//            }
-
-            databaseChore.child(chore.getChoreIdentification()).setValue(chore); //update the Chore
-            databaseChore.child(choreSubmit.getChoreIdentification()).removeValue();
-
+            databaseChores.child(chore.getChoreIdentification() ).setValue(chore);
 
             Intent intent = new Intent(ChoreEdit.this, ChoreList.class);
-            //intent.putExtra("SUBMIT", chore);
-            //intent.putExtra("USERS", userList);
-
             intent.putExtra("currentUser",currentUser);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }
     }
+
+
+
+
+    //https://developer.android.com/reference/android/app/TimePickerDialog.OnTimeSetListener.html
+    private TimePickerDialog.OnTimeSetListener timeListen = new TimePickerDialog.OnTimeSetListener() {
+
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            setTime(hourOfDay, minute);
+        }
+    };
+    //https://developer.android.com/reference/android/app/DatePickerDialog.OnDateSetListener.html
+    private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
+
+        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+            //From article: the selected month (0-11 for compatibility with MONTH), so add 1...
+            setDate(year, month, dayOfMonth);
+        }
+
+    };
+
 
 }
 
