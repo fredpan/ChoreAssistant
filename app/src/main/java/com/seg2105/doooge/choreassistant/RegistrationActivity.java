@@ -192,10 +192,10 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         } else {
             PersonRule personRule = new PersonRule(username, encrypted, isAdmin, color, userID);
             databaseLoginInfo.child(username).setValue(personRule);
+            obtainedPassword.setText("");
+            obtainedUsername.setText("");
+            Toast.makeText(getApplicationContext(), "create success !!!!", Toast.LENGTH_SHORT).show();
         }
-        obtainedPassword.setText("");
-        obtainedUsername.setText("");
-        Toast.makeText(getApplicationContext(), "create success !!!!", Toast.LENGTH_SHORT).show();
     }
 
 
