@@ -11,6 +11,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
             android:text="Edit User File"
@@ -21,6 +22,7 @@
             android:id="@+id/askingForNewUserName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:layout_marginLeft="5dp"
             android:text="Please enter a user name:" />
 
@@ -28,15 +30,19 @@
             android:id="@+id/newUserName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@drawable/back"
             android:ems="10"
             android:hint="Please enter a new user name"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:textSize="25dp" />
 
 
         <TextView
             android:id="@+id/askingforNewPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:layout_marginLeft="5dp"
             android:text="Create a new password:" />
 
@@ -44,51 +50,61 @@
             android:id="@+id/newPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@drawable/back"
             android:ems="10"
             android:hint="Please enter password"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:textSize="25dp" />
 
         <TextView
             android:id="@+id/askingforNewColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:layout_marginLeft="5dp"
             android:text="Please choose a new color to represent yourself:" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/edit_blue"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="#4169E1" />
+                android:background="@drawable/blue_button_roundedge" />
 
             <Button
+                android:id="@+id/edit_green"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="#32CD32" />
+                android:background="@drawable/green_button_roundedge" />
 
             <Button
+                android:id="@+id/edit_yellow"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="#FFA500" />
+                android:background="@drawable/yellow_button_roundedge" />
 
             <Button
+                android:id="@+id/edit_violet"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="#8A2BE2" />
+                android:background="@drawable/violet_button_roundedge" />
 
             <Button
+                android:id="@+id/edit_red"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="#FF0000" />
+                android:background="@drawable/red_button_roundedge" />
         </LinearLayout>
 
 

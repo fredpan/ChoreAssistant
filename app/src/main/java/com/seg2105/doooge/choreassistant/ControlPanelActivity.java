@@ -8,8 +8,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -28,13 +31,29 @@ public class ControlPanelActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.control_panel);
         controlPanelListView = findViewById(R.id.controlPanelListView);
-        Intent intent = getIntent();
-        personRules = (ArrayList<PersonRule>) intent.getSerializableExtra("userList");
 
 
-        System.out.println("==========================" + personRules.get(0).getUserName());
-        UserInfoAdapter userInfoAdapter = new UserInfoAdapter(personRules, ControlPanelActivity.this);
-        controlPanelListView.setAdapter(userInfoAdapter);
+        databaseLoginInfo.addValueEventListener(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot personRoleInstance : dataSnapshot.getChildren()) {
+                            PersonRule personRule = personRoleInstance.getValue(PersonRule.class);
+                            personRules.add(personRule);
+
+                        }
+                        UserInfoAdapter userInfoAdapter = new UserInfoAdapter(personRules, ControlPanelActivity.this);
+                        controlPanelListView.setAdapter(userInfoAdapter);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                }
+        );
+
+
 
 //        databaseLoginInfo.addValueEventListener(new ValueEventListener() {
 //            ArrayList<PersonRule> identificationsList = new ArrayList<>();
