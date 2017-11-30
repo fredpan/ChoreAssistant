@@ -146,6 +146,45 @@ public class WelcomePageActivity extends AppCompatActivity {
 
     }
 
+    public void showPasswordConfirm(final PersonRule user) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.login_confirm, null);
+        dialogBuilder.setView(dialogView);
+        dialogBuilder.setTitle("Login :");
+
+
+        final EditText password = dialogView.findViewById(R.id.editConfirmPassword);
+
+        final Button login = dialogView.findViewById(R.id.confirm_button);
+        final Button exist = dialogView.findViewById(R.id.confirm_exist);
+        final TextView warm = dialogView.findViewById(R.id.confirm_warn);
+        final AlertDialog dialog = dialogBuilder.create();
+        dialog.show();
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (password.getText().toString().equals("") || password.getText().toString().equals("")) {
+                    warm.setText("Your Password is wrong !!");
+                    warm.setVisibility(View.VISIBLE);
+
+                } else {
+                    Intent intent = new Intent(WelcomePageActivity.this, ChoreList.class);
+                    intent.putExtra("currentUser", user);
+                    startActivity(intent);
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        exist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+    }
 
     /*
     ** To createa adapter control each user in the recyclerView.
@@ -177,9 +216,14 @@ public class WelcomePageActivity extends AppCompatActivity {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(WelcomePageActivity.this, ChoreList.class);
-                    intent.putExtra("currentUser", user);
-                    startActivity(intent);
+
+                    if (user.isAdmin()) {
+                        showPasswordConfirm(user);
+                    } else {
+                        Intent intent = new Intent(WelcomePageActivity.this, ChoreList.class);
+                        intent.putExtra("currentUser", user);
+                        startActivity(intent);
+                    }
                 }
             });
         }

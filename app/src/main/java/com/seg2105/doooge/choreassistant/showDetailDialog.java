@@ -28,7 +28,7 @@ import java.util.TimerTask;
 
 public class showDetailDialog extends AppCompatActivity {
 
-    DatabaseReference databaseChore = FirebaseDatabase.getInstance().getReference("Chore");
+    DatabaseReference databaseChore = FirebaseDatabase.getInstance().getReference("chore");
     private Chore choreSubmit;
 
     @Override
@@ -159,7 +159,7 @@ public class showDetailDialog extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                databaseChore.child(choreSubmit.getChoreName()).child("complete").setValue(true);
+                databaseChore.child(choreSubmit.getChoreIdentification()).child("complete").setValue(true);
                 Toast.makeText(getApplicationContext(), "Congraduation, You finish !!!!", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
                 button.setBackgroundResource(R.drawable.finish_button);
