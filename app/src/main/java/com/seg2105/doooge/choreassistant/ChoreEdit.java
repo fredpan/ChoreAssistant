@@ -40,7 +40,6 @@ public class ChoreEdit extends AppCompatActivity {
     private Chore choreSubmit;
     private PersonRule currentUser;
 
-    //private PersonRule currentUser;
 
     private List<PersonRule> personRulesList;
     private List<PersonRule> selectedPersonRuleList;
@@ -58,6 +57,8 @@ public class ChoreEdit extends AppCompatActivity {
         databaseResponsibilities    = FirebaseDatabase.getInstance().getReference("responsibility");
         databaseChores              = FirebaseDatabase.getInstance().getReference("chore");
         databaseLoginInfo           = FirebaseDatabase.getInstance().getReference("PersonRule");
+
+        selectedPersonRuleList = new ArrayList<>();
 
         userListen();
 
@@ -83,6 +84,7 @@ public class ChoreEdit extends AppCompatActivity {
                         for (PersonRule user : personRulesList) {
                             if (tempID.equals( user.getUserName() ) ){
                                 userID.append( user.getUserName() );
+                                selectedPersonRuleList.add(user);
                             }
                         }
                         if (i+1 < responsibilities.size() ){userID.append(", ");}
