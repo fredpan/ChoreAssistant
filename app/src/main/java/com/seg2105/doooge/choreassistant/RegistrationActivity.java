@@ -183,19 +183,17 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         String password = String.valueOf(obtainedPassword.getText());
         String encrypted = IdentificationUtility.generateIdentification(username, password);
 
-        if (username.equals("") || password.equals("")) {
-            obtainedUsername.setError("Enter a name.");
+        if (username.equals("")) {
+            obtainedUsername.setError("At least enter a name.");
             obtainedUsername.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
-            obtainedPassword.setError("Enter a password.");
-            obtainedPassword.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
 
         } else {
             PersonRule personRule = new PersonRule(username, encrypted, isAdmin, color, userID);
             databaseLoginInfo.child(username).setValue(personRule);
+            obtainedPassword.setText("");
+            obtainedUsername.setText("");
+            Toast.makeText(getApplicationContext(), "create success !!!!", Toast.LENGTH_SHORT).show();
         }
-        obtainedPassword.setText("");
-        obtainedUsername.setText("");
-        Toast.makeText(getApplicationContext(), "create success !!!!", Toast.LENGTH_SHORT).show();
     }
 
 

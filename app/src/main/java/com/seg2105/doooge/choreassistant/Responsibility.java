@@ -7,7 +7,7 @@ import java.security.NoSuchAlgorithmException;
  * Created by dustin on 11/25/17.
  */
 
-public class Responsibility implements Serializable{
+public class Responsibility implements Serializable {
 
     //private int userID;
     private String userID;
@@ -34,31 +34,27 @@ public class Responsibility implements Serializable{
         //this.responsibilityID = IdentificationUtility.generateIdentification(Integer.toString(userID), choreIdentification);
     }
 
-    public void setChore(Chore chore){
-        this.chore = chore;
-    }
-
     public Chore getChore(){
         return chore;
     }
 
-
-
-    public void setPersonRule(PersonRule personRule){
-        this.personRule = personRule;
+    public void setChore(Chore chore) {
+        this.chore = chore;
     }
 
     public PersonRule getPersonRule(){
         return personRule;
     }
 
+    public void setPersonRule(PersonRule personRule) {
+        this.personRule = personRule;
+    }
 
-
-    public String getUserID(){
+    public String getUserID() {
         return userID;
     }
 
-    public void setUserID(String userID){
+    public void setUserID(String userID) {
         this.userID = userID;
     }
 

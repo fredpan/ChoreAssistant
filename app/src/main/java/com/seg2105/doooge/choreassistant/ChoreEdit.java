@@ -66,7 +66,7 @@ public class ChoreEdit extends AppCompatActivity {
     }
 
 
-    public void userListen(){
+    public void userListen() {
         databaseLoginInfo.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -74,9 +74,9 @@ public class ChoreEdit extends AppCompatActivity {
                 //clear and rebuild personRule list
                 personRulesList = new ArrayList<>();
                 for (DataSnapshot personRoleInstance : dataSnapshot.getChildren()) {
-                    personRulesList.add(  personRoleInstance.getValue(PersonRule.class) );
+                    personRulesList.add(personRoleInstance.getValue(PersonRule.class));
                 }
-                if (choreSubmit!=null){
+                if (choreSubmit != null) {
                     StringBuilder userID = new StringBuilder();
                     List<Responsibility> responsibilities = choreSubmit.getResponsibilities();
                     for (int i = 0; i < responsibilities.size() ; i++){
@@ -122,11 +122,9 @@ public class ChoreEdit extends AppCompatActivity {
         int calHour         = tempCal.get(Calendar.HOUR);
         int calMinute       = tempCal.get(Calendar.MINUTE);
 
-        setDate(calYear, calMonth,calDay);
+        setDate(calYear, calMonth, calDay);
         setTime(calHour, calMinute);
     }
-
-
 
     /**
      * Displays alert dialog of users in the database
@@ -210,7 +208,6 @@ public class ChoreEdit extends AppCompatActivity {
         txtDate.setError(null);
         datePick();
     }
-
 
     public void textName_OnClick(View view) {
         view.setBackgroundDrawable(getResources().getDrawable(R.drawable.back));
@@ -323,7 +320,7 @@ public class ChoreEdit extends AppCompatActivity {
             txtDate.setError("Enter a date.");
             txtDate.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
         }
-        if ((selectedPersonRuleList !=null) && (selectedPersonRuleList.size() == 0)){
+        if ((selectedPersonRuleList != null) && (selectedPersonRuleList.size() == 0)) {
             allPass = false;
             txtSelectedUsers.setError("Please assign a user.");
             txtSelectedUsers.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
@@ -339,8 +336,8 @@ public class ChoreEdit extends AppCompatActivity {
             long millis = calChore.getTimeInMillis();
 
 
-            if (choreSubmit!=null){
-                for ( Responsibility responsibility : choreSubmit.getResponsibilities() ){
+            if (choreSubmit != null) {
+                for (Responsibility responsibility : choreSubmit.getResponsibilities()) {
                     String id = responsibility.getUserID();
                     if(id == null) break;
 

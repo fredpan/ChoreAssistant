@@ -44,6 +44,7 @@ public class WelcomePageActivity extends AppCompatActivity {
     private HomeAdapter mAdapter; //This adapter for control the recyclerView.
     private PersonRule testRule;  // This is for test
     private ArrayList<PersonRule> personRulesList; //This is for save user
+    private boolean noAdmin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +67,7 @@ public class WelcomePageActivity extends AppCompatActivity {
                     personRulesList.add(personRule);
 
                 }
+                noAdmin = personRulesList.isEmpty();
                 mRecyclerView = findViewById(R.id.id_recyclerview);
                 mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
                 mRecyclerView.setAdapter(mAdapter = new HomeAdapter());
@@ -80,16 +82,33 @@ public class WelcomePageActivity extends AppCompatActivity {
         });
         System.out.println("2222===================");
 
+
+        Button loginButton = findViewById(R.id.loginAsAdmin);
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (noAdmin) {
+                    Intent intent = new Intent(WelcomePageActivity.this, RegistrationActivity.class);
+                    startActivity(intent);
+                } else {
+                    showLoginDialog();
+                }
+            }
+        });
+
+
+
+
     }
 
 
     //create a listener to display login Dialog for admin button
-    public void showLoginDialog(View view) {
+    public void showLoginDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.login_dialog, null);
         dialogBuilder.setView(dialogView);
-        dialogBuilder.setTitle("Login Page");
+        dialogBuilder.setTitle("Login :");
 
 
         final EditText userName = dialogView.findViewById(R.id.editID);
@@ -103,36 +122,18 @@ public class WelcomePageActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final ArrayList<PersonRule> personRules = new ArrayList<>();
-                databaseLoginInfo.addListenerForSingleValueEvent(
-                        new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                for (DataSnapshot personRoleInstance : dataSnapshot.getChildren()) {
-                                    PersonRule personRule = personRoleInstance.getValue(PersonRule.class);
-                                    personRules.add(personRule);
 
-                                }
-                                Intent intent = new Intent(WelcomePageActivity.this, ControlPanelActivity.class);
-                                intent.putExtra("userList", personRules);
-                                startActivity(intent);
-                                warm.setVisibility(View.INVISIBLE);
-                                dialog.dismiss();
-                            }
+                if (userName.getText().toString().equals("") || password.getText().toString().equals("")) {
+                    warm.setText("Your userID or Password is wrong !!");
+                    warm.setVisibility(View.VISIBLE);
 
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
+                } else {
+                Intent intent = new Intent(WelcomePageActivity.this, ControlPanelActivity.class);
 
-                            }
-                        }
-                );
-//                if (userName.getText().toString().equals("") || password.getText().toString().equals("")) {
-//                    warm.setText("Your userID or Password is wrong !!");
-//                    warm.setVisibility(View.VISIBLE);
-//
-//                } else {
-
-                //               }
+                startActivity(intent);
+                warm.setVisibility(View.INVISIBLE);
+                dialog.dismiss();
+                }
             }
         });
 
@@ -145,11 +146,43 @@ public class WelcomePageActivity extends AppCompatActivity {
 
     }
 
-    public void delete(View view) {
-        EditText text = findViewById(R.id.deleteText);
-        String username = String.valueOf(text.getText());
-        databaseLoginInfo.child(username).removeValue();
-        text.setText("");
+    public void showPasswordConfirm(final PersonRule user) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.login_confirm, null);
+        dialogBuilder.setView(dialogView);
+        dialogBuilder.setTitle("Login :");
+
+
+        final EditText password = dialogView.findViewById(R.id.editConfirmPassword);
+
+        final Button login = dialogView.findViewById(R.id.confirm_button);
+        final Button exist = dialogView.findViewById(R.id.confirm_exist);
+        final TextView warm = dialogView.findViewById(R.id.confirm_warn);
+        final AlertDialog dialog = dialogBuilder.create();
+        dialog.show();
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (password.getText().toString().equals("") || password.getText().toString().equals("")) {
+                    warm.setText("Your Password is wrong !!");
+                    warm.setVisibility(View.VISIBLE);
+
+                } else {
+                    Intent intent = new Intent(WelcomePageActivity.this, ChoreList.class);
+                    intent.putExtra("currentUser", user);
+                    startActivity(intent);
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        exist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
 
     }
 
@@ -183,14 +216,14 @@ public class WelcomePageActivity extends AppCompatActivity {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(WelcomePageActivity.this, ChoreList.class);
+
                     if (user.isAdmin()) {
-                        intent.putExtra(EXTRA_MASSAGE, "admin");
+                        showPasswordConfirm(user);
                     } else {
-                        intent.putExtra(EXTRA_MASSAGE, "user");
+                        Intent intent = new Intent(WelcomePageActivity.this, ChoreList.class);
+                        intent.putExtra("currentUser", user);
+                        startActivity(intent);
                     }
-                    intent.putExtra("currentUser", user);
-                    startActivity(intent);
                 }
             });
         }
