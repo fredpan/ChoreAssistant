@@ -44,6 +44,7 @@ public class WelcomePageActivity extends AppCompatActivity {
     private HomeAdapter mAdapter; //This adapter for control the recyclerView.
     private PersonRule testRule;  // This is for test
     private ArrayList<PersonRule> personRulesList; //This is for save user
+    private boolean noAdmin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +67,7 @@ public class WelcomePageActivity extends AppCompatActivity {
                     personRulesList.add(personRule);
 
                 }
+                noAdmin = personRulesList.isEmpty();
                 mRecyclerView = findViewById(R.id.id_recyclerview);
                 mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
                 mRecyclerView.setAdapter(mAdapter = new HomeAdapter());
@@ -80,11 +82,28 @@ public class WelcomePageActivity extends AppCompatActivity {
         });
         System.out.println("2222===================");
 
+
+        Button loginButton = findViewById(R.id.loginAsAdmin);
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (noAdmin) {
+                    Intent intent = new Intent(WelcomePageActivity.this, RegistrationActivity.class);
+                    startActivity(intent);
+                } else {
+                    showLoginDialog();
+                }
+            }
+        });
+
+
+
+
     }
 
 
     //create a listener to display login Dialog for admin button
-    public void showLoginDialog(View view) {
+    public void showLoginDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.login_dialog, null);
@@ -104,17 +123,17 @@ public class WelcomePageActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-//                if (userName.getText().toString().equals("") || password.getText().toString().equals("")) {
-//                    warm.setText("Your userID or Password is wrong !!");
-//                    warm.setVisibility(View.VISIBLE);
-//
-//                } else {
+                if (userName.getText().toString().equals("") || password.getText().toString().equals("")) {
+                    warm.setText("Your userID or Password is wrong !!");
+                    warm.setVisibility(View.VISIBLE);
+
+                } else {
                 Intent intent = new Intent(WelcomePageActivity.this, ControlPanelActivity.class);
 
                 startActivity(intent);
                 warm.setVisibility(View.INVISIBLE);
                 dialog.dismiss();
-                //               }
+                }
             }
         });
 
@@ -127,13 +146,6 @@ public class WelcomePageActivity extends AppCompatActivity {
 
     }
 
-    public void delete(View view) {
-        EditText text = findViewById(R.id.deleteText);
-        String username = String.valueOf(text.getText());
-        databaseLoginInfo.child(username).removeValue();
-        text.setText("");
-
-    }
 
     /*
     ** To createa adapter control each user in the recyclerView.

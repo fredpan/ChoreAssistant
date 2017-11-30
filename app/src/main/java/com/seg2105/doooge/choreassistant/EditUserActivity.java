@@ -93,7 +93,7 @@ public class EditUserActivity extends AppCompatActivity implements View.OnClickL
 //                System.out.println("HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
                 if (newUserName.equals("")) {
-                    userName.setError("Enter a name.");
+                    userName.setError("At least enter a name.");
                     userName.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
 
                 } else {

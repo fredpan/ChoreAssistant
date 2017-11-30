@@ -154,7 +154,7 @@ public class ChoreList extends AppCompatActivity {
             if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE).equals("user")) {
                 currentOperator = "user";
                 Button add = findViewById(R.id.btnAdd);
-                add.setVisibility(View.VISIBLE);
+                add.setVisibility(View.INVISIBLE);
 
             } else if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE).equals("admin")) {
                 currentOperator = "admin";
