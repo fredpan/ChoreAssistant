@@ -83,13 +83,17 @@ public class ChoreList extends AppCompatActivity {
 
                 for ( DataSnapshot postSnapshot : dataSnapshot.getChildren() ) {
                     Chore chore = postSnapshot.getValue(Chore.class);
-                    //displayChore(chore);
 
-                    if (chore.getResponsibilities() != null) {
-                        for (Responsibility respon : chore.getResponsibilities()) {
-                            if (respon == null) break;
+                    //tinkering but case should be avoided
+                    //if (chore.getResponsibilities() == null) throw new UnassignedChoreException;
 
-                            String temp1 = respon.getUserID();
+                    if (currentUser.isAdmin()){
+                        displayChore(chore);
+                    } else if (chore.getResponsibilities() != null) {
+                        for (Responsibility responsibility : chore.getResponsibilities()) {
+                            if (responsibility == null) break;
+
+                            String temp1 = responsibility.getUserID();
                             String temp2 = currentUser.getUserName();
                             if ((temp1 != null) && (temp2 != null) && ( temp1.equals(temp2)) ) {
                                 displayChore(chore);
