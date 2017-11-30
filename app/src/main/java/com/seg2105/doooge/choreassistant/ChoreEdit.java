@@ -44,7 +44,22 @@ public class ChoreEdit extends AppCompatActivity {
 
     private List<PersonRule> personRulesList;
     private List<PersonRule> selectedPersonRuleList;
+    //https://developer.android.com/reference/android/app/TimePickerDialog.OnTimeSetListener.html
+    private TimePickerDialog.OnTimeSetListener timeListen = new TimePickerDialog.OnTimeSetListener() {
 
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            setTime(hourOfDay, minute);
+        }
+    };
+    //https://developer.android.com/reference/android/app/DatePickerDialog.OnDateSetListener.html
+    private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
+
+        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+            //From article: the selected month (0-11 for compatibility with MONTH), so add 1...
+            setDate(year, month, dayOfMonth);
+        }
+
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,17 +70,18 @@ public class ChoreEdit extends AppCompatActivity {
         choreSubmit = (Chore) intent.getSerializableExtra("SUBMIT");
         currentUser = (PersonRule) intent.getSerializableExtra("currentUser");
 
-        databaseResponsibilities    = FirebaseDatabase.getInstance().getReference("responsibility");
-        databaseChores              = FirebaseDatabase.getInstance().getReference("chore");
-        databaseLoginInfo           = FirebaseDatabase.getInstance().getReference("PersonRule");
+        databaseResponsibilities = FirebaseDatabase.getInstance().getReference("responsibility");
+        databaseChores = FirebaseDatabase.getInstance().getReference("chore");
+        databaseLoginInfo = FirebaseDatabase.getInstance().getReference("PersonRule");
 
         userListen();
 
-        if (choreSubmit != null){ choreFound(); }
+        if (choreSubmit != null) {
+            choreFound();
+        }
     }
 
-
-    public void userListen(){
+    public void userListen() {
         databaseLoginInfo.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -73,22 +89,24 @@ public class ChoreEdit extends AppCompatActivity {
                 //clear and rebuild personRule list
                 personRulesList = new ArrayList<>();
                 for (DataSnapshot personRoleInstance : dataSnapshot.getChildren()) {
-                    personRulesList.add(  personRoleInstance.getValue(PersonRule.class) );
+                    personRulesList.add(personRoleInstance.getValue(PersonRule.class));
                 }
-                if (choreSubmit!=null){
+                if (choreSubmit != null) {
                     StringBuilder userID = new StringBuilder();
                     List<Responsibility> responsibilities = choreSubmit.getResponsibilities();
-                    for (int i = 0; i < responsibilities.size() ; i++){
+                    for (int i = 0; i < responsibilities.size(); i++) {
                         String tempID = responsibilities.get(i).getUserID();
                         for (PersonRule user : personRulesList) {
-                            if (tempID.equals( user.getUserName() ) ){
-                                userID.append( user.getUserName() );
+                            if (tempID.equals(user.getUserName())) {
+                                userID.append(user.getUserName());
                             }
                         }
-                        if (i+1 < responsibilities.size() ){userID.append(", ");}
+                        if (i + 1 < responsibilities.size()) {
+                            userID.append(", ");
+                        }
                     }
                     TextView textSelectedUsers = findViewById(R.id.textSelectUsers);
-                    textSelectedUsers.setText( userID.toString() );
+                    textSelectedUsers.setText(userID.toString());
                 }
             }
 
@@ -99,32 +117,29 @@ public class ChoreEdit extends AppCompatActivity {
         });
     }
 
-
-    public void choreFound(){
-        TextView txtCaption     = findViewById(R.id.textCaption);
-        TextView txtName        = findViewById(R.id.textName);
+    public void choreFound() {
+        TextView txtCaption = findViewById(R.id.textCaption);
+        TextView txtName = findViewById(R.id.textName);
         TextView txtDescription = findViewById(R.id.textDescription);
 
         txtCaption.setText("Edit Chore");
         txtName.setText(choreSubmit.getChoreName());
         txtDescription.setText(choreSubmit.getDescription());
 
-        Calendar tempCal    = Calendar.getInstance();
-        long millis         = choreSubmit.getTimeInMillis();
+        Calendar tempCal = Calendar.getInstance();
+        long millis = choreSubmit.getTimeInMillis();
 
         tempCal.setTimeInMillis(millis);
 
-        int calYear         = tempCal.get(Calendar.YEAR);
-        int calMonth        = tempCal.get(Calendar.MONTH);
-        int calDay          = tempCal.get(Calendar.DAY_OF_MONTH);
-        int calHour         = tempCal.get(Calendar.HOUR);
-        int calMinute       = tempCal.get(Calendar.MINUTE);
+        int calYear = tempCal.get(Calendar.YEAR);
+        int calMonth = tempCal.get(Calendar.MONTH);
+        int calDay = tempCal.get(Calendar.DAY_OF_MONTH);
+        int calHour = tempCal.get(Calendar.HOUR);
+        int calMinute = tempCal.get(Calendar.MINUTE);
 
-        setDate(calYear, calMonth,calDay);
+        setDate(calYear, calMonth, calDay);
         setTime(calHour, calMinute);
     }
-
-
 
     /**
      * Displays alert dialog of users in the database
@@ -194,7 +209,6 @@ public class ChoreEdit extends AppCompatActivity {
 
     }
 
-
     public void textSelectUsers_OnClick(View view) {
         view.setBackgroundDrawable(getResources().getDrawable(R.drawable.back));
         TextView txtSelect = findViewById(R.id.textSelectUsers);
@@ -208,7 +222,6 @@ public class ChoreEdit extends AppCompatActivity {
         txtDate.setError(null);
         datePick();
     }
-
 
     public void textName_OnClick(View view) {
         view.setBackgroundDrawable(getResources().getDrawable(R.drawable.back));
@@ -268,8 +281,6 @@ public class ChoreEdit extends AppCompatActivity {
         textTime.setText( String.format("%02d:%02d", hour, minute) );
     }
 
-
-
     private void timePick() {
         //https://developer.android.com/reference/android/app/TimePickerDialog.html
 
@@ -321,15 +332,15 @@ public class ChoreEdit extends AppCompatActivity {
             txtDate.setError("Enter a date.");
             txtDate.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
         }
-        if ((selectedPersonRuleList !=null) && (selectedPersonRuleList.size() == 0)){
+        if ((selectedPersonRuleList != null) && (selectedPersonRuleList.size() == 0)) {
             allPass = false;
             txtSelectedUsers.setError("Please assign a user.");
             txtSelectedUsers.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
         }
 
         if (allPass){
-            String name         = txtName.getText().toString().trim();
-            String description  = txtDescription.getText().toString().trim();
+            String name = txtName.getText().toString().trim();
+            String description = txtDescription.getText().toString().trim();
             Calendar calChore   = Calendar.getInstance();
 
             calChore.set(year,month,day,hour,minute);
@@ -337,36 +348,36 @@ public class ChoreEdit extends AppCompatActivity {
             long millis = calChore.getTimeInMillis();
 
 
-            if (choreSubmit!=null){
-                for ( Responsibility responsibility : choreSubmit.getResponsibilities() ){
+            if (choreSubmit != null) {
+                for (Responsibility responsibility : choreSubmit.getResponsibilities()) {
                     String id = responsibility.getUserID();
-                    if(id == null) break;
+                    if (id == null) break;
 
-                    for(PersonRule user : personRulesList){
-                        if(id.equals(user.getUserName())){
-                            user.removeResponsibility( responsibility );
+                    for (PersonRule user : personRulesList) {
+                        if (id.equals(user.getUserName())) {
+                            user.removeResponsibility(responsibility);
                             databaseLoginInfo.child(user.getUserName()).setValue(user);
                         }
                     }
 
-                    databaseResponsibilities.child(responsibility.getResponsibilityID() ).removeValue();
+                    databaseResponsibilities.child(responsibility.getResponsibilityID()).removeValue();
                 }
 
-                databaseChores.child( choreSubmit.getChoreIdentification() ).removeValue();
+                databaseChores.child(choreSubmit.getChoreIdentification()).removeValue();
             }
 
             Chore chore = new Chore(name, description, millis);
 
-            for ( PersonRule person : selectedPersonRuleList ){
-                Responsibility responsibility = new Responsibility( person.getUserName(), chore.getChoreIdentification() );
+            for (PersonRule person : selectedPersonRuleList) {
+                Responsibility responsibility = new Responsibility(person.getUserName(), chore.getChoreIdentification());
                 person.addResponsibility(responsibility);
                 chore.addResponsibility(responsibility);
 
-                databaseLoginInfo.child( person.getUserName() ).setValue(person);
-                databaseResponsibilities.child( responsibility.getResponsibilityID() ).setValue(responsibility);
+                databaseLoginInfo.child(person.getUserName()).setValue(person);
+                databaseResponsibilities.child(responsibility.getResponsibilityID()).setValue(responsibility);
             }
 
-            databaseChores.child(chore.getChoreIdentification() ).setValue(chore);
+            databaseChores.child(chore.getChoreIdentification()).setValue(chore);
 
             Intent intent = new Intent(ChoreEdit.this, ChoreList.class);
             intent.putExtra("currentUser",currentUser);
@@ -374,26 +385,6 @@ public class ChoreEdit extends AppCompatActivity {
             startActivity(intent);
         }
     }
-
-
-
-
-    //https://developer.android.com/reference/android/app/TimePickerDialog.OnTimeSetListener.html
-    private TimePickerDialog.OnTimeSetListener timeListen = new TimePickerDialog.OnTimeSetListener() {
-
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            setTime(hourOfDay, minute);
-        }
-    };
-    //https://developer.android.com/reference/android/app/DatePickerDialog.OnDateSetListener.html
-    private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
-
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            //From article: the selected month (0-11 for compatibility with MONTH), so add 1...
-            setDate(year, month, dayOfMonth);
-        }
-
-    };
 
 
 }

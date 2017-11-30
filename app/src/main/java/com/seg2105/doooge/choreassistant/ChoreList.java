@@ -33,21 +33,30 @@ import java.util.Calendar;
 
 public class ChoreList extends AppCompatActivity {
 
+    DatabaseReference databaseResponsibilities;
+    DatabaseReference databaseChores;
+    DatabaseReference databaseUsers;
     //Stores user information
     //private static String currentOperator;
     private PersonRule currentUser;
-
     //stores the current date
     private int day;
     private int month;
     private int year;
     private Calendar cal;
+    /**
+     * Displays the a date picker dialog and sets the current date.
+     */
+    private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
 
+        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+            //the selected month (0-11 for compatibility with MONTH)
+            scrubChoreView();
+            updateDate(year, month, dayOfMonth);
+            setDate(year, month, dayOfMonth);
 
-    DatabaseReference databaseResponsibilities;
-    DatabaseReference databaseChores;
-    DatabaseReference databaseUsers;
-
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,10 +67,10 @@ public class ChoreList extends AppCompatActivity {
         currentUser = (PersonRule) intent.getSerializableExtra("currentUser");
 
         //setting up calendar
-        cal     = Calendar.getInstance();
-        day     = cal.get(Calendar.DAY_OF_MONTH);
-        month   = cal.get(Calendar.MONTH);
-        year    = cal.get(Calendar.YEAR);
+        cal = Calendar.getInstance();
+        day = cal.get(Calendar.DAY_OF_MONTH);
+        month = cal.get(Calendar.MONTH);
+        year = cal.get(Calendar.YEAR);
 
         setDate(year, month, day);
 
@@ -73,24 +82,23 @@ public class ChoreList extends AppCompatActivity {
 
         choreListen();
         //responsibilityListen();
-        //userListen();
+        userListen();
 
     }
 
-
-    public void choreListen(){
+    public void choreListen() {
         //making this callable so update to the UI can happen
         databaseChores.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                for ( DataSnapshot postSnapshot : dataSnapshot.getChildren() ) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Chore chore = postSnapshot.getValue(Chore.class);
 
                     //tinkering but case should be avoided
                     //if (chore.getResponsibilities() == null) throw new UnassignedChoreException;
 
-                    if (currentUser.isAdmin()){
+                    if (currentUser.isAdmin()) {
                         displayChore(chore);
                     } else if (chore.getResponsibilities() != null) {
                         for (Responsibility responsibility : chore.getResponsibilities()) {
@@ -98,7 +106,7 @@ public class ChoreList extends AppCompatActivity {
 
                             String temp1 = responsibility.getUserID();
                             String temp2 = currentUser.getUserName();
-                            if ((temp1 != null) && (temp2 != null) && ( temp1.equals(temp2)) ) {
+                            if ((temp1 != null) && (temp2 != null) && (temp1.equals(temp2))) {
                                 displayChore(chore);
                             }
                         }
@@ -113,32 +121,26 @@ public class ChoreList extends AppCompatActivity {
         });
     }
 
-    public void responsibilityListen(){
+    public void responsibilityListen() {
 
     }
 
-    public void userListen(){
+    public void userListen() {
 
 
         // check if admin, if not ,set invisible for add button and edit button
 
 
-        if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE) != null) {
+        if (!currentUser.isAdmin()) {
+            Button add = findViewById(R.id.btnAdd);
+            add.setVisibility(View.INVISIBLE);
 
-            if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE).equals("user")) {
-                currentOperator = "user";
-                Button add = findViewById(R.id.btnAdd);
-                add.setVisibility(View.VISIBLE);
-
-            } else if (intent.getStringExtra(WelcomePageActivity.EXTRA_MASSAGE).equals("admin")) {
-                currentOperator = "admin";
-                Button add = findViewById(R.id.btnAdd);
-                add.setVisibility(View.VISIBLE);
-            }
         } else {
-            //choreSubmit = (Chore) intent.getSerializableExtra("SUBMIT");
+            Button add = findViewById(R.id.btnAdd);
+            add.setVisibility(View.VISIBLE);
         }
 
+    }
 
     public void add_OnClick(View view) {
         Intent intent = new Intent(ChoreList.this, ChoreEdit.class); //switch homepage to edit chore page
@@ -164,8 +166,8 @@ public class ChoreList extends AppCompatActivity {
         int choreDay            = tempCal.get(Calendar.DAY_OF_MONTH);
 
         //if chores day doesn't match the current displayed day exit
-        if ((choreYear != year) || (choreMonth != month) || (choreDay != day)){
-            return ;
+        if ((choreYear != year) || (choreMonth != month) || (choreDay != day)) {
+            return;
         }
 
         LinearLayout linearView = findViewById(R.id.choreView);
@@ -210,7 +212,7 @@ public class ChoreList extends AppCompatActivity {
             @Override
             public void onClick(View view){
 
-                Toast.makeText(getBaseContext(), " " + view.getTag(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), " " + ((Chore) view.getTag()).getChoreName(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(ChoreList.this, showDetailDialog.class);
                 intent.putExtra("SUBMIT", (Chore) view.getTag());
                 startActivity(intent);
@@ -225,7 +227,7 @@ public class ChoreList extends AppCompatActivity {
 
                 Intent intent = new Intent(ChoreList.this, ChoreEdit.class);
                 intent.putExtra("SUBMIT", (Chore) view.getTag());
-                intent.putExtra("currentUser",currentUser);
+                intent.putExtra("currentUser", currentUser);
                 startActivity(intent);
 
                 return true;
@@ -236,7 +238,6 @@ public class ChoreList extends AppCompatActivity {
         linearView.addView(gridLayout);
 
     }
-
 
     /**
      * Creates new textviews to display in new gridlayout of choreView
@@ -252,7 +253,6 @@ public class ChoreList extends AppCompatActivity {
         tempText.setText(text);
         return tempText;
     }
-
 
     public void textDate_OnClick(View view) {
         datePick();
@@ -273,7 +273,6 @@ public class ChoreList extends AppCompatActivity {
         choreListen();
 
     }
-
 
     /**
      * Sets the class varibles to this date and, if required, refreshes the ui
@@ -314,7 +313,6 @@ public class ChoreList extends AppCompatActivity {
         setDate(year, month, day);
     }
 
-
     private void scrubChoreView(){
         LinearLayout choreView = findViewById(R.id.choreView);
         choreView.removeAllViews();
@@ -353,20 +351,6 @@ public class ChoreList extends AppCompatActivity {
         DatePickerDialog temp = new DatePickerDialog(this, tempListen, year, month, day);
         temp.show();
     }
-
-    /**
-     * Displays the a date picker dialog and sets the current date.
-     */
-    private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
-
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            //the selected month (0-11 for compatibility with MONTH)
-            scrubChoreView();
-            updateDate(year, month, dayOfMonth);
-            setDate(year, month, dayOfMonth);
-
-        }
-    };
 
 
 }

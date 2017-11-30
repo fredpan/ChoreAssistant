@@ -178,11 +178,6 @@ public class WelcomePageActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(WelcomePageActivity.this, ChoreList.class);
-                    if (user.isAdmin()) {
-                        intent.putExtra(EXTRA_MASSAGE, "admin");
-                    } else {
-                        intent.putExtra(EXTRA_MASSAGE, "user");
-                    }
                     intent.putExtra("currentUser", user);
                     startActivity(intent);
                 }

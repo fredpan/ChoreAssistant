@@ -48,17 +48,9 @@ public class showDetailDialog extends AppCompatActivity {
                 click = !click;
                 if (click) {
 
-                    finish_button.setBackgroundResource(R.drawable.finish_button);
 
+                    showDialog(finish_button);
 
-                    final Timer t = new Timer();
-                    t.schedule(new TimerTask() {
-                        public void run() {
-
-
-                            t.cancel();
-                        }
-                    }, 2000); // after 2 second (or 2000 miliseconds), the task will be active.
                 }
             }
         });
@@ -153,7 +145,7 @@ public class showDetailDialog extends AppCompatActivity {
         }
     }
 
-    public void showDialog() {
+    public void showDialog(final ImageButton button) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.choredetail_warn, null);
@@ -170,7 +162,17 @@ public class showDetailDialog extends AppCompatActivity {
                 databaseChore.child(choreSubmit.getChoreName()).child("complete").setValue(true);
                 Toast.makeText(getApplicationContext(), "Congraduation, You finish !!!!", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
-                finish();
+                button.setBackgroundResource(R.drawable.finish_button);
+                final Timer t = new Timer();
+                t.schedule(new TimerTask() {
+                    public void run() {
+                        finish();
+
+
+                        t.cancel();
+                    }
+                }, 2000); // after 2 second (or 2000 miliseconds), the task will be active.
+
 
             }
         });
