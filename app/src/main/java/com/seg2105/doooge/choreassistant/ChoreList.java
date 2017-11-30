@@ -21,7 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
-import java.util.List;
+
 
 
 /**
@@ -76,9 +76,7 @@ public class ChoreList extends AppCompatActivity {
 
 
     public void choreListen(){
-
-        //make this a function so it is useful, callable, uncluttered, better...
-
+        //making this callable so update to the UI can happen
         databaseChores.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

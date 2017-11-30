@@ -32,7 +32,7 @@ public class ChoreEdit extends AppCompatActivity {
 
     DatabaseReference databaseLoginInfo;
     DatabaseReference databaseChores;
-    DatabaseReference databaseResponsibilities;     //database as final...lol
+    DatabaseReference databaseResponsibilities;
 
     //stores calendar information if a chore was passed through intent, these will be updated
     private int day, month, year, hour, minute = -1;
