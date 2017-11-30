@@ -15,36 +15,21 @@ public class PersonRule implements Serializable {
     private int color;
     private int userID;
 
-
-
-    //############### DELETE IF USERROLE CLASS IS IMPLEMENTED ###############
     private List<Responsibility> responsibilities;
-    //#######################################################
-
-
 
     public PersonRule() {
-        //Keep for Firebase only
+        responsibilities = new ArrayList<Responsibility>();
     }
 
     public PersonRule(String userName, String encrypted, boolean admin, int color, int userID) {
         this.userName = userName;
-
-
         this.userID = userID;
         this.admin = admin;
         this.encrypted = encrypted;
         this.color = color;
 
-
-        //############### DELETE IF USERROLE CLASS IS IMPLEMENTED ###############
-        responsibilities = new ArrayList<Responsibility>();
-        //#######################################################################
     }
 
-
-
-    //############### DELETE IF USERROLE CLASS IS IMPLEMENTED ###############
     public boolean hasResponsibilities() {
         return responsibilities.size() > 0;
     }
@@ -82,8 +67,6 @@ public class PersonRule implements Serializable {
     public int numberOfResponsibilities() {
         return responsibilities.size();
     }
-    //######################################################################################
-
 
 
     public String getUserName() {
