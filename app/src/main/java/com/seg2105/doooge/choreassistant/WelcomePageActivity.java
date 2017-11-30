@@ -89,7 +89,7 @@ public class WelcomePageActivity extends AppCompatActivity {
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.login_dialog, null);
         dialogBuilder.setView(dialogView);
-        dialogBuilder.setTitle("Login Page");
+        dialogBuilder.setTitle("Login :");
 
 
         final EditText userName = dialogView.findViewById(R.id.editID);
