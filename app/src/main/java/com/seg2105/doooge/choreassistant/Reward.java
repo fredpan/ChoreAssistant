@@ -34,7 +34,7 @@ public class Reward {
         databaseLoginInfo.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
+                responsibilities.clear();
                 for (DataSnapshot instanceOfResponsibility : dataSnapshot.child(personRule.getUserName()).child("responsibilities").getChildren()) {
                     Responsibility responsibility = instanceOfResponsibility.getValue(Responsibility.class);
                     responsibilities.add(responsibility);
@@ -53,6 +53,25 @@ public class Reward {
     }
 
     public boolean isAchieved() {
+
+        databaseLoginInfo.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                responsibilities.clear();
+                for (DataSnapshot instanceOfResponsibility : dataSnapshot.child(personRule.getUserName()).child("responsibilities").getChildren()) {
+                    Responsibility responsibility = instanceOfResponsibility.getValue(Responsibility.class);
+                    responsibilities.add(responsibility);
+                    System.out.println("=================" + instanceOfResponsibility.getValue());
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         for (Responsibility responsibility : responsibilities) {
             if (!responsibility.isComplete()) {
                 return false;
