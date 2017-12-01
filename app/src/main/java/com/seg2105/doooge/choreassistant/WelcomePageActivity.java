@@ -74,7 +74,10 @@ public class WelcomePageActivity extends AppCompatActivity {
                 mRecyclerView.setAdapter(mAdapter = new HomeAdapter());
                 for (PersonRule user : personRulesList) {
                     noAdmin = !(user.isAdmin());
-                    break;
+                    if(!noAdmin) {
+                        break;
+                    }
+
                 }
             }
 
