@@ -29,6 +29,7 @@ import java.util.TimerTask;
 public class showDetailDialog extends AppCompatActivity {
 
     DatabaseReference databaseChore = FirebaseDatabase.getInstance().getReference("chore");
+    DatabaseReference databaseUsers = FirebaseDatabase.getInstance().getReference("PersonRule");
     private Chore choreSubmit;
     private PersonRule personRule;
 
@@ -164,13 +165,17 @@ public class showDetailDialog extends AppCompatActivity {
                 databaseChore.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-
+                        int counter = 0;
                         for (DataSnapshot instanceOfResponsibility : dataSnapshot.child(choreSubmit.getChoreIdentification()).child("responsibilities").getChildren()) {
                             Responsibility responsibility = instanceOfResponsibility.getValue(Responsibility.class);
+
                             if (choreSubmit.getChoreIdentification().equals(responsibility.getChoreIdentification()) &&
                                     ((Integer) personRule.getUserID()).equals(responsibility.getUserID())) {
-                                responsibility.setComplete();
+                                databaseChore.child(choreSubmit.getChoreIdentification()).child("responsibilities").child("" + counter).child("complete").setValue(true);
+                                databaseUsers.child(personRule.getUserName()).child("reponsibilites").child("" + counter).child("complete").setValue(true);
+                                
                             }
+                            counter++;
                         }
                     }
 

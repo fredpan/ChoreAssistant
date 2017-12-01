@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:layout_marginBottom="10dp"
+    android:orientation="vertical"
     tools:context="com.seg2105.doooge.choreassistant.ChoreList">
 
     <Space
@@ -68,10 +68,10 @@
             android:id="@+id/choreView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
             android:divider="@drawable/divider8p"
             android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:showDividers="middle"></LinearLayout>
 
     </ScrollView>

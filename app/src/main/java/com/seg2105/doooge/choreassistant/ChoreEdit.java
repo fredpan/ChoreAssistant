@@ -44,7 +44,22 @@ public class ChoreEdit extends AppCompatActivity {
 
     private List<PersonRule> personRulesList;
     private List<PersonRule> selectedPersonRuleList;
+    //https://developer.android.com/reference/android/app/TimePickerDialog.OnTimeSetListener.html
+    private TimePickerDialog.OnTimeSetListener timeListen = new TimePickerDialog.OnTimeSetListener() {
 
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            setTime(hourOfDay, minute);
+        }
+    };
+    //https://developer.android.com/reference/android/app/DatePickerDialog.OnDateSetListener.html
+    private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
+
+        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+            //From article: the selected month (0-11 for compatibility with MONTH), so add 1...
+            setDate(year, month, dayOfMonth);
+        }
+
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,13 +78,12 @@ public class ChoreEdit extends AppCompatActivity {
 
         userListen();
 
-        if (choreSubmit != null){
+        if (choreSubmit != null) {
             choreFound();
             Button btnDelete = findViewById(R.id.btnDelete);
             btnDelete.setEnabled(true);
         }
     }
-
 
     public void userListen() {
         databaseLoginInfo.addValueEventListener(new ValueEventListener() {
@@ -105,7 +119,6 @@ public class ChoreEdit extends AppCompatActivity {
             }
         });
     }
-
 
     public void choreFound(){
         TextView txtCaption     = findViewById(R.id.textCaption);
@@ -206,25 +219,24 @@ public class ChoreEdit extends AppCompatActivity {
 
     }
 
-
     public void btnDelete_OnClick(View view){
 
-        AlertDialog.Builder deleteConfirm = new AlertDialog.Builder( this );
+        AlertDialog.Builder deleteConfirm = new AlertDialog.Builder(this);
         deleteConfirm.setTitle("Delete");
         deleteConfirm.setMessage("Are you sure you want to delete?");
         deleteConfirm.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                for (Responsibility responsibility : choreSubmit.getResponsibilities()){
+                for (Responsibility responsibility : choreSubmit.getResponsibilities()) {
                     Integer responsibilityUserID = responsibility.getUserID();
-                    if ( responsibilityUserID == null ) break;
+                    if (responsibilityUserID == null) break;
 
-                    for ( PersonRule user : personRulesList ){
+                    for (PersonRule user : personRulesList) {
                         String userID = user.getUserName();
-                        if ( userID == null ) break;
+                        if (userID == null) break;
 
-                        if ( responsibilityUserID.equals(userID) ){
+                        if (responsibilityUserID.equals(userID)) {
                             user.deleleteResponsibilityWithID(responsibility.getResponsibilityID());
                             //user.removeResponsibility(responsibility);
                             databaseLoginInfo.child(user.getUserName()).setValue(user);
@@ -248,7 +260,6 @@ public class ChoreEdit extends AppCompatActivity {
         deleteConfirm.show();
 
     }
-
 
     public void textSelectUsers_OnClick(View view) {
         view.setBackgroundDrawable(getResources().getDrawable(R.drawable.back));
@@ -321,8 +332,6 @@ public class ChoreEdit extends AppCompatActivity {
         this.minute = minute;
         textTime.setText( String.format("%02d:%02d", hour, minute) );
     }
-
-
 
     private void timePick() {
         //https://developer.android.com/reference/android/app/TimePickerDialog.html
@@ -398,7 +407,7 @@ public class ChoreEdit extends AppCompatActivity {
 
                     for(PersonRule user : personRulesList){
                         if(id.equals(user.getUserName())){
-                            user.deleleteResponsibilityWithID( responsibility.getResponsibilityID() );
+                            user.deleleteResponsibilityWithID(responsibility.getResponsibilityID());
                             //user.removeResponsibility( responsibility );
                             databaseLoginInfo.child(user.getUserName()).setValue(user);
                         }
@@ -411,7 +420,7 @@ public class ChoreEdit extends AppCompatActivity {
             Chore chore = new Chore(name, description, millis);
 
             for ( PersonRule person : selectedPersonRuleList ){
-                Responsibility responsibility = new Responsibility( person.getUserID(), chore.getChoreIdentification() );
+                Responsibility responsibility = new Responsibility(person.getUserID(), chore.getChoreIdentification());
                 person.addResponsibility(responsibility);
                 chore.addResponsibility(responsibility);
 
@@ -424,33 +433,12 @@ public class ChoreEdit extends AppCompatActivity {
         }
     }
 
-
-    private void choreListShow(){
+    private void choreListShow() {
         Intent intent = new Intent(ChoreEdit.this, ChoreList.class);
-        intent.putExtra("currentUser",currentUser);
+        intent.putExtra("currentUser", currentUser);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
-
-
-
-
-    //https://developer.android.com/reference/android/app/TimePickerDialog.OnTimeSetListener.html
-    private TimePickerDialog.OnTimeSetListener timeListen = new TimePickerDialog.OnTimeSetListener() {
-
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            setTime(hourOfDay, minute);
-        }
-    };
-    //https://developer.android.com/reference/android/app/DatePickerDialog.OnDateSetListener.html
-    private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
-
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            //From article: the selected month (0-11 for compatibility with MONTH), so add 1...
-            setDate(year, month, dayOfMonth);
-        }
-
-    };
 
 
 }

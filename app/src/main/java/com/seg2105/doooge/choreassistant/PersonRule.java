@@ -60,14 +60,14 @@ public class PersonRule implements Serializable {
         return removed;
     }
 
-    public void deleleteResponsibilityWithID(String responsibilityID){
-        if ( (responsibilities == null) || (responsibilities.size() == 0)  ) return;
+    public void deleleteResponsibilityWithID(String responsibilityID) {
+        if ((responsibilities == null) || (responsibilities.size() == 0)) return;
 
-        for (Responsibility responsibility : responsibilities){
+        for (Responsibility responsibility : responsibilities) {
             String id = responsibility.getResponsibilityID();
             if (id == null) break;
 
-            if(id.equals(responsibilityID)){
+            if (id.equals(responsibilityID)) {
                 this.removeResponsibility(responsibility);
                 return;
             }

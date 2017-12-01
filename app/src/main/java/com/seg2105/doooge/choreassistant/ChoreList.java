@@ -41,7 +41,18 @@ public class ChoreList extends AppCompatActivity {
     //stores the current date
     private int day, month, year;
     private Calendar cal;
+    /**
+     * listener for the date picker dialog
+     */
+    private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
 
+        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+            //the selected month (0-11 for compatibility with MONTH)
+            scrubChoreView();  //clear ui
+            updateDate(year, month, dayOfMonth); //adjust class variables
+            setDate(year, month, dayOfMonth);  //display the text
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +79,6 @@ public class ChoreList extends AppCompatActivity {
         userListen();
 
     }
-
 
     /**
      * Listener for new chores, display is based on the users priveledge
@@ -112,14 +122,12 @@ public class ChoreList extends AppCompatActivity {
         });
     }
 
-
     /**
      * possible dead method
      */
     public void responsibilityListen() {
 
     }
-
 
     /**
      * Check whether or not the user has sufficient privledge to view edit abilities
@@ -138,7 +146,6 @@ public class ChoreList extends AppCompatActivity {
         //}
     }
 
-
     /**
      * Change intents and pass the current user on button action
      * @param view this
@@ -149,15 +156,13 @@ public class ChoreList extends AppCompatActivity {
         startActivity(intent);
     }
 
-
     /**
      *
      */
-    public void btnReward_OnClick(View view){
+    public void btnReward_OnClick(View view) {
         Intent intent = new Intent(ChoreList.this, ChoreEdit.class); //switch homepage to edit chore page
         startActivity(intent);
     }
-
 
     /**
      * Creates a gridlayout and adds the new layout to choreView
@@ -268,7 +273,6 @@ public class ChoreList extends AppCompatActivity {
         return tempText;
     }
 
-
     /**
      * method called when the text dispay the date is clicked
      * @param view
@@ -276,7 +280,6 @@ public class ChoreList extends AppCompatActivity {
     public void textDate_OnClick(View view) {
         datePick();
     }
-
 
     /**
      * method called when the left pointing chevron is clicked
@@ -288,7 +291,6 @@ public class ChoreList extends AppCompatActivity {
         choreListen();
     }
 
-
     /**
      * method called when the right pointing chevron is clicked
      * @param view
@@ -298,7 +300,6 @@ public class ChoreList extends AppCompatActivity {
         buildNewDate(-1);
         choreListen();
     }
-
 
     /**
      * Sets the class varibles to this date and, if required, refreshes the ui
@@ -323,7 +324,6 @@ public class ChoreList extends AppCompatActivity {
         choreListen();
     }
 
-
     /**
      * used to either add or subtract X amount of days from the current day
      *
@@ -339,7 +339,6 @@ public class ChoreList extends AppCompatActivity {
         updateDate(year, month, day);
         setDate(year, month, day);
     }
-
 
     /**
      * clears the ui of all currently displayed chores
@@ -377,7 +376,6 @@ public class ChoreList extends AppCompatActivity {
         textDate.setText(monthString[month] + " " + day + ", " + year);
     }
 
-
     /**
      * displays a date picker dialog
      */
@@ -386,19 +384,6 @@ public class ChoreList extends AppCompatActivity {
         DatePickerDialog temp = new DatePickerDialog(this, tempListen, year, month, day);
         temp.show();
     }
-
-    /**
-     * listener for the date picker dialog
-     */
-    private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
-
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            //the selected month (0-11 for compatibility with MONTH)
-            scrubChoreView();  //clear ui
-            updateDate(year, month, dayOfMonth); //adjust class variables
-            setDate(year, month, dayOfMonth);  //display the text
-        }
-    };
 
 
 }
