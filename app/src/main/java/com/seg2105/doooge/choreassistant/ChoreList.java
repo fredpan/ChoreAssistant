@@ -384,6 +384,4 @@ public class ChoreList extends AppCompatActivity {
         DatePickerDialog temp = new DatePickerDialog(this, tempListen, year, month, day);
         temp.show();
     }
-
-
 }
