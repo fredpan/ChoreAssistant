@@ -123,6 +123,8 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                         if (createUserIsClickable) {
                             storeAccountInfo(false);
 //                        createUser.setClickable(false);
+                            //TODO Add to report: Assume users' login do not require password.
+                            Toast.makeText(getApplicationContext(), "The user's password will be ignored!", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(getApplicationContext(), "Please create admin first !!!!", Toast.LENGTH_SHORT).show();
                         }
