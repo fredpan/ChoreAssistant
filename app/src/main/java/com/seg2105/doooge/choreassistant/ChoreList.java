@@ -94,7 +94,7 @@ public class ChoreList extends AppCompatActivity {
                         for (Responsibility responsibility : chore.getResponsibilities()) {
                             if (responsibility == null) break;
 
-                            String temp1 = responsibility.getUserID();
+                            String temp1 = String.valueOf(responsibility.getUserID());
                             String temp2 = currentUser.getUserName();
 
                             if ((temp1 != null) && (temp2 != null) && (temp1.equals(temp2))) {

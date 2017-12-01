@@ -10,7 +10,7 @@ import java.security.NoSuchAlgorithmException;
 public class Responsibility implements Serializable {
 
     //private int userID;
-    private String userID;
+    private int userID;
     private String choreIdentification;
     private String responsibilityID;
     private Chore chore;
@@ -26,11 +26,11 @@ public class Responsibility implements Serializable {
 
     //
     //public Responsibility(int userID, String choreIdentification) throws NoSuchAlgorithmException {
-    public Responsibility(String userID, String choreIdentification) throws NoSuchAlgorithmException {
+    public Responsibility(int userID, String choreIdentification) throws NoSuchAlgorithmException {
         //this.userID = userID;
         this.userID = userID;
         this.choreIdentification = choreIdentification;
-        this.responsibilityID = IdentificationUtility.generateIdentification(userID, choreIdentification);
+        this.responsibilityID = IdentificationUtility.generateIdentification(String.valueOf(userID), choreIdentification);
 
         //this.responsibilityID = IdentificationUtility.generateIdentification(Integer.toString(userID), choreIdentification);
     }
@@ -51,11 +51,11 @@ public class Responsibility implements Serializable {
         this.personRule = personRule;
     }
 
-    public String getUserID() {
+    public int getUserID() {
         return userID;
     }
 
-    public void setUserID(String userID) {
+    public void setUserID(int userID) {
         this.userID = userID;
     }
 

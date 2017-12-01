@@ -85,7 +85,7 @@ public class ChoreEdit extends AppCompatActivity {
                     StringBuilder userID = new StringBuilder();
                     List<Responsibility> responsibilities = choreSubmit.getResponsibilities();
                     for (int i = 0; i < responsibilities.size() ; i++){
-                        String tempID = responsibilities.get(i).getUserID();
+                        String tempID = String.valueOf(responsibilities.get(i).getUserID());
                         for (PersonRule user : personRulesList) {
                             if (tempID.equals( user.getUserName() ) ){
                                 userID.append( user.getUserName() );
@@ -217,7 +217,7 @@ public class ChoreEdit extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
 
                 for (Responsibility responsibility : choreSubmit.getResponsibilities()){
-                    String responsibilityUserID = responsibility.getUserID();
+                    Integer responsibilityUserID = responsibility.getUserID();
                     if ( responsibilityUserID == null ) break;
 
                     for ( PersonRule user : personRulesList ){
@@ -393,7 +393,7 @@ public class ChoreEdit extends AppCompatActivity {
 
             if (choreSubmit != null) {
                 for (Responsibility responsibility : choreSubmit.getResponsibilities()) {
-                    String id = responsibility.getUserID();
+                    String id = String.valueOf(responsibility.getUserID());
                     if(id == null) break;
 
                     for(PersonRule user : personRulesList){
@@ -411,7 +411,7 @@ public class ChoreEdit extends AppCompatActivity {
             Chore chore = new Chore(name, description, millis);
 
             for ( PersonRule person : selectedPersonRuleList ){
-                Responsibility responsibility = new Responsibility( person.getUserName(), chore.getChoreIdentification() );
+                Responsibility responsibility = new Responsibility( person.getUserID(), chore.getChoreIdentification() );
                 person.addResponsibility(responsibility);
                 chore.addResponsibility(responsibility);
 
