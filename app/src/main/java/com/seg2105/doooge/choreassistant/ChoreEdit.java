@@ -256,12 +256,12 @@ public class ChoreEdit extends AppCompatActivity {
             txtName.setError("Enter a name.");
             txtName.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
         }
-        if (hour == -1){
+        if (hour == -1  || txtTime.getText().toString().trim().equals("")){
             allPass = false;
             txtTime.setError("Enter a time.");
             txtTime.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
         }
-        if (year == -1){
+        if (year == -1 || txtDate.getText().toString().trim().equals("")){
             allPass = false;
             txtDate.setError("Enter a date.");
             txtDate.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
@@ -491,7 +491,7 @@ public class ChoreEdit extends AppCompatActivity {
     private void timePick() {
 
         Calendar cal    = Calendar.getInstance();
-        int hour        = cal.get(Calendar.HOUR_OF_DAY);
+        int hour        = cal.get(Calendar.HOUR);
         int minute      = cal.get(Calendar.MINUTE);
 
         TimePickerDialog temp = new TimePickerDialog(this, timeListen, hour, minute, false);
@@ -516,13 +516,12 @@ public class ChoreEdit extends AppCompatActivity {
         int year        = cal.get(Calendar.YEAR);
         int month       = cal.get(Calendar.MONTH);
         int day         = cal.get(Calendar.DAY_OF_MONTH);
-        int hour        = cal.get(Calendar.HOUR_OF_DAY);
+        int hour        = cal.get(Calendar.HOUR);
         int minute      = cal.get(Calendar.MINUTE);
 
         cal.set(year,month,day,hour,minute);
 
         DatePickerDialog temp = new DatePickerDialog(this, tempListen, year, month, day);
-        temp.getDatePicker().setMinDate( cal.getTimeInMillis() - 1000 );
         temp.show();
     }
 
