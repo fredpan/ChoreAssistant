@@ -19,6 +19,27 @@ public class Reward {
     private PersonRule personRule;
     private String userName;
     private String rewardName;
+
+    public DatabaseReference getDatabaseLoginInfo() {
+        return databaseLoginInfo;
+    }
+
+    public PersonRule getPersonRule() {
+        return personRule;
+    }
+
+    public void setPersonRule(PersonRule personRule) {
+        this.personRule = personRule;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setResponsibilities(ArrayList<Responsibility> responsibilities) {
+        this.responsibilities = responsibilities;
+    }
+
     private String rewardDescription;
     private ArrayList<Responsibility> responsibilities;
 
@@ -34,7 +55,7 @@ public class Reward {
         databaseLoginInfo.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
+                responsibilities.clear();
                 for (DataSnapshot instanceOfResponsibility : dataSnapshot.child(personRule.getUserName()).child("responsibilities").getChildren()) {
                     Responsibility responsibility = instanceOfResponsibility.getValue(Responsibility.class);
                     responsibilities.add(responsibility);
@@ -53,6 +74,25 @@ public class Reward {
     }
 
     public boolean isAchieved() {
+
+        databaseLoginInfo.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                responsibilities.clear();
+                for (DataSnapshot instanceOfResponsibility : dataSnapshot.child(personRule.getUserName()).child("responsibilities").getChildren()) {
+                    Responsibility responsibility = instanceOfResponsibility.getValue(Responsibility.class);
+                    responsibilities.add(responsibility);
+                    System.out.println("=================" + instanceOfResponsibility.getValue());
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         for (Responsibility responsibility : responsibilities) {
             if (!responsibility.isComplete()) {
                 return false;
