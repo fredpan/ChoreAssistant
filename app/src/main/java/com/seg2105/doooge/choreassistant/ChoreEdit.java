@@ -226,71 +226,6 @@ public class ChoreEdit extends AppCompatActivity {
     }
 
 
-    /**
-     * Help Method - method checks if the user input matches a standard set of characters
-     * if not, warn the user that their input was not accepted
-     *
-     *
-     *
-     */
-    private boolean validateUserInput(){
-        TextView txtName            = findViewById(R.id.textName);
-        TextView txtTime            = findViewById(R.id.textTime);
-        TextView txtDate            = findViewById(R.id.textDate);
-        TextView txtSelectedUsers   = findViewById(R.id.textSelectUsers);
-
-        boolean allPass = true;
-
-        Calendar cal        = Calendar.getInstance();
-        int newYear         = cal.get(Calendar.YEAR);
-        int newMonth        = cal.get(Calendar.MONTH);
-        int newDay          = cal.get(Calendar.DAY_OF_MONTH);
-        int newHour         = cal.get(Calendar.HOUR_OF_DAY);
-        int newMinute       = cal.get(Calendar.MINUTE);
-
-        if (txtName.getText().toString().trim().equals("") ) {
-            allPass = false;
-            txtName.setError("Enter a name.");
-            txtName.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
-        }
-/*        if (!txtName.getText().toString().trim().matches("[a-zA-Z.? ]*")){
-            allPass = false;
-            txtName.setError("Use only valid charctars 'a-z, A-Z, ., ?' ");
-            txtName.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
-            Toast.makeText(getBaseContext(),
-                    "Please use standard characters 'a-z, A-Z, . , ?'", Toast.LENGTH_SHORT);
-        }*/
-        if (hour == -1){
-            allPass = false;
-            txtTime.setError("Enter a time.");
-            txtTime.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
-        }
-        if (year == -1){
-            allPass = false;
-            txtDate.setError("Enter a date.");
-            txtDate.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
-        }
-        if ((selectedPersonRuleList != null) && (selectedPersonRuleList.size() == 0)) {
-            allPass = false;
-            txtSelectedUsers.setError("Please assign a user.");
-            txtSelectedUsers.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
-        }
-        if ( newYear == year && newMonth == month && newDay == day){
-            if( newHour < hour ){
-                allPass = false;
-                txtTime.setError("Time is in the past.");
-                txtTime.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
-            } else if (newMinute < minute){
-                allPass = false;
-                txtTime.setError("Time is in the past.");
-                txtTime.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
-            }
-        }
-
-        return allPass;
-    }
-
-
 //--------------------------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------------------------
@@ -307,25 +242,52 @@ public class ChoreEdit extends AppCompatActivity {
      *
      */
     public void btnSubmit_OnClick(View view) throws NoSuchAlgorithmException {
+        TextView txtName            = findViewById(R.id.textName);
+        TextView txtTime            = findViewById(R.id.textTime);
+        TextView txtDate            = findViewById(R.id.textDate);
+        TextView txtSelectedUsers   = findViewById(R.id.textSelectUsers);
+        TextView txtDescription     = findViewById(R.id.textDescription);
 
-        if (!validateUserInput()) return;
+        boolean allPass = true;
+        
 
-        TextView txtDescription = findViewById(R.id.textDescription);
-        TextView txtName        = findViewById(R.id.textDescription);
+        if (txtName.getText().toString().trim().equals("") ) {
+            allPass = false;
+            txtName.setError("Enter a name.");
+            txtName.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
+        }
+        if (hour == -1){
+            allPass = false;
+            txtTime.setError("Enter a time.");
+            txtTime.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
+        }
+        if (year == -1){
+            allPass = false;
+            txtDate.setError("Enter a date.");
+            txtDate.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
+        }
+        if ((selectedPersonRuleList != null) && (selectedPersonRuleList.size() == 0)) {
+            allPass = false;
+            txtSelectedUsers.setError("Please assign a user.");
+            txtSelectedUsers.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
+        }
 
-        String name         = txtName.getText().toString().trim();
-        String description  = txtDescription.getText().toString().trim();
-        Calendar calChore   = Calendar.getInstance();
+        if (allPass) {
+            String name         = txtName.getText().toString().trim();
+            String description  = txtDescription.getText().toString().trim();
+            Calendar calChore   = Calendar.getInstance();
 
-        calChore.set(year,month,day,hour,minute);
-        long millis = calChore.getTimeInMillis();
+            calChore.set(year, month, day, hour, minute);
+            long millis = calChore.getTimeInMillis();
 
-        if (choreSubmit != null) { scrubResponsibilities(choreSubmit); }
+            if (choreSubmit != null) {
+                scrubResponsibilities(choreSubmit);
+            }
 
-        createResponsibilites(new Chore(name, description, millis));
+            createResponsibilites(new Chore(name, description, millis));
 
-        choreListShow();
-
+            choreListShow();
+        }
     }
 
 

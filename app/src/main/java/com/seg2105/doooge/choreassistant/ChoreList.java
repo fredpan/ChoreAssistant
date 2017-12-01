@@ -67,7 +67,7 @@ public class ChoreList extends AppCompatActivity {
 
         choreListen();
         userListen();
-        rewardListen();
+        //rewardListen();
     }
 
 
@@ -440,7 +440,8 @@ public class ChoreList extends AppCompatActivity {
 
 
     /**
-     * Listener -
+     * Listener - Displays a toast if the user is cabable of recieving an award
+     * it will also display a toast if the admin is
      *
      *
      *
