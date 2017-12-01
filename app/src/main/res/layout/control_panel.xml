@@ -36,11 +36,12 @@
                 android:text="Add New User" />
 
             <Button
-                android:id="@+id/createUser"
+                android:id="@+id/btnCreateReward"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
+                android:onClick="btnCreateReward_OnClick"
                 android:text="Create Reward" />
 
             <Button

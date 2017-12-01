@@ -22,7 +22,7 @@
         <activity android:name=".ControlPanelActivity"></activity>
         <activity android:name=".RegistrationActivity"></activity>
         <activity android:name=".EditUserActivity"></activity>
-
+        <activity android:name=".RewardEdit"></activity>
 
     </application>
 
