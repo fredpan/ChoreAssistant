@@ -45,7 +45,7 @@ public class WelcomePageActivity extends AppCompatActivity {
     private HomeAdapter mAdapter; //This adapter for control the recyclerView.
     private PersonRule testRule;  // This is for test
     private ArrayList<PersonRule> personRulesList; //This is for save user
-    private boolean noAdmin;
+    private boolean noAdmin = false;
     private PersonRule user = new PersonRule();//This for track witch user is been clicked
 
     @Override
@@ -73,10 +73,10 @@ public class WelcomePageActivity extends AppCompatActivity {
                 mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
                 mRecyclerView.setAdapter(mAdapter = new HomeAdapter());
                 for (PersonRule user : personRulesList) {
-                    noAdmin = !(user.isAdmin());
-                    if(!noAdmin) {
-                        break;
-                    }
+                    noAdmin = noAdmin || (user.isAdmin());
+//                    if(!noAdmin) {
+//                        break;
+//                    }
 
                 }
             }
@@ -93,7 +93,7 @@ public class WelcomePageActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (noAdmin) {
+                if (!noAdmin) {
                     Intent intent = new Intent(WelcomePageActivity.this, RegistrationActivity.class);
                     startActivity(intent);
                 } else {
