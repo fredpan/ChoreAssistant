@@ -30,6 +30,7 @@ public class showDetailDialog extends AppCompatActivity {
 
     DatabaseReference databaseChore = FirebaseDatabase.getInstance().getReference("chore");
     DatabaseReference databaseUsers = FirebaseDatabase.getInstance().getReference("PersonRule");
+    DatabaseReference databaseReward = FirebaseDatabase.getInstance().getReference("Reward");
     private Chore choreSubmit;
     private PersonRule personRule;
 
@@ -172,8 +173,8 @@ public class showDetailDialog extends AppCompatActivity {
                             if (choreSubmit.getChoreIdentification().equals(responsibility.getChoreIdentification()) &&
                                     ((Integer) personRule.getUserID()).equals(responsibility.getUserID())) {
                                 databaseChore.child(choreSubmit.getChoreIdentification()).child("responsibilities").child("" + counter).child("complete").setValue(true);
-                                databaseUsers.child(personRule.getUserName()).child("reponsibilites").child("" + counter).child("complete").setValue(true);
-                                
+                                databaseUsers.child(personRule.getUserName()).child("responsibilities").child("" + counter).child("complete").setValue(true);
+                                databaseReward.child(personRule.getUserName()).child("responsibilities").child("" + counter).child("complete").setValue(true);
                             }
                             counter++;
                         }

@@ -16,6 +16,7 @@ public class Reward {
 
     private final DatabaseReference databaseLoginInfo = FirebaseDatabase.getInstance().getReference("PersonRule");
     private PersonRule personRule;
+    private String userName;
     private ArrayList<Responsibility> responsibilities;
 
     public Reward() {
@@ -26,6 +27,7 @@ public class Reward {
         this.personRule = personRule;
         responsibilities = new ArrayList<>();
 
+        this.userName = personRule.getUserName();
         databaseLoginInfo.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
