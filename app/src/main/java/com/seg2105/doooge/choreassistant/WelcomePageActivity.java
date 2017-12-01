@@ -64,6 +64,7 @@ public class WelcomePageActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 personRulesList = new ArrayList<>();
+                noAdmin=false;
                 for (DataSnapshot personRoleInstance : dataSnapshot.getChildren()) {
                     PersonRule personRule = personRoleInstance.getValue(PersonRule.class);
                     personRulesList.add(personRule);
