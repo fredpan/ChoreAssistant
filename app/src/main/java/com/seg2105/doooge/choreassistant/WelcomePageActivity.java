@@ -174,10 +174,13 @@ public class WelcomePageActivity extends AppCompatActivity {
                     warm.setVisibility(View.VISIBLE);
 
                 } else {
-                    Intent intent = new Intent(WelcomePageActivity.this, ChoreList.class);
-                    intent.putExtra("currentUser", user);
-                    startActivity(intent);
-                    dialog.dismiss();
+                    //TODO Alg for verify admin pwd for going to main page
+                    //isValidLogin(user.getUserName(),String.valueOf(password),dialog,warm);
+
+//                    Intent intent = new Intent(WelcomePageActivity.this, ChoreList.class);
+//                    intent.putExtra("currentUser", user);
+//                    startActivity(intent);
+//                    dialog.dismiss();
                 }
             }
         });
