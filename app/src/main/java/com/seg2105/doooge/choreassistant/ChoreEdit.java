@@ -32,7 +32,7 @@ public class ChoreEdit extends AppCompatActivity {
 
     DatabaseReference databaseLoginInfo;
     DatabaseReference databaseChores;
-    DatabaseReference databaseResponsibilities;
+    //DatabaseReference databaseResponsibilities;
 
     //stores calendar information if a chore was passed through intent, these will be updated
     private int day, month, year, hour, minute = -1;
@@ -54,7 +54,7 @@ public class ChoreEdit extends AppCompatActivity {
         choreSubmit = (Chore) intent.getSerializableExtra("SUBMIT");
         currentUser = (PersonRule) intent.getSerializableExtra("currentUser");
 
-        databaseResponsibilities    = FirebaseDatabase.getInstance().getReference("responsibility");
+        //databaseResponsibilities    = FirebaseDatabase.getInstance().getReference("responsibility");
         databaseChores              = FirebaseDatabase.getInstance().getReference("chore");
         databaseLoginInfo           = FirebaseDatabase.getInstance().getReference("PersonRule");
 
@@ -191,6 +191,11 @@ public class ChoreEdit extends AppCompatActivity {
                     )
             );
         }
+
+    }
+
+
+    public void btnDelete_OnClick(View view){
 
     }
 
@@ -348,7 +353,7 @@ public class ChoreEdit extends AppCompatActivity {
                         }
                     }
 
-                    databaseResponsibilities.child(responsibility.getResponsibilityID() ).removeValue();
+                    //databaseResponsibilities.child(responsibility.getResponsibilityID() ).removeValue();
                 }
 
                 databaseChores.child( choreSubmit.getChoreIdentification() ).removeValue();
@@ -362,7 +367,7 @@ public class ChoreEdit extends AppCompatActivity {
                 chore.addResponsibility(responsibility);
 
                 databaseLoginInfo.child( person.getUserName() ).setValue(person);
-                databaseResponsibilities.child( responsibility.getResponsibilityID() ).setValue(responsibility);
+                //databaseResponsibilities.child( responsibility.getResponsibilityID() ).setValue(responsibility);
             }
 
             databaseChores.child(chore.getChoreIdentification() ).setValue(chore);
