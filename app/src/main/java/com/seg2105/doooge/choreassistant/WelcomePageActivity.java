@@ -125,7 +125,7 @@ public class WelcomePageActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                //TODO TO BE IMPLEMENTED
+
                 if (userName.getText().toString().equals("") || password.getText().toString().equals("")) {
                     warm.setText("Your userID or Password is wrong !!");
                     warm.setVisibility(View.VISIBLE);
