@@ -228,7 +228,15 @@ public class RewardEdit extends AppCompatActivity{
                 reward.setRewardName(name);
                 reward.setRewardDescription(description);
 
-           //     databaseReward.child( reward.getUserName() ).setValue(reward);
+                //check if the responsibility was assigned to this user, if so add it
+                //to rewards responsibility list
+                for(Responsibility responsibility : selectedResponsibilityList){
+                    if ( person.getUserID() == responsibility.getUserID() ){
+                        reward.addResponsibility(responsibility);
+                    }
+                }
+
+                databaseReward.child( reward.getUserName() ).setValue(reward);
 
             }
 
@@ -306,8 +314,8 @@ public class RewardEdit extends AppCompatActivity{
      * remove a responsibility from the selected responsibilities list.
      *
      *
-     * @param isChecked
-     * @param responsibility
+     * @param isChecked indicates whether or not a check box has been selected
+     * @param responsibility if the boolean is true, then add the responsibility to selected list
      */
     private void addToSelectedRewardList(boolean isChecked, Responsibility responsibility){
         if(isChecked){
@@ -411,7 +419,6 @@ public class RewardEdit extends AppCompatActivity{
      */
     private void controlPanelShow(){
         Intent intent = new Intent(RewardEdit.this, ControlPanelActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 

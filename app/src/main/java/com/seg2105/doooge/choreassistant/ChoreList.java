@@ -3,6 +3,7 @@ package com.seg2105.doooge.choreassistant;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -34,6 +35,7 @@ public class ChoreList extends AppCompatActivity {
 
     DatabaseReference databaseChores;
     DatabaseReference databaseUsers;
+    DatabaseReference databaseReward;
 
     private PersonRule currentUser;
 
@@ -61,15 +63,34 @@ public class ChoreList extends AppCompatActivity {
         //initiate databases and their appropriate listeners
         databaseChores  = FirebaseDatabase.getInstance().getReference("chore");
         databaseUsers   = FirebaseDatabase.getInstance().getReference("PersonRule");
+        databaseReward  = FirebaseDatabase.getInstance().getReference("Reward");
 
         choreListen();
         userListen();
+        rewardListen();
     }
 
 
 //--------------------------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------------------------
+
+
+    /**
+     *
+     *
+     *
+     */
+
+
+    /**
+     * Helper Method - test for completion of reward.
+     *
+     *
+     */
+    private void rewardAvailableCheck(){
+        //for(Reward reward :  )
+    }
 
 
     /**
@@ -242,7 +263,7 @@ public class ChoreList extends AppCompatActivity {
         Calendar tempCal        = Calendar.getInstance();
         tempCal.setTimeInMillis( chore.getTimeInMillis() );
 
-        int choreHours          = tempCal.get(Calendar.HOUR);
+        int choreHours          = tempCal.get(Calendar.HOUR_OF_DAY);
         int choreMinute         = tempCal.get(Calendar.MINUTE);
         int choreYear           = tempCal.get(Calendar.YEAR);
         int choreMonth          = tempCal.get(Calendar.MONTH);
@@ -278,6 +299,14 @@ public class ChoreList extends AppCompatActivity {
         text1.setTypeface(Typeface.DEFAULT_BOLD);
         text2.setTypeface(null,Typeface.ITALIC);
         text3.setTypeface(null,Typeface.BOLD_ITALIC);
+
+        for (Responsibility responsibility : chore.getResponsibilities()){
+            if (responsibility.isComplete()){
+                text1.setPaintFlags( text1.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG );
+                text2.setPaintFlags( text1.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG );
+                text3.setPaintFlags( text1.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG );
+            }
+        }
 
         text1.setTextColor(Color.BLACK);
 
@@ -376,10 +405,11 @@ public class ChoreList extends AppCompatActivity {
      * Dialog - displays a date picker dialog and passes the user information
      * to a method for displaying the result
      *
+     * Note: this site was referenced in the construction of this method
+     * https://developer.android.com/reference/android/app/DatePickerDialog.html
      *
      */
     private void datePick() {
-        //https://developer.android.com/reference/android/app/DatePickerDialog.html
         DatePickerDialog temp = new DatePickerDialog(this, tempListen, year, month, day);
         temp.show();
     }
@@ -407,6 +437,51 @@ public class ChoreList extends AppCompatActivity {
             setDate(year, month, dayOfMonth);  //display the text
         }
     };
+
+
+    /**
+     * Listener -
+     *
+     *
+     *
+     */
+    private void rewardListen(){
+        databaseReward.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren() ){
+                    Reward reward = postSnapshot.getValue(Reward.class);
+                    boolean passed = true;
+                    for ( Responsibility responsibility : reward.getResponsibilities() ){
+                        if (!responsibility.isComplete()){
+                            passed = false;
+                        }
+
+                    }
+                    if (passed && (currentUser.isAdmin()) ) {
+                        Toast.makeText(getBaseContext(), reward.getUserName() +
+                                " has me the requirements for " + reward.getRewardName(), Toast.LENGTH_LONG  );
+                        reward.setAdminAnnounced(true);
+                        databaseReward.child(reward.getUserName()).setValue(reward);
+                        //break;
+                    }
+                    if ( passed && currentUser.getUserName().equals(reward.getUserName())){
+                        Toast.makeText(getBaseContext(),
+                                "Good Work! You have me the requirements for " +
+                                        reward.getRewardName(), Toast.LENGTH_LONG);
+                        reward.setUserAnnounced(true);
+                        databaseReward.child(reward.getUserName()).setValue(reward);
+                        //break;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 
 
     /**

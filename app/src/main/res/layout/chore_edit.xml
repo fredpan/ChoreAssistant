@@ -70,7 +70,7 @@
             android:background="@drawable/back"
             android:ems="10"
             android:inputType="textPersonName"
-            android:maxLength="20"
+            android:maxLength="30"
             android:onClick="textName_OnClick"
             android:paddingLeft="3dp"
             android:textSize="18sp" />
@@ -106,7 +106,7 @@
             android:background="@drawable/back"
             android:ems="10"
             android:inputType="textPersonName"
-            android:maxLength="40"
+            android:maxLength="50"
             android:paddingLeft="3dp"
             android:textSize="18sp" />
 

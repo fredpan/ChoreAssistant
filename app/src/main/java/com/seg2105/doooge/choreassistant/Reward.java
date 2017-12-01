@@ -6,6 +6,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,16 +14,16 @@ import java.util.List;
  * Created by fredpan on 2017/11/30.
  */
 
-public class Reward {
+public class Reward implements Serializable {
 
-    private final DatabaseReference databaseLoginInfo = FirebaseDatabase.getInstance().getReference("PersonRule");
+    //private final DatabaseReference databaseLoginInfo = FirebaseDatabase.getInstance().getReference("PersonRule");
     private PersonRule personRule;
     private String userName;
     private String rewardName;
 
-    public DatabaseReference getDatabaseLoginInfo() {
-        return databaseLoginInfo;
-    }
+//    public DatabaseReference getDatabaseLoginInfo() {
+//        return databaseLoginInfo;
+//    }
 
     public PersonRule getPersonRule() {
         return personRule;
@@ -42,16 +43,21 @@ public class Reward {
 
     private String rewardDescription;
     private ArrayList<Responsibility> responsibilities;
+    private boolean userAnnounced;
+    private boolean adminAnnounced;
 
     public Reward() {
         //For Firebase
+        responsibilities = new ArrayList<>();
     }
 
     public Reward(final PersonRule personRule) {
         this.personRule = personRule;
+
         responsibilities = new ArrayList<>();
 
         this.userName = personRule.getUserName();
+        /*
         databaseLoginInfo.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -70,9 +76,19 @@ public class Reward {
 
             }
         });
+        */
 
     }
 
+    public void addResponsibility(Responsibility responsibility){
+        responsibilities.add(responsibility);
+    }
+
+    public void removeResponsibility(Responsibility responsibility){
+        responsibilities.remove(responsibility);
+    }
+
+    /*
     public boolean isAchieved() {
 
         databaseLoginInfo.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -100,6 +116,7 @@ public class Reward {
         }
         return true;
     }
+*/
 
     public ArrayList<Responsibility> getResponsibilities(){
         ArrayList<Responsibility> tempResponsibilities = responsibilities;
@@ -116,6 +133,22 @@ public class Reward {
 
     public String getRewardDescription(){
         return rewardDescription;
+    }
+
+    public boolean getUserAnnounced(){
+        return userAnnounced;
+    }
+
+    public void setUserAnnounced(boolean flag){
+        this.userAnnounced = flag;
+    }
+
+    public boolean getAdminAnnounced(){
+        return adminAnnounced;
+    }
+
+    public void setAdminAnnounced(boolean flag){
+        this.adminAnnounced = flag;
     }
 
     public void setRewardDescription(String rewardDescription){

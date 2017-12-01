@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -225,33 +226,40 @@ public class ChoreEdit extends AppCompatActivity {
     }
 
 
-//--------------------------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------------------------
-
-
     /**
-     * OnClick Event - Adds or removes a users responsibility
+     * Help Method - method checks if the user input matches a standard set of characters
+     * if not, warn the user that their input was not accepted
      *
      *
-     * @param view
      *
      */
-    public void btnSubmit_OnClick(View view) throws NoSuchAlgorithmException {
-
+    private boolean validateUserInput(){
         TextView txtName            = findViewById(R.id.textName);
-        TextView txtDescription     = findViewById(R.id.textDescription);
         TextView txtTime            = findViewById(R.id.textTime);
         TextView txtDate            = findViewById(R.id.textDate);
         TextView txtSelectedUsers   = findViewById(R.id.textSelectUsers);
 
-        Boolean allPass = true;
+        boolean allPass = true;
 
-        if (txtName.getText().toString().trim().equals("")) {
+        Calendar cal        = Calendar.getInstance();
+        int newYear         = cal.get(Calendar.YEAR);
+        int newMonth        = cal.get(Calendar.MONTH);
+        int newDay          = cal.get(Calendar.DAY_OF_MONTH);
+        int newHour         = cal.get(Calendar.HOUR_OF_DAY);
+        int newMinute       = cal.get(Calendar.MINUTE);
+
+        if (txtName.getText().toString().trim().equals("") ) {
             allPass = false;
             txtName.setError("Enter a name.");
             txtName.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
         }
+/*        if (!txtName.getText().toString().trim().matches("[a-zA-Z.? ]*")){
+            allPass = false;
+            txtName.setError("Use only valid charctars 'a-z, A-Z, ., ?' ");
+            txtName.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
+            Toast.makeText(getBaseContext(),
+                    "Please use standard characters 'a-z, A-Z, . , ?'", Toast.LENGTH_SHORT);
+        }*/
         if (hour == -1){
             allPass = false;
             txtTime.setError("Enter a time.");
@@ -267,21 +275,57 @@ public class ChoreEdit extends AppCompatActivity {
             txtSelectedUsers.setError("Please assign a user.");
             txtSelectedUsers.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
         }
-
-        if (allPass){
-            String name         = txtName.getText().toString().trim();
-            String description  = txtDescription.getText().toString().trim();
-            Calendar calChore   = Calendar.getInstance();
-
-            calChore.set(year,month,day,hour,minute);
-            long millis = calChore.getTimeInMillis();
-
-            if (choreSubmit != null) { scrubResponsibilities(choreSubmit); }
-
-            createResponsibilites(new Chore(name, description, millis));
-
-            choreListShow();
+        if ( newYear == year && newMonth == month && newDay == day){
+            if( newHour < hour ){
+                allPass = false;
+                txtTime.setError("Time is in the past.");
+                txtTime.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
+            } else if (newMinute < minute){
+                allPass = false;
+                txtTime.setError("Time is in the past.");
+                txtTime.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
+            }
         }
+
+        return allPass;
+    }
+
+
+//--------------------------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------------------------
+
+
+    /**
+     * OnClick Event - after setting the calendar and extracting the time in millis,
+     * we determine whether or not a chore was passed. If a chore was passed, then a
+     * method is called to remove all responsibilities from the chore. Afterwards a
+     * method call is made to create new responsibilities, then a final method call is
+     * made to switch intent to Chore List
+     *
+     * @param view
+     *
+     */
+    public void btnSubmit_OnClick(View view) throws NoSuchAlgorithmException {
+
+        if (!validateUserInput()) return;
+
+        TextView txtDescription = findViewById(R.id.textDescription);
+        TextView txtName        = findViewById(R.id.textDescription);
+
+        String name         = txtName.getText().toString().trim();
+        String description  = txtDescription.getText().toString().trim();
+        Calendar calChore   = Calendar.getInstance();
+
+        calChore.set(year,month,day,hour,minute);
+        long millis = calChore.getTimeInMillis();
+
+        if (choreSubmit != null) { scrubResponsibilities(choreSubmit); }
+
+        createResponsibilites(new Chore(name, description, millis));
+
+        choreListShow();
+
     }
 
 
@@ -485,7 +529,7 @@ public class ChoreEdit extends AppCompatActivity {
     private void timePick() {
 
         Calendar cal    = Calendar.getInstance();
-        int hour        = cal.get(Calendar.HOUR);
+        int hour        = cal.get(Calendar.HOUR_OF_DAY);
         int minute      = cal.get(Calendar.MINUTE);
 
         TimePickerDialog temp = new TimePickerDialog(this, timeListen, hour, minute, false);
@@ -495,6 +539,8 @@ public class ChoreEdit extends AppCompatActivity {
 
     /**
      * Dialog - displays a date picker dialog and calls a method to display the date in a text
+     * a minimum date is set to inhibit the currentUser from assigning any user a chore with
+     * a date set in the past.
      *
      * NOTE: the following sites were referenced in the construction of this method
      * https://developer.android.com/reference/android/app/DatePickerDialog.html
@@ -508,8 +554,13 @@ public class ChoreEdit extends AppCompatActivity {
         int year        = cal.get(Calendar.YEAR);
         int month       = cal.get(Calendar.MONTH);
         int day         = cal.get(Calendar.DAY_OF_MONTH);
+        int hour        = cal.get(Calendar.HOUR_OF_DAY);
+        int minute      = cal.get(Calendar.MINUTE);
+
+        cal.set(year,month,day,hour,minute);
 
         DatePickerDialog temp = new DatePickerDialog(this, tempListen, year, month, day);
+        temp.getDatePicker().setMinDate( cal.getTimeInMillis() - 1000 );
         temp.show();
     }
 
