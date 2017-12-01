@@ -19,6 +19,27 @@ public class Reward {
     private PersonRule personRule;
     private String userName;
     private String rewardName;
+
+    public DatabaseReference getDatabaseLoginInfo() {
+        return databaseLoginInfo;
+    }
+
+    public PersonRule getPersonRule() {
+        return personRule;
+    }
+
+    public void setPersonRule(PersonRule personRule) {
+        this.personRule = personRule;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setResponsibilities(ArrayList<Responsibility> responsibilities) {
+        this.responsibilities = responsibilities;
+    }
+
     private String rewardDescription;
     private ArrayList<Responsibility> responsibilities;
 
