@@ -78,7 +78,8 @@ public class showDetailDialog extends AppCompatActivity {
         if (choreSubmit != null) {
 
             choreName.setText(choreSubmit.getChoreName());
-            description.setText(choreSubmit.getDescription());
+            String descrip = databaseReward.child(personRule.getUserName()).child("description").getKey();
+            description.setText(descrip);
 
             Calendar tempCal = Calendar.getInstance();
             long millis = choreSubmit.getTimeInMillis();

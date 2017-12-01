@@ -411,6 +411,7 @@ public class RewardEdit extends AppCompatActivity{
      */
     private void controlPanelShow(){
         Intent intent = new Intent(RewardEdit.this, ControlPanelActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 
