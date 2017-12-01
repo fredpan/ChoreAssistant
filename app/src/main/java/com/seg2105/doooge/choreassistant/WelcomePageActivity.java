@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 
@@ -117,23 +118,27 @@ public class WelcomePageActivity extends AppCompatActivity {
         final Button login = dialogView.findViewById(R.id.LoginButton);
         final Button exist = dialogView.findViewById(R.id.ExistButton);
         final TextView warm = dialogView.findViewById(R.id.warm);
+        warm.setVisibility(View.INVISIBLE);
         final AlertDialog dialog = dialogBuilder.create();
         dialog.show();
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                //TODO TO BE IMPLEMENTED
                 if (userName.getText().toString().equals("") || password.getText().toString().equals("")) {
                     warm.setText("Your userID or Password is wrong !!");
                     warm.setVisibility(View.VISIBLE);
 
                 } else {
-                Intent intent = new Intent(WelcomePageActivity.this, ControlPanelActivity.class);
-
-                startActivity(intent);
-                warm.setVisibility(View.INVISIBLE);
-                dialog.dismiss();
+                    try {
+                        isValidLogin(userName.getText().toString(), password.getText().toString(), dialog, warm);
+                    } catch (NoSuchAlgorithmException e) {
+                        e.printStackTrace();
+                    }
                 }
+
+
             }
         });
 
@@ -181,6 +186,39 @@ public class WelcomePageActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
+            }
+        });
+
+    }
+
+    private void isValidLogin(String userName, String password, final AlertDialog dialog, final TextView warm) throws NoSuchAlgorithmException {
+        if (password == null) {
+            password = "";
+        }
+        final String generatedIdentification = IdentificationUtility.generateIdentification(userName, password);
+        databaseLoginInfo.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot instanceOfUser : dataSnapshot.getChildren()) {
+                    PersonRule personRule = instanceOfUser.getValue(PersonRule.class);
+
+                    if (personRule.getEncrypted().equals(generatedIdentification)) {
+                        Intent intent = new Intent(WelcomePageActivity.this, ControlPanelActivity.class);
+
+                        startActivity(intent);
+                        dialog.dismiss();
+                    }
+                }
+                warm.setText("Your userID or Password is wrong !!");
+                warm.setVisibility(View.VISIBLE);
+
+            }
+
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
 
