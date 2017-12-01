@@ -121,8 +121,10 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 //                if (createUser.isClickable()) {
                     try {
                         if (createUserIsClickable) {
-                            storeAccountInfo();
+                            storeAccountInfo(false);
 //                        createUser.setClickable(false);
+                            //TODO Add to report: Assume users' login do not require password.
+                            Toast.makeText(getApplicationContext(), "The user's password will be ignored!", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(getApplicationContext(), "Please create admin first !!!!", Toast.LENGTH_SHORT).show();
                         }
@@ -140,7 +142,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 
                 try {
                     isAdmin = true;
-                    storeAccountInfo();
+                    storeAccountInfo(true);
 
                     isAdmin = false;
                     //createUser.setClickable(false);
@@ -175,17 +177,23 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     }
 
 
-    private void storeAccountInfo() throws NoSuchAlgorithmException {
+    private void storeAccountInfo(boolean isAdmin) throws NoSuchAlgorithmException {
         // Storing new username with its related encrypted password, user ID, and isAdmin to database
         EditText obtainedUsername = findViewById(R.id.newUserName);
         EditText obtainedPassword = findViewById(R.id.newPassword);
         String username = String.valueOf(obtainedUsername.getText());
-        String password = String.valueOf(obtainedPassword.getText());
+        String password = "";
+        password = String.valueOf(obtainedPassword.getText());
         String encrypted = IdentificationUtility.generateIdentification(username, password);
 
         if (username.equals("")) {
             obtainedUsername.setError("At least enter a name.");
             obtainedUsername.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
+
+        } else if (isAdmin && password.equals("")) {
+            obtainedPassword.setError("Enter a password.");
+            obtainedPassword.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
+
 
         } else {
             PersonRule personRule = new PersonRule(username, encrypted, isAdmin, color, userID);

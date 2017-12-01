@@ -5,12 +5,9 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-
 import android.view.LayoutInflater;
 import android.view.View;
-
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +27,7 @@ public class showDetailDialog extends AppCompatActivity {
 
     DatabaseReference databaseChore = FirebaseDatabase.getInstance().getReference("chore");
     private Chore choreSubmit;
+    private PersonRule personRule;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +35,7 @@ public class showDetailDialog extends AppCompatActivity {
         setContentView(R.layout.choredetail_dialog);
         Intent intent = getIntent();
         choreSubmit = (Chore) intent.getSerializableExtra("SUBMIT");
+        personRule = (PersonRule) intent.getSerializableExtra("currentUser");
         initialData(choreSubmit);
 
         final ImageButton finish_button = findViewById(R.id.finishButton);
@@ -166,7 +165,12 @@ public class showDetailDialog extends AppCompatActivity {
                 final Timer t = new Timer();
                 t.schedule(new TimerTask() {
                     public void run() {
-                        finish();
+                        Intent intent = new Intent(showDetailDialog.this, ChoreList.class);
+                        intent.putExtra("currentUser", personRule);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+
+
 
 
                         t.cancel();

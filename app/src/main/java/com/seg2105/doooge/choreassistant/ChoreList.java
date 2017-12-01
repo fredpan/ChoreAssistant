@@ -22,7 +22,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 
 
@@ -217,6 +216,7 @@ public class ChoreList extends AppCompatActivity {
                 Toast.makeText(getBaseContext(), " " + ((Chore) view.getTag()).getChoreName(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(ChoreList.this, showDetailDialog.class);
                 intent.putExtra("SUBMIT", (Chore) view.getTag());
+                intent.putExtra("currentUser", currentUser);
                 startActivity(intent);
 
             }
