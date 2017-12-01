@@ -45,7 +45,7 @@ public class WelcomePageActivity extends AppCompatActivity {
     private HomeAdapter mAdapter; //This adapter for control the recyclerView.
     private PersonRule testRule;  // This is for test
     private ArrayList<PersonRule> personRulesList; //This is for save user
-    private boolean noAdmin;
+    private boolean noAdmin=true;
     private PersonRule user = new PersonRule();//This for track witch user is been clicked
 
     @Override
@@ -76,7 +76,6 @@ public class WelcomePageActivity extends AppCompatActivity {
                     noAdmin = !(user.isAdmin());
                     break;
                 }
-
             }
 
             @Override
