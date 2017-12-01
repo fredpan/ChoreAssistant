@@ -46,6 +46,7 @@ public class WelcomePageActivity extends AppCompatActivity {
     private PersonRule testRule;  // This is for test
     private ArrayList<PersonRule> personRulesList; //This is for save user
     private boolean noAdmin;
+    private PersonRule user = new PersonRule();//This for track witch user is been clicked
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,12 +69,14 @@ public class WelcomePageActivity extends AppCompatActivity {
                     personRulesList.add(personRule);
 
                 }
-                noAdmin = personRulesList.isEmpty();
                 mRecyclerView = findViewById(R.id.id_recyclerview);
                 mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
                 mRecyclerView.setAdapter(mAdapter = new HomeAdapter());
+                for (PersonRule user : personRulesList) {
+                    noAdmin = !(user.isAdmin());
+                    break;
+                }
 
-                System.out.println("11111111=========================");
             }
 
             @Override
@@ -81,7 +84,7 @@ public class WelcomePageActivity extends AppCompatActivity {
 
             }
         });
-        System.out.println("2222===================");
+
 
 
         Button loginButton = findViewById(R.id.loginAsAdmin);
@@ -130,7 +133,7 @@ public class WelcomePageActivity extends AppCompatActivity {
 
                 } else {
                     try {
-                        isValidLogin(userName.getText().toString(), password.getText().toString(), dialog, warm);
+                        isValidLogin(userName.getText().toString(), password.getText().toString(), dialog, warm, false, user);
                     } catch (NoSuchAlgorithmException e) {
                         e.printStackTrace();
                     }
@@ -172,13 +175,13 @@ public class WelcomePageActivity extends AppCompatActivity {
                     warm.setVisibility(View.VISIBLE);
 
                 } else {
-                    //TODO Alg for verify admin pwd for going to main page
-                    //isValidLogin(user.getUserName(),String.valueOf(password),dialog,warm);
+                    try {
+                        isValidLogin(user.getUserName(), password.getText().toString(), dialog, warm, true, user);
+                    } catch (NoSuchAlgorithmException e) {
+                        e.printStackTrace();
+                    }
 
-//                    Intent intent = new Intent(WelcomePageActivity.this, ChoreList.class);
-//                    intent.putExtra("currentUser", user);
-//                    startActivity(intent);
-//                    dialog.dismiss();
+
                 }
             }
         });
@@ -192,10 +195,8 @@ public class WelcomePageActivity extends AppCompatActivity {
 
     }
 
-    private void isValidLogin(String userName, String password, final AlertDialog dialog, final TextView warm) throws NoSuchAlgorithmException {
-        if (password == null) {
-            password = "";
-        }
+    private void isValidLogin(String userName, String password, final AlertDialog dialog, final TextView warm, final boolean isConfrim, final PersonRule user) throws NoSuchAlgorithmException {
+
         final String generatedIdentification = IdentificationUtility.generateIdentification(userName, password);
         databaseLoginInfo.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -204,22 +205,29 @@ public class WelcomePageActivity extends AppCompatActivity {
                 for (DataSnapshot instanceOfUser : dataSnapshot.getChildren()) {
                     PersonRule personRule = instanceOfUser.getValue(PersonRule.class);
 
-                    if (personRule.getEncrypted().equals(generatedIdentification)) {
-                        Intent intent = new Intent(WelcomePageActivity.this, ControlPanelActivity.class);
+                    if (isConfrim) {
+                        if (personRule.getEncrypted().equals(generatedIdentification)) {
+                            Intent intent = new Intent(WelcomePageActivity.this, ChoreList.class);
+                            intent.putExtra("currentUser", user);
+                            startActivity(intent);
+                            dialog.dismiss();
+                        }
+                        warm.setText("Your Password is wrong !!");
+                        warm.setVisibility(View.VISIBLE);
 
-                        startActivity(intent);
-                        dialog.dismiss();
+                    } else {
+                        if (personRule.getEncrypted().equals(generatedIdentification)) {
+                            Intent intent = new Intent(WelcomePageActivity.this, ControlPanelActivity.class);
+                            startActivity(intent);
+                            dialog.dismiss();
+                        }
+                        warm.setText("Your userID or Password is wrong !!");
+                        warm.setVisibility(View.VISIBLE);
                     }
                 }
-                warm.setText("Your userID or Password is wrong !!");
-                warm.setVisibility(View.VISIBLE);
-
             }
-
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
 

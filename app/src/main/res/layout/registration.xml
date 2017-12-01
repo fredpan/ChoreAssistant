@@ -35,6 +35,7 @@
             android:ems="10"
             android:hint="Please enter your user name"
             android:inputType="textPersonName"
+            android:maxLength="10"
             android:textSize="25dp" />
 
 

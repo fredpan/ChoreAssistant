@@ -14,6 +14,7 @@ public class Responsibility implements Serializable {
     private String choreIdentification;
     private String responsibilityID;
     private Chore chore;
+    private boolean isComplete;
 
 
     private PersonRule personRule;
@@ -27,11 +28,16 @@ public class Responsibility implements Serializable {
     //public Responsibility(int userID, String choreIdentification) throws NoSuchAlgorithmException {
     public Responsibility(String userID, String choreIdentification) throws NoSuchAlgorithmException {
         //this.userID = userID;
+        isComplete = false;
         this.userID = userID;
         this.choreIdentification = choreIdentification;
         this.responsibilityID = IdentificationUtility.generateIdentification(userID, choreIdentification);
 
         //this.responsibilityID = IdentificationUtility.generateIdentification(Integer.toString(userID), choreIdentification);
+    }
+
+    public void setComplete() {
+        isComplete = true;
     }
 
     public Chore getChore(){

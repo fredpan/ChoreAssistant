@@ -40,8 +40,6 @@ public class EditUserActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.edit_user_info);
         Intent intent = getIntent();
         personRule = (PersonRule) intent.getSerializableExtra("userInfo");
-        color = getResources().getColor(R.color.black);
-
         update = findViewById(R.id.updateUserInfo);
         update.setOnClickListener(this);
 
@@ -64,6 +62,7 @@ public class EditUserActivity extends AppCompatActivity implements View.OnClickL
         userName = findViewById(R.id.newUserName);
         password = findViewById(R.id.newPassword);
         userName.setText(personRule.getUserName());
+        color = personRule.getColor();
 
 
 
@@ -74,7 +73,6 @@ public class EditUserActivity extends AppCompatActivity implements View.OnClickL
 
         //obtain new data
         newUserName = String.valueOf(userName.getText());
-        System.out.println(newUserName);
         newPassword = String.valueOf(password.getText());
         try {
             encrypted = IdentificationUtility.generateIdentification(newUserName, newPassword);
@@ -93,9 +91,11 @@ public class EditUserActivity extends AppCompatActivity implements View.OnClickL
 //                System.out.println("HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
                 if (newUserName.equals("")) {
-                    userName.setError("At least enter a name.");
+                    userName.setError("Enter a name.");
                     userName.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
-
+                } else if (newPassword.equals("")) {
+                    password.setError("Enter a password.");
+                    password.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
                 } else {
                     PersonRule newPersonRule = new PersonRule(newUserName, encrypted, personRule.isAdmin(), color, personRule.getUserID());
                     databaseLoginInfo.child(personRule.getUserName()).removeValue();
