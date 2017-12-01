@@ -94,7 +94,7 @@ public class ChoreList extends AppCompatActivity {
                         for (Responsibility responsibility : chore.getResponsibilities()) {
                             if (responsibility == null) break;
 
-                            String temp1 = responsibility.getUserID();
+                            String temp1 = String.valueOf(responsibility.getUserID());
                             String temp2 = currentUser.getUserName();
 
                             if ((temp1 != null) && (temp2 != null) && (temp1.equals(temp2))) {
@@ -127,13 +127,15 @@ public class ChoreList extends AppCompatActivity {
      */
     public void userListen() {
         // check if admin, if not ,set invisible for add button and edit button
+        /*
         if (!currentUser.isAdmin()) {
             Button add = findViewById(R.id.btnAdd);
             add.setVisibility(View.INVISIBLE);
         } else {
+        */
             Button add = findViewById(R.id.btnAdd);
             add.setVisibility(View.VISIBLE);
-        }
+        //}
     }
 
 
@@ -144,6 +146,15 @@ public class ChoreList extends AppCompatActivity {
     public void add_OnClick(View view) {
         Intent intent = new Intent(ChoreList.this, ChoreEdit.class); //switch homepage to edit chore page
         intent.putExtra("currentUser",currentUser);
+        startActivity(intent);
+    }
+
+
+    /**
+     *
+     */
+    public void btnReward_OnClick(View view){
+        Intent intent = new Intent(ChoreList.this, ChoreEdit.class); //switch homepage to edit chore page
         startActivity(intent);
     }
 

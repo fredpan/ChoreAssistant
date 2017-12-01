@@ -60,6 +60,22 @@ public class PersonRule implements Serializable {
         return removed;
     }
 
+    public void deleleteResponsibilityWithID(String responsibilityID){
+        if ( (responsibilities == null) || (responsibilities.size() == 0)  ) return;
+
+        for (Responsibility responsibility : responsibilities){
+            String id = responsibility.getResponsibilityID();
+            if (id == null) break;
+
+            if(id.equals(responsibilityID)){
+                this.removeResponsibility(responsibility);
+                return;
+            }
+        }
+
+
+    }
+
     public List<Responsibility> getResponsibilities() {
         List<Responsibility> newResponsibilities = responsibilities;
         return newResponsibilities;
