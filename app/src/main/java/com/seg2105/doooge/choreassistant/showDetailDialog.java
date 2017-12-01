@@ -71,15 +71,17 @@ public class showDetailDialog extends AppCompatActivity {
         TextView description = findViewById(R.id.printDescription);
         description.setText("Please be careful !!!");
         TextView reward = findViewById(R.id.printReward);
-        reward.setText("You will get 10 dollars!");
+        reward.setText("No reward now .");
         Intent intent = getIntent();
         choreSubmit = (Chore) intent.getSerializableExtra("SUBMIT");
 
         if (choreSubmit != null) {
 
             choreName.setText(choreSubmit.getChoreName());
-            String descrip = databaseReward.child(personRule.getUserName()).child("description").getKey();
-            description.setText(descrip);
+            //String descrip = databaseReward.child(personRule.getUserName()).child("description").getKey();
+            //if(descrip!=null) {
+            //    description.setText(descrip);
+            //}
 
             Calendar tempCal = Calendar.getInstance();
             long millis = choreSubmit.getTimeInMillis();

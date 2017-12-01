@@ -228,7 +228,7 @@ public class RewardEdit extends AppCompatActivity{
                 reward.setRewardName(name);
                 reward.setRewardDescription(description);
 
-                databaseReward.child( reward.getUserName() ).setValue(reward);
+           //     databaseReward.child( reward.getUserName() ).setValue(reward);
 
             }
 
