@@ -14,6 +14,7 @@ public class Responsibility implements Serializable {
     private String choreIdentification;
     private String responsibilityID;
     private Chore chore;
+    private boolean isComplete;
 
 
     private PersonRule personRule;
@@ -85,4 +86,11 @@ public class Responsibility implements Serializable {
     }
 
 
+    public boolean isComplete() {
+        return isComplete;
+    }
+
+    public void setComplete(boolean complete) {
+        isComplete = complete;
+    }
 }

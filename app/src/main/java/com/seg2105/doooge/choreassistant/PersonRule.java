@@ -27,6 +27,7 @@ public class PersonRule implements Serializable {
         this.admin = admin;
         this.encrypted = encrypted;
         this.color = color;
+        this.responsibilities = new ArrayList<Responsibility>();
 
     }
 
