@@ -37,6 +37,7 @@ public class ControlPanelActivity extends AppCompatActivity {
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        personRules.clear();
                         for (DataSnapshot personRoleInstance : dataSnapshot.getChildren()) {
                             PersonRule personRule = personRoleInstance.getValue(PersonRule.class);
                             personRules.add(personRule);
