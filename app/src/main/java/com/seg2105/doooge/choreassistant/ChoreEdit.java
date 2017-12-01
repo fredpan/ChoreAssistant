@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -62,7 +63,11 @@ public class ChoreEdit extends AppCompatActivity {
 
         userListen();
 
-        if (choreSubmit != null){ choreFound(); }
+        if (choreSubmit != null){
+            choreFound();
+            Button btnDelete = findViewById(R.id.btnDelete);
+            btnDelete.setEnabled(true);
+        }
     }
 
 
@@ -177,6 +182,13 @@ public class ChoreEdit extends AppCompatActivity {
             }
         });
 
+        userList.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
         userList.show();
     }
 
@@ -196,6 +208,44 @@ public class ChoreEdit extends AppCompatActivity {
 
 
     public void btnDelete_OnClick(View view){
+
+        AlertDialog.Builder deleteConfirm = new AlertDialog.Builder( this );
+        deleteConfirm.setTitle("Delete");
+        deleteConfirm.setMessage("Are you sure you want to delete?");
+        deleteConfirm.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                for (Responsibility responsibility : choreSubmit.getResponsibilities()){
+                    String responsibilityUserID = responsibility.getUserID();
+                    if ( responsibilityUserID == null ) break;
+
+                    for ( PersonRule user : personRulesList ){
+                        String userID = user.getUserName();
+                        if ( userID == null ) break;
+
+                        if ( responsibilityUserID.equals(userID) ){
+                            user.deleleteResponsibilityWithID(responsibility.getResponsibilityID());
+                            //user.removeResponsibility(responsibility);
+                            databaseLoginInfo.child(user.getUserName()).setValue(user);
+                        }
+                    }
+                }
+
+                databaseChores.child(choreSubmit.getChoreIdentification()).removeValue();
+
+                choreListShow();
+            }
+        });
+
+        deleteConfirm.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        deleteConfirm.show();
 
     }
 
@@ -372,11 +422,16 @@ public class ChoreEdit extends AppCompatActivity {
 
             databaseChores.child(chore.getChoreIdentification() ).setValue(chore);
 
-            Intent intent = new Intent(ChoreEdit.this, ChoreList.class);
-            intent.putExtra("currentUser",currentUser);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+            choreListShow();
         }
+    }
+
+
+    private void choreListShow(){
+        Intent intent = new Intent(ChoreEdit.this, ChoreList.class);
+        intent.putExtra("currentUser",currentUser);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
 
