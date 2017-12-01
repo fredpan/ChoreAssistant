@@ -158,7 +158,7 @@ public class showDetailDialog extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                databaseResponsiblity.child(choreSubmit.getChoreIdentification()).child("complete").setValue(true);
+//                databaseResponsiblity.child(choreSubmit.getChoreIdentification()).child("complete").setValue(true);
                 Toast.makeText(getApplicationContext(), "Congraduation, You finish !!!!", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
                 button.setBackgroundResource(R.drawable.finish_button);
