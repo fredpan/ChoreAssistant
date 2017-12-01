@@ -91,4 +91,11 @@ public class Responsibility implements Serializable {
     }
 
 
+    public boolean isComplete() {
+        return isComplete;
+    }
+
+    public void setComplete(boolean complete) {
+        isComplete = complete;
+    }
 }
