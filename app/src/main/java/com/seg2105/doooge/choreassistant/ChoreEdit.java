@@ -398,12 +398,11 @@ public class ChoreEdit extends AppCompatActivity {
 
                     for(PersonRule user : personRulesList){
                         if(id.equals(user.getUserName())){
-                            user.removeResponsibility( responsibility );
+                            user.deleleteResponsibilityWithID( responsibility.getResponsibilityID() );
+                            //user.removeResponsibility( responsibility );
                             databaseLoginInfo.child(user.getUserName()).setValue(user);
                         }
                     }
-
-                    //databaseResponsibilities.child(responsibility.getResponsibilityID() ).removeValue();
                 }
 
                 databaseChores.child( choreSubmit.getChoreIdentification() ).removeValue();
@@ -417,7 +416,6 @@ public class ChoreEdit extends AppCompatActivity {
                 chore.addResponsibility(responsibility);
 
                 databaseLoginInfo.child( person.getUserName() ).setValue(person);
-                //databaseResponsibilities.child( responsibility.getResponsibilityID() ).setValue(responsibility);
             }
 
             databaseChores.child(chore.getChoreIdentification() ).setValue(chore);
