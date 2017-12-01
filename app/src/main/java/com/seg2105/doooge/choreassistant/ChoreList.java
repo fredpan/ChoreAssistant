@@ -32,7 +32,6 @@ import java.util.Calendar;
 
 public class ChoreList extends AppCompatActivity {
 
-    //DatabaseReference databaseResponsibilities;
     DatabaseReference databaseChores;
     DatabaseReference databaseUsers;
 
@@ -41,18 +40,7 @@ public class ChoreList extends AppCompatActivity {
     //stores the current date
     private int day, month, year;
     private Calendar cal;
-    /**
-     * listener for the date picker dialog
-     */
-    private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
 
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            //the selected month (0-11 for compatibility with MONTH)
-            scrubChoreView();  //clear ui
-            updateDate(year, month, dayOfMonth); //adjust class variables
-            setDate(year, month, dayOfMonth);  //display the text
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,83 +59,86 @@ public class ChoreList extends AppCompatActivity {
         setDate(year, month, day);
 
         //initiate databases and their appropriate listeners
-        //databaseResponsibilities = FirebaseDatabase.getInstance().getReference("responsibility");
         databaseChores  = FirebaseDatabase.getInstance().getReference("chore");
         databaseUsers   = FirebaseDatabase.getInstance().getReference("PersonRule");
 
         choreListen();
         userListen();
-
     }
 
+
+//--------------------------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------------------------
+
+
     /**
-     * Listener for new chores, display is based on the users priveledge
-     * or whether or not the chore is for that specific person
+     * Helper Method - receives either a negative or positive integer, (representing days),
+     * that is added or subtracted from the current date. Functions are then called to set
+     * the class variables and display the result.
+     *
+     *
+     * @param upDown amount in days to shift the calendar date by, can be negative or positive
      */
-    public void choreListen() {
-        //making this callable so update to the UI can happen
-        databaseChores.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+    private void buildNewDate(int upDown) {
+        cal.add(Calendar.DATE, upDown);
 
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    Chore chore = postSnapshot.getValue(Chore.class);
+        year    = cal.get(Calendar.YEAR);
+        month   = cal.get(Calendar.MONTH);
+        day     = cal.get(Calendar.DAY_OF_MONTH);
 
-                    //tinkering but case should be avoided
-                    //if (chore.getResponsibilities() == null) throw new UnassignedChoreException;
-
-                    if (currentUser.isAdmin()) {
-                        displayChore(chore);
-                    } else if (chore.getResponsibilities() != null) {
-
-                        //Testing if any of the available chores are for this particular user.
-                        for (Responsibility responsibility : chore.getResponsibilities()) {
-                            if (responsibility == null) break;
-
-                            String temp1 = String.valueOf(responsibility.getUserID());
-                            String temp2 = currentUser.getUserName();
-
-                            if ((temp1 != null) && (temp2 != null) && (temp1.equals(temp2))) {
-                                displayChore(chore);
-                            }
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        updateDate(year, month, day);
+        setDate(year, month, day);
     }
 
+
     /**
-     * possible dead method
+     * Helper Method - creates a new text view and assigns it the attributes that
+     * were passed to the method. The textboxes are used on a grid layout of the
+     * choreView to display information about a chore.
+     *
+     *
+     * @param text text to be inserted into textview
+     * @param textSize size of the font of the text
+     * @return
      */
-    public void responsibilityListen() {
+    private TextView createTextView(String text, int textSize){
+        TextView tempText = new TextView(this);
 
+        tempText.setTextSize(textSize);
+        tempText.setText(text);
+        return tempText;
     }
 
+
     /**
-     * Check whether or not the user has sufficient privledge to view edit abilities
-     * and disable them if not
+     * Helper Method - checks the current users privledge, if the user admin the
+     * button that changes intent to ChoreEdit is made visibile, otherwise, it is
+     * hidden from view.
+     *
+     *
      */
     public void userListen() {
-        // check if admin, if not ,set invisible for add button and edit button
-        /*
         if (!currentUser.isAdmin()) {
             Button add = findViewById(R.id.btnAdd);
             add.setVisibility(View.INVISIBLE);
         } else {
-        */
             Button add = findViewById(R.id.btnAdd);
             add.setVisibility(View.VISIBLE);
-        //}
+        }
     }
 
+
+//--------------------------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------------------------
+
+
     /**
-     * Change intents and pass the current user on button action
+     * OnClick Event - changes the intent to ChoreEdit and passes ChoreEdit the
+     * current user
+     *
+     *
      * @param view this
      */
     public void add_OnClick(View view) {
@@ -156,17 +147,93 @@ public class ChoreList extends AppCompatActivity {
         startActivity(intent);
     }
 
-    /**
-     *
-     */
-    public void btnReward_OnClick(View view) {
-        Intent intent = new Intent(ChoreList.this, ChoreEdit.class); //switch homepage to edit chore page
-        startActivity(intent);
-    }
 
     /**
-     * Creates a gridlayout and adds the new layout to choreView
-     * the content that will be displayed is based on the chore
+     * OnClick Event - makes a method call to a date picker dialog to obtain
+     * user input about the date they want to switch to.
+     *
+     *
+     * @param view
+     */
+    public void textDate_OnClick(View view) {
+        datePick();
+    }
+
+
+    /**
+     * OnClick Event - first the chores that are currently being displayed are cleared
+     * from the UI. The next method is then called to increment the date, once that is
+     * complete, a call to the chore listener is made to pull from fire base the chores
+     * of the current date and place them on the UI.
+     *
+     *
+     * @param view
+     */
+    public void imgDateUp_OnClick(View view) {
+        scrubChoreView();
+        buildNewDate(1);
+        choreListen();
+    }
+
+
+    /**
+     * OnClick Event - first the chores that are currently being displayed are cleared
+     * from the UI. The next method is then called to decrement the date, once that is
+     * complete, a call to the chore listener is made to pull from fire base the chores
+     * of the current date and place them on the UI.
+     *
+     *
+     * @param view
+     */
+    public void imgDateDown_OnClick(View view) {
+        scrubChoreView();
+        buildNewDate(-1);
+        choreListen();
+    }
+
+
+    /**
+     * OnClick Event (Or Highly Related To) - recieves the date as integer representation
+     * of the day, month, and year. If those values match the current day nothing
+     * happens; If they do not, the class variables are set and chore listener
+     * is called to pull from fire base the chores of the current date and
+     * place them on the UI
+     *
+     *
+     * @param year sets the new year
+     * @param month sets the new month
+     * @param day sets the new day
+     */
+    private void updateDate(int year, int month, int day){
+
+        //if the user selected the all ready displayed date, do nothing
+        if ((year == this.year) && (month == this.month) && (day == this.day)) {
+            return;
+        }
+
+        cal.set(year,month,day);
+
+        this.year   = year;
+        this.month  = month;
+        this.day    = day;
+
+        choreListen();
+    }
+
+
+//--------------------------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------------------------
+
+
+    /**
+     * UI Event | OnClick Event - checks that chore passed to the method has a date
+     * that matches the currently set date, if not the method returns.
+     * A grid layout is then constructed and a method call is made to create textviews
+     * that are inserted onto the grid layout. The chore is tagged to that layout and a
+     * listener is set. If the listener is activated the tagged chored will be passed
+     * through intent. Lastly, the newly constructed grid view is placed onto the ChoreView.
+     *
      *
      * @param chore the chore that has been assigned to, or created by, the current user.
      */
@@ -192,9 +259,9 @@ public class ChoreList extends AppCompatActivity {
         Point point             = new Point();                  //required for to get display size
 
         //create text views and add text to them
-        TextView text1          = textTest(chore.getChoreName(),18);
-        TextView text2          = textTest( String.format("%02d:%02d", choreHours, choreMinute), 14);
-        TextView text3          = textTest(chore.getDescription(), 14);
+        TextView text1          = createTextView(chore.getChoreName(),18);
+        TextView text2          = createTextView( String.format("%02d:%02d", choreHours, choreMinute), 14);
+        TextView text3          = createTextView(chore.getDescription(), 14);
 
         //set the layout
         gridLayout.setColumnCount(2);
@@ -255,101 +322,24 @@ public class ChoreList extends AppCompatActivity {
 
         //finally, place the gridview on layout to be displayed
         linearView.addView(gridLayout);
-
     }
 
+
     /**
-     * Creates new textviews to display in new gridlayout of choreView
+     * UI Event - removes all the views currently placed on the choreview.
      *
-     * @param text text to be inserted into textview
-     * @param textSize size of the font of the text
-     * @return
-     */
-    private TextView textTest(String text, int textSize){
-        TextView tempText = new TextView(this);
-
-        tempText.setTextSize(textSize);
-        tempText.setText(text);
-        return tempText;
-    }
-
-    /**
-     * method called when the text dispay the date is clicked
-     * @param view
-     */
-    public void textDate_OnClick(View view) {
-        datePick();
-    }
-
-    /**
-     * method called when the left pointing chevron is clicked
-     * @param view
-     */
-    public void imgDateUp_OnClick(View view) {
-        scrubChoreView();
-        buildNewDate(1);
-        choreListen();
-    }
-
-    /**
-     * method called when the right pointing chevron is clicked
-     * @param view
-     */
-    public void imgDateDown_OnClick(View view) {
-        scrubChoreView();
-        buildNewDate(-1);
-        choreListen();
-    }
-
-    /**
-     * Sets the class varibles to this date and, if required, refreshes the ui
      *
-     * @param year sets the new year
-     * @param month sets the new month
-     * @param day sets the new day
-     */
-    private void updateDate(int year, int month, int day){
-
-        //if the user selected the all ready displayed date, do nothing
-        if ((year == this.year) && (month == this.month) && (day == this.day)) {
-            return;
-        }
-
-        cal.set(year,month,day);
-
-        this.year   = year;
-        this.month  = month;
-        this.day    = day;
-
-        choreListen();
-    }
-
-    /**
-     * used to either add or subtract X amount of days from the current day
-     *
-     * @param upDown amount in days to shift the calendar date by, can be negative or positive
-     */
-    private void buildNewDate(int upDown) {
-        cal.add(Calendar.DATE, upDown);
-
-        year    = cal.get(Calendar.YEAR);
-        month   = cal.get(Calendar.MONTH);
-        day     = cal.get(Calendar.DAY_OF_MONTH);
-
-        updateDate(year, month, day);
-        setDate(year, month, day);
-    }
-
-    /**
-     * clears the ui of all currently displayed chores
      */
     private void scrubChoreView(){
         LinearLayout choreView = findViewById(R.id.choreView);
         choreView.removeAllViews();
     }
 
+
     /**
-     * Displays the date as a readable text to textDate
+     * UI Event - Receives a day, month, year as integer values and converts
+     * those values into a string and displays the resultant text to the user.
+     *
      *
      * @param year the year the calendar is to be set to
      * @param month the month the calendar is to be set to
@@ -376,14 +366,88 @@ public class ChoreList extends AppCompatActivity {
         textDate.setText(monthString[month] + " " + day + ", " + year);
     }
 
+
+//--------------------------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------------------------
+
+
     /**
-     * displays a date picker dialog
+     * Dialog - displays a date picker dialog and passes the user information
+     * to a method for displaying the result
+     *
+     *
      */
     private void datePick() {
         //https://developer.android.com/reference/android/app/DatePickerDialog.html
         DatePickerDialog temp = new DatePickerDialog(this, tempListen, year, month, day);
         temp.show();
     }
+
+
+//--------------------------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------------------------
+
+
+    /**
+     * Listener - if the user has selected a date, it calls a method to clear the
+     * choreView of all the currently displayed chores. Next, a method is called to
+     * set the class variables to the selected date. Finally, the last method is called
+     * to display the selected date as text to the user.
+     *
+     *
+     */
+    private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
+
+        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+            //the selected month (0-11 for compatibility with MONTH)
+            scrubChoreView();  //clear ui
+            updateDate(year, month, dayOfMonth); //adjust class variables
+            setDate(year, month, dayOfMonth);  //display the text
+        }
+    };
+
+
+    /**
+     * Listener - grabs all the chores currently in firebase, if the current user
+     * has admin privledge it is displayed; otherwise, only if the chore has been
+     * assigned to the current user will the chore be displayed.
+     *
+     *
+     */
+    public void choreListen() {
+        //making this callable so update to the UI can happen
+        databaseChores.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Chore chore = postSnapshot.getValue(Chore.class);
+
+                    if (currentUser.isAdmin()) {
+                        displayChore(chore);
+                    } else if (chore.getResponsibilities() != null) {
+
+                        //Testing if any of the available chores are for this particular user.
+                        for (Responsibility responsibility : chore.getResponsibilities()) {
+                            if (responsibility == null) break;
+
+                            if ( responsibility.getUserID() == currentUser.getUserID() ){
+                                displayChore(chore);
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 
 
 }
