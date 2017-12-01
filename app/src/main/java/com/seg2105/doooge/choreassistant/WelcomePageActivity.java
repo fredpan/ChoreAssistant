@@ -98,8 +98,6 @@ public class WelcomePageActivity extends AppCompatActivity {
         });
 
 
-
-
     }
 
 
