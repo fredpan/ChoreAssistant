@@ -54,7 +54,7 @@
             android:background="@drawable/back"
             android:ems="10"
             android:hint="Please enter your password"
-            android:inputType="textPassword"
+            android:inputType="textPersonName"
             android:textSize="25dp" />
 
         <TextView

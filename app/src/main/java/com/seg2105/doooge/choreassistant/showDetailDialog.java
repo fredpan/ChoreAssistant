@@ -12,8 +12,11 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
 import java.util.Timer;
@@ -25,7 +28,7 @@ import java.util.TimerTask;
 
 public class showDetailDialog extends AppCompatActivity {
 
-    DatabaseReference databaseResponsiblity = FirebaseDatabase.getInstance().getReference("responsibility");
+    DatabaseReference databaseChore = FirebaseDatabase.getInstance().getReference("chore");
     private Chore choreSubmit;
     private PersonRule personRule;
 
@@ -158,7 +161,26 @@ public class showDetailDialog extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                databaseResponsiblity.child(choreSubmit.getChoreIdentification()).child("complete").setValue(true);
+                databaseChore.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        for (DataSnapshot instanceOfResponsibility : dataSnapshot.child(choreSubmit.getChoreIdentification()).child("responsibilities").getChildren()) {
+                            Responsibility responsibility = instanceOfResponsibility.getValue(Responsibility.class);
+                            if (choreSubmit.getChoreIdentification().equals(responsibility.getChoreIdentification()) &&
+                                    ((Integer) personRule.getUserID()).equals(responsibility.getUserID())) {
+                                responsibility.setComplete();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
                 Toast.makeText(getApplicationContext(), "Congraduation, You finish !!!!", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
                 button.setBackgroundResource(R.drawable.finish_button);
@@ -169,10 +191,6 @@ public class showDetailDialog extends AppCompatActivity {
                         intent.putExtra("currentUser", personRule);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
-
-
-
-
                         t.cancel();
                     }
                 }, 2000); // after 2 second (or 2000 miliseconds), the task will be active.
