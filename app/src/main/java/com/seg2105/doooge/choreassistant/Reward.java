@@ -7,6 +7,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by fredpan on 2017/11/30.
@@ -17,6 +18,8 @@ public class Reward {
     private final DatabaseReference databaseLoginInfo = FirebaseDatabase.getInstance().getReference("PersonRule");
     private PersonRule personRule;
     private String userName;
+    private String rewardName;
+    private String rewardDescription;
     private ArrayList<Responsibility> responsibilities;
 
     public Reward() {
@@ -56,6 +59,31 @@ public class Reward {
             }
         }
         return true;
+    }
+
+    public ArrayList<Responsibility> getResponsibilities(){
+        ArrayList<Responsibility> tempResponsibilities = responsibilities;
+        return tempResponsibilities;
+    }
+
+    public String getRewardName(){
+        return rewardName;
+    }
+
+    public void setRewardName(String rewardName){
+        this.rewardName = rewardName;
+    }
+
+    public String getRewardDescription(){
+        return rewardDescription;
+    }
+
+    public void setRewardDescription(String rewardDescription){
+        this.rewardDescription = rewardDescription;
+    }
+
+    public String getUserName(){
+        return userName;
     }
 
 }

@@ -33,7 +33,7 @@ public class ChoreEdit extends AppCompatActivity {
 
     DatabaseReference databaseLoginInfo;
     DatabaseReference databaseChores;
-    //DatabaseReference databaseResponsibilities;
+    DatabaseReference databaseReward;
 
     //stores calendar information if a chore was passed through intent, these will be updated
     private int day, month, year, hour, minute = -1;
@@ -41,25 +41,9 @@ public class ChoreEdit extends AppCompatActivity {
     private Chore choreSubmit;
     private PersonRule currentUser;
 
-
     private List<PersonRule> personRulesList;
     private List<PersonRule> selectedPersonRuleList;
-    //https://developer.android.com/reference/android/app/TimePickerDialog.OnTimeSetListener.html
-    private TimePickerDialog.OnTimeSetListener timeListen = new TimePickerDialog.OnTimeSetListener() {
 
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            setTime(hourOfDay, minute);
-        }
-    };
-    //https://developer.android.com/reference/android/app/DatePickerDialog.OnDateSetListener.html
-    private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
-
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            //From article: the selected month (0-11 for compatibility with MONTH), so add 1...
-            setDate(year, month, dayOfMonth);
-        }
-
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,56 +54,54 @@ public class ChoreEdit extends AppCompatActivity {
         choreSubmit = (Chore) intent.getSerializableExtra("SUBMIT");
         currentUser = (PersonRule) intent.getSerializableExtra("currentUser");
 
-        //databaseResponsibilities    = FirebaseDatabase.getInstance().getReference("responsibility");
-        databaseChores              = FirebaseDatabase.getInstance().getReference("chore");
-        databaseLoginInfo           = FirebaseDatabase.getInstance().getReference("PersonRule");
-
-        selectedPersonRuleList = new ArrayList<>();
+        databaseChores      = FirebaseDatabase.getInstance().getReference("chore");
+        databaseLoginInfo   = FirebaseDatabase.getInstance().getReference("PersonRule");
+        databaseReward      = FirebaseDatabase.getInstance().getReference("Reward");
 
         userListen();
 
-        if (choreSubmit != null) {
+        if (choreSubmit != null){
             choreFound();
             Button btnDelete = findViewById(R.id.btnDelete);
             btnDelete.setEnabled(true);
         }
+
     }
 
-    public void userListen() {
-        databaseLoginInfo.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                //clear and rebuild personRule list
-                personRulesList = new ArrayList<>();
-                for (DataSnapshot personRoleInstance : dataSnapshot.getChildren()) {
-                    personRulesList.add(personRoleInstance.getValue(PersonRule.class));
-                }
-                if (choreSubmit != null) {
-                    StringBuilder userID = new StringBuilder();
-                    List<Responsibility> responsibilities = choreSubmit.getResponsibilities();
-                    for (int i = 0; i < responsibilities.size() ; i++){
-                        String tempID = String.valueOf(responsibilities.get(i).getUserID());
-                        for (PersonRule user : personRulesList) {
-                            if (tempID.equals( user.getUserName() ) ){
-                                userID.append( user.getUserName() );
-                                selectedPersonRuleList.add(user);
-                            }
-                        }
-                        if (i+1 < responsibilities.size() ){userID.append(", ");}
-                    }
-                    TextView textSelectedUsers = findViewById(R.id.textSelectUsers);
-                    textSelectedUsers.setText( userID.toString() );
-                }
-            }
+    /**
+     * Set Class Variables - recieves an array of integers that correspond to
+     * slected users from checkbox dialog.
+     *
+     *
+     * @param selectedUserAtIndex
+     */
+    public void setSelectedPersonRuleList(ArrayList selectedUserAtIndex){
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+        selectedPersonRuleList= new ArrayList<>();
 
-            }
-        });
+        for (int i = 0 ; i < selectedUserAtIndex.size() ; i++ ){
+            selectedPersonRuleList
+                    .add(personRulesList
+                            .get( Integer.valueOf(selectedUserAtIndex.get(i).toString() )
+                            )
+                    );
+        }
     }
 
+
+//--------------------------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------------------------
+
+
+    /**
+     * UI Event - Extracts a time from the chore passed through intent
+     * then converts the millisecond value of that time into a proper date
+     * with year, month, day and time with hour and minute.
+     *
+     *
+     */
     public void choreFound(){
         TextView txtCaption     = findViewById(R.id.textCaption);
         TextView txtName        = findViewById(R.id.textName);
@@ -144,12 +126,277 @@ public class ChoreEdit extends AppCompatActivity {
         setTime(calHour, calMinute);
     }
 
+
     /**
-     * Displays alert dialog of users in the database
+     * UI Event - Set the text of the textDate field.
+     *
+     * @param year  calendar year
+     * @param month calendar month
+     * @param day   calendar day
+     */
+    private void setDate(int year, int month, int day) {
+        TextView textDate = findViewById(R.id.textDate);
+
+        this.day    = day;
+        this.month  = month;
+        this.year   = year;
+
+        String[] monthString = {
+                "January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December" };
+
+
+        textDate.setText( monthString[month] +" " + day + ", " + year);
+    }
+
+
+    /**
+     * UI Event - Recieves the time in hours and minutes, then uses
+     * String format to add missing 0s in front of single digit times
+     *
+     * @param hour   time in hours
+     * @param minute time in minutes
+     */
+    private void setTime(int hour, int minute) {
+        this.hour   = hour;
+        this.minute = minute;
+
+        TextView textTime = findViewById(R.id.textTime);
+        textTime.setText( String.format("%02d:%02d", hour, minute) );
+    }
+
+
+//--------------------------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------------------------
+
+
+    /**
+     * Helper Method - creates associations from responsibilites to users and from
+     * responsibilities to chores, then adds them to firebase.
+     *
+     *
+     * @param chore the chore that is to be associated
+     *
+     */
+    private void createResponsibilites(Chore chore) throws NoSuchAlgorithmException {
+        for ( PersonRule person : selectedPersonRuleList ){
+            Responsibility responsibility = new Responsibility( person.getUserID(), chore.getChoreIdentification() );
+            person.addResponsibility(responsibility);
+            chore.addResponsibility(responsibility);
+
+            databaseLoginInfo.child( person.getUserName() ).setValue(person);
+        }
+
+        databaseChores.child(chore.getChoreIdentification() ).setValue(chore);
+    }
+
+
+    /**
+     * Helper Method - Removes all associations a chore has to responsibilities and then
+     * removes it from firebase.
+     *
+     *
+     * @param chore
+     */
+    private void scrubResponsibilities( Chore chore ){
+        for (Responsibility responsibility : chore.getResponsibilities()) {
+            int id = responsibility.getUserID();
+
+            for(PersonRule user : personRulesList){
+                if(id == user.getUserID() ){
+                    user.deleleteResponsibilityWithID( responsibility.getResponsibilityID() );
+                    databaseLoginInfo.child(user.getUserName()).setValue(user);
+                }
+            }
+        }
+
+        databaseChores.child( chore.getChoreIdentification() ).removeValue();
+    }
+
+
+//--------------------------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------------------------
+
+
+    /**
+     * OnClick Event - Adds or removes a users responsibility
+     *
+     *
+     * @param view
+     *
+     */
+    public void btnSubmit_OnClick(View view) throws NoSuchAlgorithmException {
+
+        TextView txtName            = findViewById(R.id.textName);
+        TextView txtDescription     = findViewById(R.id.textDescription);
+        TextView txtTime            = findViewById(R.id.textTime);
+        TextView txtDate            = findViewById(R.id.textDate);
+        TextView txtSelectedUsers   = findViewById(R.id.textSelectUsers);
+
+        Boolean allPass = true;
+
+        if (txtName.getText().toString().trim().equals("")) {
+            allPass = false;
+            txtName.setError("Enter a name.");
+            txtName.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
+        }
+        if (hour == -1){
+            allPass = false;
+            txtTime.setError("Enter a time.");
+            txtTime.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
+        }
+        if (year == -1){
+            allPass = false;
+            txtDate.setError("Enter a date.");
+            txtDate.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
+        }
+        if ((selectedPersonRuleList != null) && (selectedPersonRuleList.size() == 0)) {
+            allPass = false;
+            txtSelectedUsers.setError("Please assign a user.");
+            txtSelectedUsers.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
+        }
+
+        if (allPass){
+            String name         = txtName.getText().toString().trim();
+            String description  = txtDescription.getText().toString().trim();
+            Calendar calChore   = Calendar.getInstance();
+
+            calChore.set(year,month,day,hour,minute);
+            long millis = calChore.getTimeInMillis();
+
+            if (choreSubmit != null) { scrubResponsibilities(choreSubmit); }
+
+            createResponsibilites(new Chore(name, description, millis));
+
+            choreListShow();
+        }
+    }
+
+
+    /**
+     * OnClick Event - Displays a conformitation to the user about thier choice
+     * then, if selected, deletes the chore from firebase and removes all assiciations
+     *
+     *
+     * @param view
+     */
+    public void btnDelete_OnClick(View view){
+
+        AlertDialog.Builder deleteConfirm = new AlertDialog.Builder( this );
+        deleteConfirm.setTitle("Delete");
+        deleteConfirm.setMessage("Are you sure you want to delete?");
+        deleteConfirm.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                for (Responsibility responsibility : choreSubmit.getResponsibilities()){
+                    int responsibilityUserID = responsibility.getUserID();
+
+                    for ( PersonRule user : personRulesList ){
+                        if ( responsibilityUserID == user.getUserID() ){
+                            user.deleleteResponsibilityWithID(responsibility.getResponsibilityID());
+                            databaseLoginInfo.child(user.getUserName()).setValue(user);
+                        }
+                    }
+                }
+
+                databaseChores.child(choreSubmit.getChoreIdentification()).removeValue();
+
+                choreListShow();
+            }
+        });
+
+        deleteConfirm.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        deleteConfirm.show();
+    }
+
+
+    /**
+     * OnClick Event - Resets the textview back to orginial state if a warning had occured.
+     * Then calls the method that displays the checkbox dialog.
+     *
+     * @param view
+     */
+    public void textSelectUsers_OnClick(View view) {
+        view.setBackgroundDrawable(getResources().getDrawable(R.drawable.back));
+        TextView txtSelect = findViewById(R.id.textSelectUsers);
+        txtSelect.setError(null);
+        selectUsers();
+    }
+
+
+    /**
+     * OnClick Event - Resets the textview back to orginial state if a warning had occured.
+     * Then calls the method that displays the date picker dialog
+     *
+     * @param view
+     */
+    public void textDate_OnClick(View view) {
+        view.setBackgroundDrawable(getResources().getDrawable(R.drawable.back));
+        TextView txtDate = findViewById(R.id.textDate);
+        txtDate.setError(null);
+        datePick();
+    }
+
+
+    /**
+     * OnClick Event - Resets the textview back to orginial state if a warning had occured.
+     * Then calls the method that displays the time picker dialog
+     *
+     * @param view
+     */
+    public void textTimne_OnClick(View view) {
+        view.setBackgroundDrawable(getResources().getDrawable(R.drawable.back));
+        TextView txtTime = findViewById(R.id.textTime);
+        txtTime.setError(null);
+        timePick();
+    }
+
+
+    /**
+     * OnClick Event - Resets the textview back to orginial state if a warning had occured.
+     *
+     *
+     * @param view
+     */
+    public void textName_OnClick(View view) {
+        view.setBackgroundDrawable(getResources().getDrawable(R.drawable.back));
+        TextView txtName = findViewById(R.id.textName);
+        txtName.setError(null);
+    }
+
+
+//--------------------------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------------------------
+
+
+    /**
+     * Dialog - displays a checklist dialog and lists all users that were selected.
+     *
+     * NOTE: the following site was referenced in the construction of this method
+     * https://developer.android.com/reference/android/app/AlertDialog.Builder.html
+     *
      */
     public void selectUsers(){
-        //https://developer.android.com/reference/android/app/AlertDialog.Builder.html
-
         //used in the creating of userList, list of all selected users
         final String[] users            = new String[personRulesList.size()];
         final ArrayList selectedUsers   = new ArrayList();
@@ -205,136 +452,37 @@ public class ChoreEdit extends AppCompatActivity {
         userList.show();
     }
 
-    public void setSelectedPersonRuleList(ArrayList selectedUserAtIndex){
 
-        selectedPersonRuleList= new ArrayList<>();
+    /**
+     * Dialog - Displays an Error to the user about an issue that was encounter and
+     * then returns them to the previous intent.
+     *
+     *
+     */
+    public void unhandledEvent(String warningTitle, String warningDescription){
 
-        for (int i = 0 ; i < selectedUserAtIndex.size() ; i++ ){
-            selectedPersonRuleList
-                    .add(personRulesList
-                            .get( Integer.valueOf(selectedUserAtIndex.get(i).toString() )
-                    )
-            );
-        }
-
-    }
-
-    public void btnDelete_OnClick(View view){
-
-        AlertDialog.Builder deleteConfirm = new AlertDialog.Builder(this);
-        deleteConfirm.setTitle("Delete");
-        deleteConfirm.setMessage("Are you sure you want to delete?");
-        deleteConfirm.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+        AlertDialog.Builder deleteConfirm = new AlertDialog.Builder( this );
+        deleteConfirm.setTitle(warningTitle);
+        deleteConfirm.setMessage(warningDescription);
+        deleteConfirm.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
-                for (Responsibility responsibility : choreSubmit.getResponsibilities()) {
-                    Integer responsibilityUserID = responsibility.getUserID();
-                    if (responsibilityUserID == null) break;
-
-                    for (PersonRule user : personRulesList) {
-                        String userID = user.getUserName();
-                        if (userID == null) break;
-
-                        if (responsibilityUserID.equals(userID)) {
-                            user.deleleteResponsibilityWithID(responsibility.getResponsibilityID());
-                            //user.removeResponsibility(responsibility);
-                            databaseLoginInfo.child(user.getUserName()).setValue(user);
-                        }
-                    }
-                }
-
-                databaseChores.child(choreSubmit.getChoreIdentification()).removeValue();
-
                 choreListShow();
             }
         });
 
-        deleteConfirm.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
         deleteConfirm.show();
-
     }
 
-    public void textSelectUsers_OnClick(View view) {
-        view.setBackgroundDrawable(getResources().getDrawable(R.drawable.back));
-        TextView txtSelect = findViewById(R.id.textSelectUsers);
-        txtSelect.setError(null);
-        selectUsers();
-    }
-
-    public void textDate_OnClick(View view) {
-        view.setBackgroundDrawable(getResources().getDrawable(R.drawable.back));
-        TextView txtDate = findViewById(R.id.textDate);
-        txtDate.setError(null);
-        datePick();
-    }
-
-    public void textName_OnClick(View view) {
-        view.setBackgroundDrawable(getResources().getDrawable(R.drawable.back));
-        TextView txtName = findViewById(R.id.textName);
-        txtName.setError(null);
-    }
-
-    public void textTimne_OnClick(View view) {
-        view.setBackgroundDrawable(getResources().getDrawable(R.drawable.back));
-        TextView txtTime = findViewById(R.id.textTime);
-        txtTime.setError(null);
-        timePick();
-    }
 
     /**
-     * Set the text of the textDate field.
+     * Dialog - displays a time picker dialog and calls a method to display the time in a text
      *
-     * @param year  calendar year
-     * @param month calendar month
-     * @param day   calendar day
-     */
-    private void setDate(int year, int month, int day) {
-        TextView textDate = findViewById(R.id.textDate);
-
-        this.day = day;
-        this.month = month;
-        this.year = year;
-
-        String[] monthString = {
-                "January",
-                "February",
-                "March",
-                "April",
-                "May",
-                "June",
-                "July",
-                "August",
-                "September",
-                "October",
-                "November",
-                "December" };
-
-
-        textDate.setText( monthString[month] +" " + day + ", " + year);
-    }
-
-    /**
-     * Set the text of the textTime field.
+     * NOTE: the following site was referenced in the construction of this method
+     * https://developer.android.com/reference/android/app/TimePickerDialog.html
      *
-     * @param hour   time in hours
-     * @param minute time in minutes
      */
-    private void setTime(int hour, int minute) {
-        TextView textTime = findViewById(R.id.textTime);
-        this.hour = hour;
-        this.minute = minute;
-        textTime.setText( String.format("%02d:%02d", hour, minute) );
-    }
-
     private void timePick() {
-        //https://developer.android.com/reference/android/app/TimePickerDialog.html
 
         Calendar cal    = Calendar.getInstance();
         int hour        = cal.get(Calendar.HOUR);
@@ -344,102 +492,129 @@ public class ChoreEdit extends AppCompatActivity {
         temp.show();
     }
 
-    //https://developer.android.com/reference/android/app/DatePickerDialog.html
+
+    /**
+     * Dialog - displays a date picker dialog and calls a method to display the date in a text
+     *
+     * NOTE: the following sites were referenced in the construction of this method
+     * https://developer.android.com/reference/android/app/DatePickerDialog.html
+     * https://developer.android.com/reference/java/util/Calendar.html
+     *
+     */
     private void datePick() {
 
-        //year, month, and day have to be set before calling or the date is very very very very very wrong
-        //https://developer.android.com/reference/java/util/Calendar.html
+        //year, month, and day have to be set before calling or the date is very wrong
         Calendar cal    = Calendar.getInstance();
         int year        = cal.get(Calendar.YEAR);
         int month       = cal.get(Calendar.MONTH);
         int day         = cal.get(Calendar.DAY_OF_MONTH);
 
-
         DatePickerDialog temp = new DatePickerDialog(this, tempListen, year, month, day);
         temp.show();
     }
 
-    public void btnSubmit_OnClick(View view) throws NoSuchAlgorithmException {
 
-        TextView txtName            = findViewById(R.id.textName);
-        TextView txtDescription     = findViewById(R.id.textDescription);
-        TextView txtTime            = findViewById(R.id.textTime);
-        TextView txtDate            = findViewById(R.id.textDate);
-        TextView txtSelectedUsers   = findViewById(R.id.textSelectUsers);
+//--------------------------------------------------------------------------------------------------
 
-        Boolean allPass = true;
-
-        if (txtName.getText().toString().equals("")) {
-            allPass = false;
-            txtName.setError("Enter a name.");
-            txtName.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
-        }
-        if (hour == -1){
-            allPass = false;
-            txtTime.setError("Enter a time.");
-            txtTime.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
-        }
-        if (year == -1){
-            allPass = false;
-            txtDate.setError("Enter a date.");
-            txtDate.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
-        }
-        if ((selectedPersonRuleList != null) && (selectedPersonRuleList.size() == 0)) {
-            allPass = false;
-            txtSelectedUsers.setError("Please assign a user.");
-            txtSelectedUsers.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
-        }
-
-        if (allPass){
-            String name         = txtName.getText().toString().trim();
-            String description  = txtDescription.getText().toString().trim();
-            Calendar calChore   = Calendar.getInstance();
-
-            calChore.set(year,month,day,hour,minute);
-
-            long millis = calChore.getTimeInMillis();
+//--------------------------------------------------------------------------------------------------
 
 
-            if (choreSubmit != null) {
-                for (Responsibility responsibility : choreSubmit.getResponsibilities()) {
-                    String id = String.valueOf(responsibility.getUserID());
-                    if(id == null) break;
+    /**
+     * Listen Event - recreates and fills an array of all the current users
+     * If a chore was passed through intent a second array is created and
+     * filled with all the users that have a relationship to that chores
+     * responsibility
+     *
+     *
+     */
+    public void userListen() {
+        selectedPersonRuleList = new ArrayList<>();
 
-                    for(PersonRule user : personRulesList){
-                        if(id.equals(user.getUserName())){
-                            user.deleleteResponsibilityWithID(responsibility.getResponsibilityID());
-                            //user.removeResponsibility( responsibility );
-                            databaseLoginInfo.child(user.getUserName()).setValue(user);
+        databaseLoginInfo.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                //clear and rebuild personRule list
+                personRulesList = new ArrayList<>();
+                for (DataSnapshot personRoleInstance : dataSnapshot.getChildren()) {
+                    personRulesList.add(personRoleInstance.getValue(PersonRule.class));
+                }
+                if (choreSubmit == null) return ;
+
+                StringBuilder userID = new StringBuilder();
+                List<Responsibility> responsibilities = choreSubmit.getResponsibilities();
+
+                for (int i = 0; i < responsibilities.size() ; i++){
+                    int tempID = responsibilities.get(i).getUserID();
+
+                    for (PersonRule user : personRulesList) {
+                        if (tempID == user.getUserID() ) {
+                            userID.append( user.getUserName() );
+                            selectedPersonRuleList.add(user);
                         }
                     }
+                    if (i+1 < responsibilities.size() ){userID.append(", ");}
                 }
+                TextView textSelectedUsers = findViewById(R.id.textSelectUsers);
+                textSelectedUsers.setText( userID.toString() );
 
-                databaseChores.child( choreSubmit.getChoreIdentification() ).removeValue();
             }
 
-            Chore chore = new Chore(name, description, millis);
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-            for ( PersonRule person : selectedPersonRuleList ){
-                Responsibility responsibility = new Responsibility(person.getUserID(), chore.getChoreIdentification());
-                person.addResponsibility(responsibility);
-                chore.addResponsibility(responsibility);
-
-                databaseLoginInfo.child( person.getUserName() ).setValue(person);
             }
-
-            databaseChores.child(chore.getChoreIdentification() ).setValue(chore);
-
-            choreListShow();
-        }
+        });
     }
 
-    private void choreListShow() {
+
+    /**
+     * Listener - displays a time picker and calls a function to both display and set the time
+     *
+     * NOTE: the following site was referenced in the construction of this method
+     * //https://developer.android.com/reference/android/app/TimePickerDialog.OnTimeSetListener.html
+     *
+     */
+    private TimePickerDialog.OnTimeSetListener timeListen = new TimePickerDialog.OnTimeSetListener() {
+
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            setTime(hourOfDay, minute);
+        }
+    };
+
+
+    /**
+     * Listener - display a date picker and calls a function to both display and set the date
+     *
+     * NOTE: the following site was referenced in the construction of this method
+     * https://developer.android.com/reference/android/app/DatePickerDialog.OnDateSetListener.html
+     *
+     */
+    private DatePickerDialog.OnDateSetListener tempListen = new DatePickerDialog.OnDateSetListener() {
+
+        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+            //From article: the selected month (0-11 for compatibility with MONTH), so add 1...
+            setDate(year, month, dayOfMonth);
+        }
+
+    };
+
+
+//--------------------------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------------------------
+
+
+    /**
+     * Intent - changes intent to ChoreList and passes the current user
+     *
+     */
+    private void choreListShow(){
         Intent intent = new Intent(ChoreEdit.this, ChoreList.class);
-        intent.putExtra("currentUser", currentUser);
+        intent.putExtra("currentUser",currentUser);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
-
 
 }
 

@@ -102,8 +102,11 @@ public class ControlPanelActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
 
-
+    public void btnCreateReward_OnClick(View view){
+        Intent intent = new Intent(ControlPanelActivity.this, RewardEdit.class);
+        startActivity(intent);
     }
 
 

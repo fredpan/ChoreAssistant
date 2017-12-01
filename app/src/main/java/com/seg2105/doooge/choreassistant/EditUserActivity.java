@@ -89,11 +89,11 @@ public class EditUserActivity extends AppCompatActivity implements View.OnClickL
 //                updateUserName.put("/PersonRule/"+personRule.getUserName()+"/userName/",newUserName);
 //                databaseLoginInfo.child(personRule.getUserName()).updateChildren(updateUserName);
 //                System.out.println("HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-
+                boolean isAdmin = personRule.isAdmin();
                 if (newUserName.equals("")) {
                     userName.setError("Enter a name.");
                     userName.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
-                } else if (newPassword.equals("")) {
+                } else if (isAdmin&&newPassword.equals("")) {
                     password.setError("Enter a password.");
                     password.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
                 } else {
