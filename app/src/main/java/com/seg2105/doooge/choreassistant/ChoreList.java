@@ -156,7 +156,7 @@ public class ChoreList extends AppCompatActivity {
         final ArrayList selectedUsers   = new ArrayList();
 
         for (int i = 0; i < rewardsList.size() ; i++){
-            rewards[i] = rewardsList.get(i).getPoints() + ": " + rewardsList.get(i).getRewardName();
+            rewards[i] = rewardsList.get(i).getPoints() + " Points: " + rewardsList.get(i).getRewardName();
         }
 
         //pass personRulist list to a string Array for functionality in alert dialog

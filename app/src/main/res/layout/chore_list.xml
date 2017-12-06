@@ -91,7 +91,8 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Points: 9999"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/btnAdd"
