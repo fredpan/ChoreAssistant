@@ -177,7 +177,8 @@ public class showDetailDialog extends AppCompatActivity {
                                     ((Integer) personRule.getUserID()).equals(responsibility.getUserID()) && !responsibility.isComplete()) {
                                 databaseChore.child(choreSubmit.getChoreIdentification()).child("responsibilities").child("" + counter).child("complete").setValue(true);
                                 databaseUsers.child(personRule.getUserName()).child("responsibilities").child("" + counter).child("complete").setValue(true);
-                                databaseReward.child(personRule.getUserName()).child("responsibilities").child("" + counter).child("complete").setValue(true);
+                                //This can't be done here, but when a user chooses to turn points in for a reward
+                                //databaseReward.child(personRule.getUserName()).child("responsibilities").child("" + counter).child("complete").setValue(true);
 
                                 personRule.addPoints( responsibility.getPoints() );
                                 databaseUsers.child(personRule.getUserName()).child("points").setValue( personRule.getPoints() );
