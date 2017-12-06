@@ -76,7 +76,6 @@ public class Chore implements Serializable {
         return responsibilities.size();
     }
 
-
     public long getTimeInMillis(){
         return timeInMillis;
     }

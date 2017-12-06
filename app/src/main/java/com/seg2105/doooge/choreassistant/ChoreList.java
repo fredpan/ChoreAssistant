@@ -36,9 +36,9 @@ import java.util.List;
 
 public class ChoreList extends AppCompatActivity {
 
-    DatabaseReference databaseChores;
-    DatabaseReference databaseUsers;
-    DatabaseReference databaseReward;
+    private DatabaseReference databaseChores;
+    private DatabaseReference databaseUsers;
+    private DatabaseReference databaseReward;
 
     private PersonRule currentUser;
     private List<Reward> rewardsList;
@@ -129,7 +129,7 @@ public class ChoreList extends AppCompatActivity {
      *
      *
      */
-    public void userSetup() {
+    private void userSetup() {
         TextView txtPoints = findViewById(R.id.textPoints);
         Button add = findViewById(R.id.btnAdd);
 
@@ -611,7 +611,7 @@ public class ChoreList extends AppCompatActivity {
      *
      *
      */
-    public void choreListen() {
+    private void choreListen() {
         //making this callable so update to the UI can happen
         databaseChores.addValueEventListener(new ValueEventListener() {
             @Override

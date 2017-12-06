@@ -7,7 +7,6 @@ package com.seg2105.doooge.choreassistant;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,9 +31,9 @@ import java.util.List;
 
 public class ChoreEdit extends AppCompatActivity {
 
-    DatabaseReference databaseLoginInfo;
-    DatabaseReference databaseChores;
-    DatabaseReference databaseReward;
+    private DatabaseReference databaseLoginInfo;
+    private DatabaseReference databaseChores;
+    private DatabaseReference databaseReward;
 
     //stores calendar information if a chore was passed through intent, these will be updated
     private int day, month, year, hour, minute = -1;
@@ -78,7 +76,7 @@ public class ChoreEdit extends AppCompatActivity {
      *
      * @param selectedUserAtIndex
      */
-    public void setSelectedPersonRuleList(ArrayList selectedUserAtIndex){
+    private void setSelectedPersonRuleList(ArrayList selectedUserAtIndex){
 
         selectedPersonRuleList= new ArrayList<>();
 
@@ -104,7 +102,7 @@ public class ChoreEdit extends AppCompatActivity {
      *
      *
      */
-    public void choreFound(){
+    private void choreFound(){
         TextView txtCaption     = findViewById(R.id.textCaption);
         TextView txtName        = findViewById(R.id.textName);
         TextView txtDescription = findViewById(R.id.textDescription);
@@ -424,7 +422,7 @@ public class ChoreEdit extends AppCompatActivity {
      * https://developer.android.com/reference/android/app/AlertDialog.Builder.html
      *
      */
-    public void selectUsers(){
+    private void selectUsers(){
         //used in the creating of userList, list of all selected users
         final String[] users            = new String[personRulesList.size()];
         final ArrayList selectedUsers   = new ArrayList();
@@ -487,7 +485,7 @@ public class ChoreEdit extends AppCompatActivity {
      *
      *
      */
-    public void unhandledEvent(String warningTitle, String warningDescription){
+    private void unhandledEvent(String warningTitle, String warningDescription){
 
         AlertDialog.Builder deleteConfirm = new AlertDialog.Builder( this );
         deleteConfirm.setTitle(warningTitle);
@@ -562,7 +560,7 @@ public class ChoreEdit extends AppCompatActivity {
      *
      *
      */
-    public void userListen() {
+    private void userListen() {
         selectedPersonRuleList = new ArrayList<>();
 
         databaseLoginInfo.addValueEventListener(new ValueEventListener() {

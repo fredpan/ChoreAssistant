@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -38,9 +37,9 @@ public class RewardEdit extends AppCompatActivity{
     private Reward rewardSubmit;
     private PersonRule currentUser;
 
-    DatabaseReference databaseLoginInfo;
-    DatabaseReference databaseReward;
-    DatabaseReference databaseChore;
+    private DatabaseReference databaseLoginInfo;
+    private DatabaseReference databaseReward;
+    private DatabaseReference databaseChore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +76,7 @@ public class RewardEdit extends AppCompatActivity{
      * @param warningTitle
      * @param warningText
      */
-    public void unhandledEvent(String warningTitle, String warningText){
+    private void unhandledEvent(String warningTitle, String warningText){
 
         AlertDialog.Builder unhandled = new AlertDialog.Builder( this );
         unhandled.setTitle(warningTitle);
@@ -113,7 +112,7 @@ public class RewardEdit extends AppCompatActivity{
      * https://developer.android.com/reference/android/app/AlertDialog.Builder.html
      *
      */
-    public void selectUsers(){
+    private void selectUsers(){
 
         //used in the creating of userList, list of all selected users
         final String[] users            = new String[personRulesList.size()];
@@ -440,7 +439,7 @@ public class RewardEdit extends AppCompatActivity{
      *
      * @param selectedUserAtIndex
      */
-    public void setSelectedPersonRuleList(ArrayList selectedUserAtIndex){
+    private void setSelectedPersonRuleList(ArrayList selectedUserAtIndex){
 
         selectedPersonRuleList= new ArrayList<>();
 
@@ -467,7 +466,7 @@ public class RewardEdit extends AppCompatActivity{
      *
      *
      */
-    public void userListen() {
+    private void userListen() {
         personRulesList = new ArrayList<>();
 
         databaseLoginInfo.addValueEventListener(new ValueEventListener() {
