@@ -15,6 +15,7 @@ public class Responsibility implements Serializable {
     private String responsibilityID;
     private Chore chore;
     private boolean isComplete;
+    private int points;
 
 
     private PersonRule personRule;
@@ -29,6 +30,7 @@ public class Responsibility implements Serializable {
     public Responsibility(int userID, String choreIdentification) throws NoSuchAlgorithmException {
         //this.userID = userID;
         isComplete = false;
+        points = 0;
         this.userID = userID;
         this.choreIdentification = choreIdentification;
         this.responsibilityID = IdentificationUtility.generateIdentification(String.valueOf(userID), choreIdentification);
@@ -62,6 +64,14 @@ public class Responsibility implements Serializable {
 
     public void setUserID(int userID) {
         this.userID = userID;
+    }
+
+    public void setPoints(int points){
+        this.points = points;
+    }
+
+    public int getPoints(){
+        return this.points;
     }
 
 /*

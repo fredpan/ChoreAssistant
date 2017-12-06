@@ -210,9 +210,18 @@ public class WelcomePageActivity extends AppCompatActivity {
 
                     if (isConfrim) {
                         if (personRule.getEncrypted().equals(generatedIdentification)) {
-                            Intent intent = new Intent(WelcomePageActivity.this, ChoreList.class);
-                            intent.putExtra("currentUser", user);
-                            startActivity(intent);
+                            if (user.isAdmin()){ //Direct admin to the control panel instead of chore page
+
+                                Intent intent = new Intent(WelcomePageActivity.this, ControlPanelActivity.class);
+                                intent.putExtra("currentUser", user);
+                                startActivity(intent);
+
+                            } else {
+                                Intent intent = new Intent(WelcomePageActivity.this, ChoreList.class);
+                                intent.putExtra("currentUser", user);
+                                startActivity(intent);
+
+                            }
                             dialog.dismiss();
                         }
                         warm.setText("Your Password is wrong !!");
@@ -220,7 +229,11 @@ public class WelcomePageActivity extends AppCompatActivity {
 
                     } else {
                         if (personRule.getEncrypted().equals(generatedIdentification)) {
+                            //Creating an admin account that will not be saved
+                            PersonRule tempAdmin = new PersonRule("tempAdmin", "", true, 0,0 );
+
                             Intent intent = new Intent(WelcomePageActivity.this, ControlPanelActivity.class);
+                            intent.putExtra("currentUser", tempAdmin); //-----------------------------------------------------------------------
                             startActivity(intent);
                             dialog.dismiss();
                         }

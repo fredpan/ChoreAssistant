@@ -174,10 +174,13 @@ public class showDetailDialog extends AppCompatActivity {
                             Responsibility responsibility = instanceOfResponsibility.getValue(Responsibility.class);
 
                             if (choreSubmit.getChoreIdentification().equals(responsibility.getChoreIdentification()) &&
-                                    ((Integer) personRule.getUserID()).equals(responsibility.getUserID())) {
+                                    ((Integer) personRule.getUserID()).equals(responsibility.getUserID()) && !responsibility.isComplete()) {
                                 databaseChore.child(choreSubmit.getChoreIdentification()).child("responsibilities").child("" + counter).child("complete").setValue(true);
                                 databaseUsers.child(personRule.getUserName()).child("responsibilities").child("" + counter).child("complete").setValue(true);
                                 databaseReward.child(personRule.getUserName()).child("responsibilities").child("" + counter).child("complete").setValue(true);
+
+                                personRule.addPoints( responsibility.getPoints() );
+                                databaseUsers.child(personRule.getUserName()).child("points").setValue( personRule.getPoints() );
                             }
                             counter++;
                         }
@@ -202,7 +205,7 @@ public class showDetailDialog extends AppCompatActivity {
                         startActivity(intent);
                         t.cancel();
                     }
-                }, 2000); // after 2 second (or 2000 miliseconds), the task will be active.
+                }, 200); // after 2 second (or 2000 miliseconds), the task will be active.
 
 
             }

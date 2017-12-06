@@ -14,10 +14,12 @@ public class PersonRule implements Serializable {
     private String encrypted;
     private int color;
     private int userID;
+    private int points;
 
     private List<Responsibility> responsibilities;
 
     public PersonRule() {
+        //rewards = new ArrayList<Reward>();
         responsibilities = new ArrayList<Responsibility>();
     }
 
@@ -27,6 +29,10 @@ public class PersonRule implements Serializable {
         this.admin = admin;
         this.encrypted = encrypted;
         this.color = color;
+
+        points = 0;
+        //rewards = new ArrayList<Reward>();
+
         this.responsibilities = new ArrayList<Responsibility>();
 
     }
@@ -104,6 +110,22 @@ public class PersonRule implements Serializable {
 
     public int getColor() {
         return color;
+    }
+
+    public int getPoints(){
+        return points;
+    }
+
+    public void removePoints(int points){
+        this.points = this.points - points;
+    }
+
+    public void setPoints(int points){
+        this.points = points;
+    }
+
+    public void addPoints(int points){
+        this.points = this.points + points;
     }
 
 

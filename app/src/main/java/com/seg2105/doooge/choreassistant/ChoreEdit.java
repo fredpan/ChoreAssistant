@@ -7,6 +7,7 @@ package com.seg2105.doooge.choreassistant;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -190,9 +191,10 @@ public class ChoreEdit extends AppCompatActivity {
      * @param chore the chore that is to be associated
      *
      */
-    private void createResponsibilites(Chore chore) throws NoSuchAlgorithmException {
+    private void createResponsibilites(Chore chore, int points ) throws NoSuchAlgorithmException {
         for ( PersonRule person : selectedPersonRuleList ){
             Responsibility responsibility = new Responsibility( person.getUserID(), chore.getChoreIdentification() );
+            responsibility.setPoints( points );
             person.addResponsibility(responsibility);
             chore.addResponsibility(responsibility);
 
@@ -247,30 +249,47 @@ public class ChoreEdit extends AppCompatActivity {
         TextView txtDate            = findViewById(R.id.textDate);
         TextView txtSelectedUsers   = findViewById(R.id.textSelectUsers);
         TextView txtDescription     = findViewById(R.id.textDescription);
+        TextView txtPoints          = findViewById(R.id.textPoints);
 
         boolean allPass = true;
-        
+
+        try {
+            int points = Integer.parseInt(txtPoints.getText().toString().trim());
+        } catch (NumberFormatException exNum) {
+            allPass = false;
+            txtPoints.requestFocus();
+            txtPoints.setError("Enter a number.");
+            txtPoints.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
+        }
 
         if (txtName.getText().toString().trim().equals("") ) {
             allPass = false;
+            txtName.requestFocus();
             txtName.setError("Enter a name.");
             txtName.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
         }
-        if (hour == -1){
+        if (txtTime.getText().toString().trim().equals("")){
             allPass = false;
             txtTime.setError("Enter a time.");
             txtTime.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
         }
-        if (year == -1){
+        if (txtDate.getText().toString().trim().equals("")){
             allPass = false;
             txtDate.setError("Enter a date.");
             txtDate.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
+        }
+        if (txtPoints.getText().toString().trim().equals("")){
+            allPass = false;
+            txtPoints.requestFocus();
+            txtPoints.setError("Enter amount of points.");
+            txtPoints.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
         }
         if ((selectedPersonRuleList != null) && (selectedPersonRuleList.size() == 0)) {
             allPass = false;
             txtSelectedUsers.setError("Please assign a user.");
             txtSelectedUsers.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
         }
+
 
         if (allPass) {
             String name         = txtName.getText().toString().trim();
@@ -284,7 +303,10 @@ public class ChoreEdit extends AppCompatActivity {
                 scrubResponsibilities(choreSubmit);
             }
 
-            createResponsibilites(new Chore(name, description, millis));
+            Chore chore = new Chore(name, description, millis);
+            //chore.setPoints(Integer.parseInt(txtPoints.getText().toString().trim()));
+
+            createResponsibilites( chore, Integer.parseInt(txtPoints.getText().toString().trim())  );
 
             choreListShow();
         }
@@ -412,7 +434,7 @@ public class ChoreEdit extends AppCompatActivity {
         }
 
         //pass personRulist list to a string Array for functionality in alert dialog
-        AlertDialog.Builder userList = new AlertDialog.Builder(this);
+        AlertDialog.Builder userList = new AlertDialog.Builder( ChoreEdit.this );
         userList.setTitle("Select who should complete the chore.");
 
         //detect which users were selected for a task
@@ -423,7 +445,7 @@ public class ChoreEdit extends AppCompatActivity {
                 if(isChecked) {
                     selectedUsers.add(which);
                 } else {
-                    selectedUsers.remove(which);
+                    selectedUsers.remove(Integer.valueOf(which));
                 }
             }
         });
@@ -550,7 +572,13 @@ public class ChoreEdit extends AppCompatActivity {
                 //clear and rebuild personRule list
                 personRulesList = new ArrayList<>();
                 for (DataSnapshot personRoleInstance : dataSnapshot.getChildren()) {
-                    personRulesList.add(personRoleInstance.getValue(PersonRule.class));
+                    PersonRule user = personRoleInstance.getValue(PersonRule.class);
+                    if ( !user.isAdmin() ){
+                        personRulesList.add(user);
+                    }
+
+
+                    //personRulesList.add(personRoleInstance.getValue(PersonRule.class));
                 }
                 if (choreSubmit == null) return ;
 

@@ -109,6 +109,7 @@ public class Chore implements Serializable {
         this.complete = value;
     }
 
+
     public String getChoreIdentification() {
         return choreIdentification;
     }

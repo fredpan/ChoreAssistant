@@ -1,6 +1,8 @@
 package com.seg2105.doooge.choreassistant;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -23,8 +25,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Calendar;
-
+import java.util.List;
 
 
 /**
@@ -38,6 +41,8 @@ public class ChoreList extends AppCompatActivity {
     DatabaseReference databaseReward;
 
     private PersonRule currentUser;
+    private List<Reward> rewardsList;
+    private List<PersonRule> personRuleList;
 
     //stores the current date
     private int day, month, year;
@@ -65,32 +70,17 @@ public class ChoreList extends AppCompatActivity {
         databaseUsers   = FirebaseDatabase.getInstance().getReference("PersonRule");
         databaseReward  = FirebaseDatabase.getInstance().getReference("Reward");
 
+        userListen(); //------------------------------------------------
         choreListen();
-        userListen();
-        //rewardListen();
+        userSetup();
+
+        rewardListen();
     }
 
 
 //--------------------------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------------------------
-
-
-    /**
-     *
-     *
-     *
-     */
-
-
-    /**
-     * Helper Method - test for completion of reward.
-     *
-     *
-     */
-    private void rewardAvailableCheck(){
-        //for(Reward reward :  )
-    }
 
 
     /**
@@ -104,9 +94,9 @@ public class ChoreList extends AppCompatActivity {
     private void buildNewDate(int upDown) {
         cal.add(Calendar.DATE, upDown);
 
-        year    = cal.get(Calendar.YEAR);
-        month   = cal.get(Calendar.MONTH);
-        day     = cal.get(Calendar.DAY_OF_MONTH);
+        int year    = cal.get(Calendar.YEAR);
+        int month   = cal.get(Calendar.MONTH);
+        int day     = cal.get(Calendar.DAY_OF_MONTH);
 
         updateDate(year, month, day);
         setDate(year, month, day);
@@ -139,15 +129,120 @@ public class ChoreList extends AppCompatActivity {
      *
      *
      */
-    public void userListen() {
+    public void userSetup() {
+        TextView txtPoints = findViewById(R.id.textPoints);
+        Button add = findViewById(R.id.btnAdd);
+
         if (!currentUser.isAdmin()) {
-            Button add = findViewById(R.id.btnAdd);
-            add.setVisibility(View.INVISIBLE);
+            //add.setVisibility(View.INVISIBLE);
+            add.setText("View Rewards");
+            txtPoints.setText( "Total Points: " + String.valueOf(currentUser.getPoints()) );
+            txtPoints.setTextColor(Color.BLACK);
         } else {
-            Button add = findViewById(R.id.btnAdd);
-            add.setVisibility(View.VISIBLE);
+            //add.setVisibility(View.VISIBLE);
+            txtPoints.setVisibility(TextView.INVISIBLE);
         }
     }
+
+
+    /**
+     * Displays to the users all the rewards that are available to them, then depending
+     * on the users selection, calls a method with an array filled with the index of the
+     * choices the user selected.
+     *
+     */
+    private void displayRewards(){
+        final String[] rewards          = new String[rewardsList.size()];
+        final ArrayList selectedUsers   = new ArrayList();
+
+        for (int i = 0; i < rewardsList.size() ; i++){
+            rewards[i] = rewardsList.get(i).getPoints() + ": " + rewardsList.get(i).getRewardName();
+        }
+
+        //pass personRulist list to a string Array for functionality in alert dialog
+        AlertDialog.Builder userList = new AlertDialog.Builder(this);
+        userList.setTitle("Select your reward.");
+
+        //detect which users were selected for a task
+        userList.setMultiChoiceItems(rewards, null, new DialogInterface.OnMultiChoiceClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                if(isChecked) {
+                    selectedUsers.add(which);
+                } else {
+                    selectedUsers.remove(which);
+                }
+            }
+        });
+
+        //add all selected users to a list and pass it to an instance variable
+        userList.setPositiveButton("Sumbit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                setSelectedReward(selectedUsers);
+            }
+        });
+
+        userList.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        userList.show();
+    }
+
+
+    /**
+     * This method confirms that the user has enough points to recieve a reward
+     * if so, displays a congratulatory message and updates the users point count
+     *
+     * @param selectedUserAtIndex List containing the index of a selected choice
+     */
+    private void setSelectedReward(ArrayList selectedUserAtIndex){
+        int counter = 0;
+        for ( int i = 0 ; i < selectedUserAtIndex.size() ; i++ ){
+            Reward reward = rewardsList.get( Integer.parseInt( selectedUserAtIndex.get(i).toString() ) );
+            counter = counter + reward.getPoints();
+        }
+
+        if(counter > currentUser.getPoints()){
+            Toast.makeText(getApplicationContext(),
+                    "Sorry, but you do not have enough points.", Toast.LENGTH_LONG ).show();
+        } else {
+            Toast.makeText(getApplicationContext(),
+                    "Hurray! Your hard work paid off! See your parents for a reward!", Toast.LENGTH_LONG ).show();
+            currentUser.removePoints(counter);
+            databaseUsers.child( currentUser.getUserName() ).setValue(currentUser);
+
+            for ( int i = 0 ; i < selectedUserAtIndex.size() ; i ++){
+                Reward tempReward = rewardsList.get(  Integer.parseInt( selectedUserAtIndex.get(i).toString()));
+                for( Responsibility responsibility : tempReward.getResponsibilities() ){
+                    if (responsibility.getUserID() == currentUser.getUserID()){
+                        responsibility.setComplete(true);
+                        databaseReward.child( tempReward.getRewardName() ).setValue( tempReward );
+                        //databaseReward.child( tempReward.getRewardName() ).removeValue();
+                    }
+                }
+            }
+            updateTotalPoints();
+            rewardListen();
+        }
+
+    }
+
+
+    /**
+     * Updates the text displaying a users total points
+     */
+    private void updateTotalPoints(){
+        TextView txtPoints = findViewById(R.id.textPoints);
+        txtPoints.setText( "Total Points: " + String.valueOf(currentUser.getPoints()) );
+    }
+
+
 
 
 //--------------------------------------------------------------------------------------------------
@@ -163,9 +258,15 @@ public class ChoreList extends AppCompatActivity {
      * @param view this
      */
     public void add_OnClick(View view) {
-        Intent intent = new Intent(ChoreList.this, ChoreEdit.class); //switch homepage to edit chore page
-        intent.putExtra("currentUser",currentUser);
-        startActivity(intent);
+        if (currentUser.isAdmin()) {
+            Intent intent = new Intent(ChoreList.this, ChoreEdit.class); //switch homepage to edit chore page
+            intent.putExtra("currentUser", currentUser);
+            startActivity(intent);
+        } else {
+            //rewardListen();
+            displayRewards();
+        }
+
     }
 
 
@@ -191,9 +292,7 @@ public class ChoreList extends AppCompatActivity {
      * @param view
      */
     public void imgDateUp_OnClick(View view) {
-        scrubChoreView();
         buildNewDate(1);
-        choreListen();
     }
 
 
@@ -207,9 +306,7 @@ public class ChoreList extends AppCompatActivity {
      * @param view
      */
     public void imgDateDown_OnClick(View view) {
-        scrubChoreView();
         buildNewDate(-1);
-        choreListen();
     }
 
 
@@ -232,7 +329,9 @@ public class ChoreList extends AppCompatActivity {
             return;
         }
 
-        cal.set(year,month,day);
+        scrubChoreView();
+
+        this.cal.set(year,month,day);
 
         this.year   = year;
         this.month  = month;
@@ -282,7 +381,7 @@ public class ChoreList extends AppCompatActivity {
         //create text views and add text to them
         TextView text1          = createTextView(chore.getChoreName(),18);
         TextView text2          = createTextView( String.format("%02d:%02d", choreHours, choreMinute), 14);
-        TextView text3          = createTextView(chore.getDescription(), 14);
+        TextView text3          = createTextView("",14);
 
         //set the layout
         gridLayout.setColumnCount(2);
@@ -293,18 +392,24 @@ public class ChoreList extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getSize(point);
 
         //set the text views
-        text1.setWidth(point.x - 160);
-        text2.setWidth( 160 );
-        text3.setWidth(point.x - 160);
+        text1.setWidth(point.x - 200);
+        text2.setWidth( 200 );
+        text3.setWidth(point.x - 200);
         text1.setTypeface(Typeface.DEFAULT_BOLD);
         text2.setTypeface(null,Typeface.ITALIC);
         text3.setTypeface(null,Typeface.BOLD_ITALIC);
 
-        for (Responsibility responsibility : chore.getResponsibilities()){
-            if (responsibility.isComplete()){
-                text1.setPaintFlags( text1.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG );
-                text2.setPaintFlags( text1.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG );
-                text3.setPaintFlags( text1.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG );
+        if (currentUser.isAdmin()){
+            text3.setText( getText(chore) );
+        } else {
+            for (Responsibility responsibility : chore.getResponsibilities()) {
+                if (responsibility.isComplete() && (responsibility.getUserID() == currentUser.getUserID())) {
+                    text1.setPaintFlags(text1.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    text2.setPaintFlags(text1.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    text3.setText("Recieved " + responsibility.getPoints() + " Points!");
+                } else {
+                    text3.setText("Worth " + responsibility.getPoints() + " Points!");
+                }
             }
         }
 
@@ -338,12 +443,13 @@ public class ChoreList extends AppCompatActivity {
         gridLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                //switch intents and pass both the chore, which is tagged to the event, and the current user
-                Intent intent = new Intent(ChoreList.this, ChoreEdit.class);
-                intent.putExtra("SUBMIT", (Chore) view.getTag());
-                intent.putExtra("currentUser", currentUser);
-                startActivity(intent);
-
+                if( currentUser.isAdmin() ) {
+                    //switch intents and pass both the chore, which is tagged to the event, and the current user
+                    Intent intent = new Intent(ChoreList.this, ChoreEdit.class);
+                    intent.putExtra("SUBMIT", (Chore) view.getTag());
+                    intent.putExtra("currentUser", currentUser);
+                    startActivity(intent);
+                }
                 return true;
 
             }
@@ -351,6 +457,35 @@ public class ChoreList extends AppCompatActivity {
 
         //finally, place the gridview on layout to be displayed
         linearView.addView(gridLayout);
+    }
+
+
+    /**
+     * Populates a string with the names of the users assigned to a specific chore
+     * and the status of thier progress on the chore.
+     *
+     * @param chore the chore which information is going to be displayed
+     * @return a String that contains users names and status
+     */
+    private String getText(Chore chore){
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+
+        for (Responsibility responsibility : chore.getResponsibilities()){
+            for ( PersonRule person : personRuleList ) {
+                if( person.getUserID() == responsibility.getUserID() ){
+                    sb.append( person.getUserName());
+                    if (responsibility.isComplete()){
+                        sb.append( ": complete" );
+                    }
+                }
+            }
+
+            if (i+1 < chore.getResponsibilities().size()) sb.append(";   ");
+            i++;
+        }
+
+        return sb.toString();
     }
 
 
@@ -432,7 +567,6 @@ public class ChoreList extends AppCompatActivity {
 
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
             //the selected month (0-11 for compatibility with MONTH)
-            scrubChoreView();  //clear ui
             updateDate(year, month, dayOfMonth); //adjust class variables
             setDate(year, month, dayOfMonth);  //display the text
         }
@@ -450,29 +584,14 @@ public class ChoreList extends AppCompatActivity {
         databaseReward.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                rewardsList = new ArrayList<>();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren() ){
                     Reward reward = postSnapshot.getValue(Reward.class);
-                    boolean passed = true;
-                    for ( Responsibility responsibility : reward.getResponsibilities() ){
-                        if (!responsibility.isComplete()){
-                            passed = false;
+                    for ( Responsibility responsibility : reward.getResponsibilities()){
+                        if ( responsibility == null ) break;
+                        if ( responsibility.getUserID() == currentUser.getUserID() && !responsibility.isComplete() ){
+                            rewardsList.add(reward);
                         }
-
-                    }
-                    if (passed && (currentUser.isAdmin()) ) {
-                        Toast.makeText(getBaseContext(), reward.getUserName() +
-                                " has me the requirements for " + reward.getRewardName(), Toast.LENGTH_LONG  );
-                        reward.setAdminAnnounced(true);
-                        databaseReward.child(reward.getUserName()).setValue(reward);
-                        //break;
-                    }
-                    if ( passed && currentUser.getUserName().equals(reward.getUserName())){
-                        Toast.makeText(getBaseContext(),
-                                "Good Work! You have me the requirements for " +
-                                        reward.getRewardName(), Toast.LENGTH_LONG);
-                        reward.setUserAnnounced(true);
-                        databaseReward.child(reward.getUserName()).setValue(reward);
-                        //break;
                     }
                 }
             }
@@ -513,6 +632,31 @@ public class ChoreList extends AppCompatActivity {
                                 displayChore(chore);
                             }
                         }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
+    /**
+     * Fills the personRuleList with the names of all nonadmin users
+     *
+     */
+    private void userListen(){
+        personRuleList = new ArrayList<>();
+        databaseUsers.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot personRoleInstance : dataSnapshot.getChildren()) {
+                    PersonRule user = personRoleInstance.getValue(PersonRule.class);
+                    if ( !user.isAdmin() ){
+                        personRuleList.add(user);
                     }
                 }
             }

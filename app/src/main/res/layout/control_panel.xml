@@ -42,7 +42,7 @@
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:onClick="btnCreateReward_OnClick"
-                android:text="Create Reward" />
+                android:text="Rewards" />
 
             <Button
                 android:id="@+id/editReward"
@@ -50,7 +50,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:text="Edit Reward" />
+                android:onClick="btnChore_OnClick"
+                android:text="Chores" />
         </LinearLayout>
     </LinearLayout>
 

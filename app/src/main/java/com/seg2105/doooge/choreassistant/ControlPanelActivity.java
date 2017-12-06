@@ -25,11 +25,16 @@ public class ControlPanelActivity extends AppCompatActivity {
     private final DatabaseReference databaseLoginInfo = FirebaseDatabase.getInstance().getReference("PersonRule");
     ArrayList<PersonRule> personRules = new ArrayList<>();
     private ListView controlPanelListView;
+    private PersonRule currentUser;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.control_panel);
+
+        Intent intent   = getIntent();
+        currentUser     = (PersonRule) intent.getSerializableExtra("currentUser");
+
         controlPanelListView = findViewById(R.id.controlPanelListView);
 
 
@@ -106,6 +111,13 @@ public class ControlPanelActivity extends AppCompatActivity {
 
     public void btnCreateReward_OnClick(View view){
         Intent intent = new Intent(ControlPanelActivity.this, RewardEdit.class);
+        intent.putExtra("currentUser", currentUser);
+        startActivity(intent);
+    }
+
+    public void btnChore_OnClick(View view){ //--------------------------------------------------------------------
+        Intent intent = new Intent(ControlPanelActivity.this, ChoreList.class);
+        intent.putExtra("currentUser", currentUser);
         startActivity(intent);
     }
 

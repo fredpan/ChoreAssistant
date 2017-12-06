@@ -29,7 +29,7 @@
         android:focusableInTouchMode="false"
         android:inputType="textPersonName"
         android:linksClickable="false"
-        android:text="Create reward"
+        android:text="Rewards"
         android:textAllCaps="false"
         android:textSize="24sp"
         android:textStyle="bold" />
@@ -66,6 +66,7 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:maxLength="20"
+        android:onClick="textName_OnClick"
         android:paddingLeft="3dp"
         android:textSize="18sp" />
 
@@ -87,7 +88,7 @@
         android:focusableInTouchMode="false"
         android:inputType="textPersonName"
         android:linksClickable="false"
-        android:text="Description"
+        android:text="Points Required"
         android:textSize="18sp"
         android:textStyle="bold" />
 
@@ -101,6 +102,7 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:maxLength="40"
+        android:onClick="textDescription_OnClick"
         android:paddingLeft="3dp"
         android:textSize="18sp" />
 
@@ -122,7 +124,7 @@
         android:focusableInTouchMode="false"
         android:inputType="textPersonName"
         android:linksClickable="false"
-        android:text="Assignment"
+        android:text="Who can obtain"
         android:textSize="18sp"
         android:textStyle="bold"
         tools:layout_editor_absoluteX="8dp"
@@ -161,7 +163,7 @@
         android:focusableInTouchMode="false"
         android:inputType="textPersonName"
         android:linksClickable="false"
-        android:text="Chores"
+        android:text="Current Rewards"
         android:textSize="18sp"
         android:textStyle="bold" />
 
@@ -180,21 +182,15 @@
             android:id="@+id/responsibilityView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:divider="@drawable/divider8p"
             android:orientation="vertical"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp">
+            android:paddingRight="10dp"
+            android:showDividers="middle">
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
         </LinearLayout>
 
     </ScrollView>
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -210,6 +206,7 @@
             android:layout_weight="1"
             android:background="@drawable/back"
             android:enabled="false"
+            android:onClick="btnDelete_OnClick"
             android:text="Delete"
             android:textSize="24sp" />
 

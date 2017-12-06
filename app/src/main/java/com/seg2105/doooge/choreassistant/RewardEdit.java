@@ -3,13 +3,14 @@ package com.seg2105.doooge.choreassistant;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,9 +32,11 @@ public class RewardEdit extends AppCompatActivity{
 
     private List<PersonRule> personRulesList;
     private List<PersonRule> selectedPersonRuleList;
-    private List<Responsibility> selectedResponsibilityList;
+    private List<Reward> rewardsList;
+    //private List<Responsibility> selectedResponsibilityList;
 
     private Reward rewardSubmit;
+    private PersonRule currentUser;
 
     DatabaseReference databaseLoginInfo;
     DatabaseReference databaseReward;
@@ -44,18 +47,21 @@ public class RewardEdit extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reward_edit);
 
-        Intent intent = getIntent();
-        rewardSubmit = (Reward) intent.getSerializableExtra("reward");
+        Intent intent   = getIntent();
+        currentUser     = (PersonRule) intent.getSerializableExtra("currentUser");
 
-        selectedResponsibilityList = new ArrayList<>();
+        rewardSubmit = null;
 
         databaseReward      = FirebaseDatabase.getInstance().getReference("Reward");
         databaseLoginInfo   = FirebaseDatabase.getInstance().getReference("PersonRule");
         databaseChore       = FirebaseDatabase.getInstance().getReference("chore");
 
         userListen();               //listener for databaseLogInfo
+        rewardListen();
+
 
     }
+
 
 //--------------------------------------------------------------------------------------------------
 
@@ -111,7 +117,7 @@ public class RewardEdit extends AppCompatActivity{
 
         //used in the creating of userList, list of all selected users
         final String[] users            = new String[personRulesList.size()];
-        final ArrayList selectedUsers   = new ArrayList();
+        final ArrayList selectedUsers   = new ArrayList<>();
 
         for (int i = 0; i <personRulesList.size() ; i++){
             users[i] = personRulesList.get(i).getUserName();
@@ -127,11 +133,10 @@ public class RewardEdit extends AppCompatActivity{
                 if(isChecked) {
                     selectedUsers.add(which);
                 } else {
-                    selectedUsers.remove(which);
+                    selectedUsers.remove(Integer.valueOf(which));
                 }
             }
         });
-
 
         userList.setPositiveButton("Sumbit", new DialogInterface.OnClickListener() {
             @Override
@@ -181,6 +186,68 @@ public class RewardEdit extends AppCompatActivity{
         TextView txtSelect = findViewById(R.id.textSelectUsers);
         txtSelect.setError(null);
         selectUsers();
+        toggleDeleteButton(false);
+    }
+
+    /**
+     * OnClick event - Confirmation and deletion of a reward from the database.
+     * A dialog message prompts the user for confirmation, then if confirmed,
+     * carries out the removal of the reward from the database.
+     *
+     *
+     * @param view
+     */
+    public void btnDelete_OnClick(View view){
+        AlertDialog.Builder deleteConfirm = new AlertDialog.Builder( this );
+        deleteConfirm.setTitle("Delete");
+        deleteConfirm.setMessage("Are you sure you want to delete?");
+        deleteConfirm.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                databaseReward.child( rewardSubmit.getRewardName() ).removeValue();
+                scrubRewardView();
+
+            }
+        });
+
+        deleteConfirm.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        deleteConfirm.show();
+    }
+
+    /**
+     * OnClick event - first, the method resets the textview and error messages, if any
+     * had occured.
+     *
+     *
+     * @param view
+     */
+    public void textName_OnClick(View view){
+        view.setBackgroundDrawable(getResources().getDrawable(R.drawable.back));
+        TextView txtName = findViewById(R.id.textName);
+        txtName.setError(null);
+        toggleDeleteButton(false);
+    }
+
+
+    /**
+     * OnClick Event
+     * Resets the text field back to its original state and disables the delete button
+     * since it is assumed that the user would rather edit then delete.
+     *
+     * @param view
+     */
+    public void textDescription_OnClick(View view){
+        view.setBackgroundDrawable(getResources().getDrawable(R.drawable.back));
+        TextView txtPoints = findViewById(R.id.textDescription);
+        txtPoints.setError(null);
+        toggleDeleteButton(false);
     }
 
 
@@ -196,49 +263,56 @@ public class RewardEdit extends AppCompatActivity{
      */
     public void btnSubmit_OnClick(View view) throws NoSuchAlgorithmException {
 
+        //scrubRewardView();
         TextView txtName = findViewById(R.id.textName);
         TextView txtDescription = findViewById(R.id.textDescription);
         TextView txtSelectedUsers = findViewById(R.id.textSelectUsers);
 
         Boolean allPass = true;
 
+        try {
+            Integer.parseInt( txtDescription.getText().toString().trim() );
+        } catch (NumberFormatException exNum){
+            allPass = false;
+            txtDescription.requestFocus();
+            txtDescription.setError("Enter a number.");
+            txtDescription.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
+        }
+
         if (txtName.getText().toString().trim().equals("")) {
             allPass = false;
             txtName.setError("Enter a name.");
             txtName.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
         }
-        if ((selectedPersonRuleList != null) && (selectedPersonRuleList.size() == 0)) {
+        if ((selectedPersonRuleList == null) || (selectedPersonRuleList.size() == 0) ||
+                txtSelectedUsers.getText().toString().trim().equals("") ) {
             allPass = false;
             txtSelectedUsers.setError("Please assign a user.");
             txtSelectedUsers.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
         }
         if(allPass){
             String name = txtName.getText().toString().trim();
-            String description  = txtDescription.getText().toString().trim();
 
-            if( selectedResponsibilityList == null || selectedPersonRuleList == null ){
+            if( selectedPersonRuleList == null ){
                 unhandledEvent( "Error!", "Creation of reward could not finish." );
                 return;
             }
 
-            //Create a Reward and associate it to a Responsibility
-            for ( PersonRule person : selectedPersonRuleList ){
-                int id = person.getUserID();
-                Reward reward = new Reward(person);
-                reward.setRewardName(name);
-                reward.setRewardDescription(description);
-
-                //check if the responsibility was assigned to this user, if so add it
-                //to rewards responsibility list
-                for(Responsibility responsibility : selectedResponsibilityList){
-                    if ( person.getUserID() == responsibility.getUserID() ){
-                        reward.addResponsibility(responsibility);
-                    }
-                }
-
-                databaseReward.child( reward.getUserName() ).setValue(reward);
-
+            if (rewardSubmit != null){
+                databaseReward.child(rewardSubmit.getRewardName()).removeValue();
             }
+
+            Reward reward = new Reward();
+            reward.setRewardName(name);
+            reward.setPoints( Integer.parseInt( txtDescription.getText().toString().trim() ) );
+
+
+            for(PersonRule person : selectedPersonRuleList){
+                Responsibility responsibility = new Responsibility( person.getUserID(), name );
+                reward.addResponsibility(responsibility);
+            }
+
+            databaseReward.child( name ).setValue(reward);
 
             controlPanelShow();
         }
@@ -256,7 +330,7 @@ public class RewardEdit extends AppCompatActivity{
      *
      *
      */
-    private void scrubResponsibilityView(){
+    private void scrubRewardView(){
         LinearLayout responsibilityView = findViewById(R.id.responsibilityView);
         responsibilityView.removeAllViews();
     }
@@ -272,59 +346,89 @@ public class RewardEdit extends AppCompatActivity{
      *
      *
      */
-    private void setViewUp(){
+    private void displayReward(Reward reward){
         LinearLayout responsibilityView = findViewById(R.id.responsibilityView);
 
-        for(PersonRule person : selectedPersonRuleList){
-            for(Responsibility responsibility : person.getResponsibilities()){
+        LinearLayout top = new LinearLayout(this);
 
-                CheckBox checkBox = new CheckBox( getApplicationContext() );
-                checkBox.setTextSize(18);
+        top.setOrientation(LinearLayout.VERTICAL);
 
-                StringBuilder sb = new StringBuilder();
-                sb.append(person.getUserName() + ": ");
-                sb.append( databaseChore.child(responsibility
-                        .getChoreIdentification()).child("choreName").getKey() );
+        TextView text1 = new TextView(this);
+        TextView text2 = new TextView(this);
 
-                checkBox.setText(sb.toString());
-                checkBox.setTag( responsibility );
+        text1.setTextSize(18);
+        text2.setTextSize(14);
 
-                final Responsibility res = responsibility;
+        text1.setTypeface(Typeface.DEFAULT_BOLD);
+        text2.setTypeface(null,Typeface.BOLD_ITALIC);
 
-                checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        addToSelectedRewardList(isChecked, res);                //set class variable
-                    }
-                });
+        text1.setText( reward.getRewardName() );
+        text2.setText( reward.getPoints() + " Points - " + setSelectedPersonRuleList(reward) );
 
-                responsibilityView.addView(checkBox);
+        top.addView(text1);
+        top.addView(text2);
+
+        top.setPadding(0,30,0,30);
+
+        top.setTag(reward);
+
+        top.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                rewardSubmit = ((Reward) view.getTag());
+
+                TextView txtName = findViewById(R.id.textName);
+                TextView txtPoints = findViewById(R.id.textDescription);
+                TextView txtUsers = findViewById(R.id.textSelectUsers);
+
+                txtName.setText( rewardSubmit.getRewardName() );
+                txtPoints.setText( String.valueOf( rewardSubmit.getPoints()) );
+                txtUsers.setText( setSelectedPersonRuleList(rewardSubmit) );
+
+                txtName.setBackgroundDrawable(getResources().getDrawable(R.drawable.back));
+                txtPoints.setBackgroundDrawable(getResources().getDrawable(R.drawable.back));
+                txtUsers.setBackgroundDrawable(getResources().getDrawable(R.drawable.back));
+
+                txtName.setError(null);
+                txtPoints.setError(null);
+                txtUsers.setError(null);
+
+                toggleDeleteButton(true);
             }
-        }
+        });
+
+        responsibilityView.addView(top);
     }
+
+    private String setSelectedPersonRuleList(Reward reward){
+        selectedPersonRuleList = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+        for ( Responsibility responsibility : reward.getResponsibilities() ) {
+            for(PersonRule person : personRulesList){
+                if(responsibility.getUserID() == person.getUserID()){
+                    selectedPersonRuleList.add(person);
+                    sb.append(person.getUserName());
+
+                    if ( responsibility.isComplete() ){
+                        sb.append(": completed");
+                    }
+                }
+            }
+
+            if( i + 1 < reward.getResponsibilities().size() ){
+                sb.append(";    ");
+            }
+            i++;
+        }
+        return sb.toString();
+    }
+
 
 
 //--------------------------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------------------------
-
-
-    /**
-     * Set Class Variables - depending on the data sent, the method will either add or
-     * remove a responsibility from the selected responsibilities list.
-     *
-     *
-     * @param isChecked indicates whether or not a check box has been selected
-     * @param responsibility if the boolean is true, then add the responsibility to selected list
-     */
-    private void addToSelectedRewardList(boolean isChecked, Responsibility responsibility){
-        if(isChecked){
-            selectedResponsibilityList.add(responsibility);
-        }else {
-            selectedResponsibilityList.remove(responsibility);
-        }
-
-    }
 
 
     /**
@@ -347,9 +451,6 @@ public class RewardEdit extends AppCompatActivity{
                             )
                     );
         }
-
-        scrubResponsibilityView();
-        setViewUp();
     }
 
 
@@ -376,26 +477,38 @@ public class RewardEdit extends AppCompatActivity{
                 //clear and rebuild personRule list
                 personRulesList = new ArrayList<>();
                 for (DataSnapshot personRoleInstance : dataSnapshot.getChildren()) {
-                    personRulesList.add(personRoleInstance.getValue(PersonRule.class));
-                }
-                if (rewardSubmit == null) return;
-
-                //fill selectedPersonList if a reward was passed through intent, and display.
-                StringBuilder userID = new StringBuilder();
-                List<Responsibility> responsibilities = rewardSubmit.getResponsibilities();
-                for (int i = 0; i < responsibilities.size(); i++) {
-                    int tempID = responsibilities.get(i).getUserID();
-
-                    for (PersonRule user : personRulesList) {
-                        if (tempID == user.getUserID()) {
-                            userID.append(user.getUserName());
-                            selectedPersonRuleList.add(user);
-                        }
+                    PersonRule user = personRoleInstance.getValue(PersonRule.class);
+                    if ( !user.isAdmin() ){
+                        personRulesList.add(user);
                     }
-                    if (i + 1 < responsibilities.size()) { userID.append(", "); }
                 }
-                TextView textSelectedUsers = findViewById(R.id.textSelectUsers);
-                textSelectedUsers.setText(userID.toString());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
+    /**
+     * Listener - Fills rewardsList with all the avaiable awards and then calls
+     * a method to have them displayed on the UI.
+     *
+     */
+    private void rewardListen(){
+        scrubRewardView();
+        rewardsList = new ArrayList<>();
+
+        databaseReward.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapShot : dataSnapshot.getChildren() ) {
+                    Reward reward = snapShot.getValue(Reward.class);
+                    rewardsList.add(reward);
+                    displayReward(reward);
+                }
 
             }
 
@@ -404,6 +517,7 @@ public class RewardEdit extends AppCompatActivity{
 
             }
         });
+
     }
 
 
@@ -419,8 +533,20 @@ public class RewardEdit extends AppCompatActivity{
      */
     private void controlPanelShow(){
         Intent intent = new Intent(RewardEdit.this, ControlPanelActivity.class);
+        intent.putExtra("currentUser", currentUser);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+    }
+
+
+    /**
+     * Disables or enables the "Delete" button
+     *
+     * @param flag
+     */
+    private void toggleDeleteButton(boolean flag){
+        Button btnDelete = findViewById(R.id.btnDelete);
+        btnDelete.setEnabled(flag);
     }
 
 }

@@ -16,15 +16,66 @@ import java.util.List;
 
 public class Reward implements Serializable {
 
-    //private final DatabaseReference databaseLoginInfo = FirebaseDatabase.getInstance().getReference("PersonRule");
-    private PersonRule personRule;
+    //private PersonRule personRule;
     private String userName;
     private String rewardName;
+    //private int userID;
+    private int points;
+    private List<Responsibility> responsibilities;
+    //private ArrayList<Responsibility> responsibilities;
 
-//    public DatabaseReference getDatabaseLoginInfo() {
-//        return databaseLoginInfo;
-//    }
 
+/*
+    public int getUserID(){
+        return userID;
+    }
+
+    public void setUserID(int userID){
+        this.userID = userID;
+    }
+    */
+
+    public List<Responsibility> getResponsibilities(){
+        return responsibilities;
+    }
+
+    public void setResponsibilities(List<Responsibility> responsibilities){
+        this.responsibilities = responsibilities;
+    }
+
+    public void addResponsibility(Responsibility responsibility){
+        responsibilities.add(responsibility);
+    }
+
+
+
+
+    public Reward() {
+        //For Firebase
+        responsibilities = new ArrayList<>();
+    }
+
+    /*
+    public Reward(final PersonRule personRule) {
+        this.personRule = personRule;
+
+        //responsibilities = new ArrayList<>();
+        points = 0;
+
+        this.userName = personRule.getUserName();
+
+    }
+    */
+
+    public int getPoints(){
+        return points;
+    }
+
+    public void setPoints(int points){
+        this.points = points;
+    }
+
+/*
     public PersonRule getPersonRule() {
         return personRule;
     }
@@ -32,52 +83,15 @@ public class Reward implements Serializable {
     public void setPersonRule(PersonRule personRule) {
         this.personRule = personRule;
     }
+   */
 
     public void setUserName(String userName) {
         this.userName = userName;
     }
 
+    /*
     public void setResponsibilities(ArrayList<Responsibility> responsibilities) {
         this.responsibilities = responsibilities;
-    }
-
-    private String rewardDescription;
-    private ArrayList<Responsibility> responsibilities;
-    private boolean userAnnounced;
-    private boolean adminAnnounced;
-
-    public Reward() {
-        //For Firebase
-        responsibilities = new ArrayList<>();
-    }
-
-    public Reward(final PersonRule personRule) {
-        this.personRule = personRule;
-
-        responsibilities = new ArrayList<>();
-
-        this.userName = personRule.getUserName();
-        /*
-        databaseLoginInfo.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                responsibilities.clear();
-                for (DataSnapshot instanceOfResponsibility : dataSnapshot.child(personRule.getUserName()).child("responsibilities").getChildren()) {
-                    Responsibility responsibility = instanceOfResponsibility.getValue(Responsibility.class);
-                    responsibilities.add(responsibility);
-                    System.out.println("=================" + instanceOfResponsibility.getValue());
-                }
-
-            }
-
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        */
-
     }
 
     public void addResponsibility(Responsibility responsibility){
@@ -88,40 +102,12 @@ public class Reward implements Serializable {
         responsibilities.remove(responsibility);
     }
 
-    /*
-    public boolean isAchieved() {
-
-        databaseLoginInfo.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                responsibilities.clear();
-                for (DataSnapshot instanceOfResponsibility : dataSnapshot.child(personRule.getUserName()).child("responsibilities").getChildren()) {
-                    Responsibility responsibility = instanceOfResponsibility.getValue(Responsibility.class);
-                    responsibilities.add(responsibility);
-                    System.out.println("=================" + instanceOfResponsibility.getValue());
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        for (Responsibility responsibility : responsibilities) {
-            if (!responsibility.isComplete()) {
-                return false;
-            }
-        }
-        return true;
-    }
-*/
 
     public ArrayList<Responsibility> getResponsibilities(){
         ArrayList<Responsibility> tempResponsibilities = responsibilities;
         return tempResponsibilities;
     }
+    */
 
     public String getRewardName(){
         return rewardName;
@@ -129,30 +115,6 @@ public class Reward implements Serializable {
 
     public void setRewardName(String rewardName){
         this.rewardName = rewardName;
-    }
-
-    public String getRewardDescription(){
-        return rewardDescription;
-    }
-
-    public boolean getUserAnnounced(){
-        return userAnnounced;
-    }
-
-    public void setUserAnnounced(boolean flag){
-        this.userAnnounced = flag;
-    }
-
-    public boolean getAdminAnnounced(){
-        return adminAnnounced;
-    }
-
-    public void setAdminAnnounced(boolean flag){
-        this.adminAnnounced = flag;
-    }
-
-    public void setRewardDescription(String rewardDescription){
-        this.rewardDescription = rewardDescription;
     }
 
     public String getUserName(){

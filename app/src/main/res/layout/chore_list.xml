@@ -84,6 +84,15 @@
         android:orientation="vertical"
         android:visibility="visible">
 
+        <TextView
+            android:id="@+id/textPoints"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Points: 9999"
+            android:textSize="24sp" />
+
         <Button
             android:id="@+id/btnAdd"
             android:layout_width="match_parent"

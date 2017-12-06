@@ -42,7 +42,7 @@
         <Space
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="10dp" />
 
         <EditText
             android:id="@+id/textNameCaption"
@@ -78,7 +78,7 @@
         <Space
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="10dp" />
 
         <EditText
             android:id="@+id/editText7"
@@ -105,7 +105,6 @@
             android:layout_marginRight="10dp"
             android:background="@drawable/back"
             android:ems="10"
-            android:inputType="textPersonName"
             android:maxLength="50"
             android:paddingLeft="3dp"
             android:textSize="18sp" />
@@ -113,7 +112,7 @@
         <Space
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="10dp" />
 
         <EditText
             android:id="@+id/textDateCaption"
@@ -142,7 +141,6 @@
             android:ems="10"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:inputType="textPersonName"
             android:onClick="textDate_OnClick"
             android:paddingLeft="3dp"
             android:textSize="18sp" />
@@ -150,7 +148,7 @@
         <Space
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="10dp" />
 
         <EditText
             android:id="@+id/editText11"
@@ -187,7 +185,7 @@
         <Space
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="10dp" />
 
         <EditText
             android:id="@+id/editText16"
@@ -219,6 +217,40 @@
             android:focusableInTouchMode="false"
             android:inputType="textPersonName"
             android:onClick="textSelectUsers_OnClick"
+            android:paddingLeft="3dp"
+            android:textSize="18sp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp" />
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@android:drawable/screen_background_light_transparent"
+            android:clickable="false"
+            android:ems="10"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:inputType="textPersonName"
+            android:linksClickable="false"
+            android:text="Points"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/textPoints"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/back"
+            android:ems="10"
+            android:inputType="textPersonName"
             android:paddingLeft="3dp"
             android:textSize="18sp" />
 
