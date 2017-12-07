@@ -467,7 +467,7 @@ public class ResponsibilityList extends AppCompatActivity {
                 }
 
                 if (i + 1 < chore.getResponsibilities().size())
-                    sb.append("Not assign to anyone.   ");
+                    sb.append("; ");
                 i++;
             }
         } else {
