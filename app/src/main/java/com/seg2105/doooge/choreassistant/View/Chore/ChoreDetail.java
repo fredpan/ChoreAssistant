@@ -1,4 +1,4 @@
-package com.seg2105.doooge.choreassistant;
+package com.seg2105.doooge.choreassistant.View.Chore;
 
 
 import android.app.AlertDialog;
@@ -17,6 +17,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.seg2105.doooge.choreassistant.Model.Chore;
+import com.seg2105.doooge.choreassistant.Model.PersonRule;
+import com.seg2105.doooge.choreassistant.Model.Responsibility;
+import com.seg2105.doooge.choreassistant.R;
+import com.seg2105.doooge.choreassistant.View.Responsibility.ResponsibilityList;
 
 import java.util.Calendar;
 import java.util.Timer;
@@ -199,7 +204,7 @@ public class ChoreDetail extends AppCompatActivity {
                 final Timer t = new Timer();
                 t.schedule(new TimerTask() {
                     public void run() {
-                        Intent intent = new Intent(ChoreDetail.this, ChoreList.class);
+                        Intent intent = new Intent(ChoreDetail.this, ResponsibilityList.class);
                         intent.putExtra("currentUser", personRule);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);

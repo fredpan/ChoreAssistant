@@ -1,4 +1,4 @@
-package com.seg2105.doooge.choreassistant;
+package com.seg2105.doooge.choreassistant.View.Responsibility;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -24,6 +24,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.seg2105.doooge.choreassistant.Model.Chore;
+import com.seg2105.doooge.choreassistant.Model.PersonRule;
+import com.seg2105.doooge.choreassistant.Model.Responsibility;
+import com.seg2105.doooge.choreassistant.Model.Reward;
+import com.seg2105.doooge.choreassistant.R;
+import com.seg2105.doooge.choreassistant.View.Chore.ChoreDetail;
+import com.seg2105.doooge.choreassistant.View.Chore.ChoreEdit;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -34,7 +41,7 @@ import java.util.List;
  * Created by dustin on 11/22/17.
  */
 
-public class ChoreList extends AppCompatActivity {
+public class ResponsibilityList extends AppCompatActivity {
 
     DatabaseReference databaseChores;
     DatabaseReference databaseUsers;
@@ -254,7 +261,7 @@ public class ChoreList extends AppCompatActivity {
      */
     public void add_OnClick(View view) {
         if (currentUser.isAdmin()) {
-            Intent intent = new Intent(ChoreList.this, ChoreEdit.class); //switch homepage to edit chore page
+            Intent intent = new Intent(ResponsibilityList.this, ChoreEdit.class); //switch homepage to edit chore page
             intent.putExtra("currentUser", currentUser);
             startActivity(intent);
         } else {
@@ -415,14 +422,14 @@ public class ChoreList extends AppCompatActivity {
             public void onClick(View view) {
                 if (currentUser.isAdmin()) {
                     //switch intents and pass both the chore, which is tagged to the event, and the current user
-                    Intent intent = new Intent(ChoreList.this, ChoreEdit.class);
+                    Intent intent = new Intent(ResponsibilityList.this, ChoreEdit.class);
                     intent.putExtra("SUBMIT", (Chore) view.getTag());
                     intent.putExtra("currentUser", currentUser);
                     startActivity(intent);
                 } else {
                     //switch intents and pass the chore tagged to the event
                     Toast.makeText(getBaseContext(), " " + ((Chore) view.getTag()).getChoreName(), Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(ChoreList.this, ChoreDetail.class);
+                    Intent intent = new Intent(ResponsibilityList.this, ChoreDetail.class);
                     intent.putExtra("SUBMIT", (Chore) view.getTag());
                     intent.putExtra("currentUser", currentUser);
                     startActivity(intent);

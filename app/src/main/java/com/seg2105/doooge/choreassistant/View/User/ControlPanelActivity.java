@@ -1,4 +1,4 @@
-package com.seg2105.doooge.choreassistant;
+package com.seg2105.doooge.choreassistant.View.User;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.seg2105.doooge.choreassistant.Model.PersonRule;
+import com.seg2105.doooge.choreassistant.R;
+import com.seg2105.doooge.choreassistant.View.Responsibility.ResponsibilityList;
+import com.seg2105.doooge.choreassistant.View.Reward.RewardEdit;
 
 import java.util.ArrayList;
 
@@ -115,7 +119,7 @@ public class ControlPanelActivity extends AppCompatActivity {
     }
 
     public void btnChore_OnClick(View view) { //--------------------------------------------------------------------
-        Intent intent = new Intent(ControlPanelActivity.this, ChoreList.class);
+        Intent intent = new Intent(ControlPanelActivity.this, ResponsibilityList.class);
         intent.putExtra("currentUser", currentUser);
         startActivity(intent);
     }

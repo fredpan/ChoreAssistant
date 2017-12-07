@@ -1,4 +1,4 @@
-package com.seg2105.doooge.choreassistant;
+package com.seg2105.doooge.choreassistant.View.User;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.seg2105.doooge.choreassistant.Model.Chore;
+import com.seg2105.doooge.choreassistant.Model.PersonRule;
+import com.seg2105.doooge.choreassistant.Model.Responsibility;
+import com.seg2105.doooge.choreassistant.Model.Reward;
+import com.seg2105.doooge.choreassistant.R;
+import com.seg2105.doooge.choreassistant.Tool.IdentificationUtility;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;

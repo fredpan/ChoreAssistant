@@ -1,4 +1,6 @@
-package com.seg2105.doooge.choreassistant;
+package com.seg2105.doooge.choreassistant.Model;
+
+import com.seg2105.doooge.choreassistant.Tool.IdentificationUtility;
 
 import java.io.Serializable;
 import java.security.NoSuchAlgorithmException;

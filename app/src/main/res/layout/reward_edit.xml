@@ -7,7 +7,7 @@
     android:layout_centerInParent="true"
     android:layout_gravity="center"
     android:gravity="center_horizontal"
-    tools:context="com.seg2105.doooge.choreassistant.RewardEdit">
+    tools:context="com.seg2105.doooge.choreassistant.View.Reward.RewardEdit">
 
 <LinearLayout
     android:layout_width="match_parent"

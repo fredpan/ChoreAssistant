@@ -1,4 +1,4 @@
-package com.seg2105.doooge.choreassistant;
+package com.seg2105.doooge.choreassistant.Tool;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -7,7 +7,7 @@ import java.security.NoSuchAlgorithmException;
  * Created by fredpan on 2017/11/25.
  */
 
-class IdentificationUtility {
+public class IdentificationUtility {
 
     private IdentificationUtility() {
     }

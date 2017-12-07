@@ -7,7 +7,7 @@
     android:layout_centerInParent="true"
     android:layout_gravity="center"
     android:gravity="center_horizontal"
-    tools:context="com.seg2105.doooge.choreassistant.ChoreEdit">
+    tools:context="com.seg2105.doooge.choreassistant.View.Chore.ChoreEdit">
 
 
     <LinearLayout

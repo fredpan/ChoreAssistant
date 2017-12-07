@@ -1,4 +1,4 @@
-package com.seg2105.doooge.choreassistant;
+package com.seg2105.doooge.choreassistant.View.Chore;
 
 /**
  * Created by dustin on 11/22/17.
@@ -22,6 +22,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.seg2105.doooge.choreassistant.Model.Chore;
+import com.seg2105.doooge.choreassistant.Model.PersonRule;
+import com.seg2105.doooge.choreassistant.Model.Responsibility;
+import com.seg2105.doooge.choreassistant.R;
+import com.seg2105.doooge.choreassistant.View.Responsibility.ResponsibilityList;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -602,10 +607,10 @@ public class ChoreEdit extends AppCompatActivity {
 //--------------------------------------------------------------------------------------------------
 
     /**
-     * Intent - changes intent to ChoreList and passes the current user
+     * Intent - changes intent to ResponsibilityList and passes the current user
      */
     private void choreListShow() {
-        Intent intent = new Intent(ChoreEdit.this, ChoreList.class);
+        Intent intent = new Intent(ChoreEdit.this, ResponsibilityList.class);
         intent.putExtra("currentUser", currentUser);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);

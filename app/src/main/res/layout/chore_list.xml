@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_marginBottom="10dp"
     android:orientation="vertical"
-    tools:context="com.seg2105.doooge.choreassistant.ChoreList">
+    tools:context="com.seg2105.doooge.choreassistant.View.Responsibility.ResponsibilityList">
 
     <Space
         android:layout_width="match_parent"

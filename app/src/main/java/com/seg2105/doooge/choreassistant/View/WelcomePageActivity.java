@@ -1,4 +1,4 @@
-package com.seg2105.doooge.choreassistant;
+package com.seg2105.doooge.choreassistant.View;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -20,6 +20,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.seg2105.doooge.choreassistant.Model.PersonRule;
+import com.seg2105.doooge.choreassistant.R;
+import com.seg2105.doooge.choreassistant.Tool.IdentificationUtility;
+import com.seg2105.doooge.choreassistant.View.Responsibility.ResponsibilityList;
+import com.seg2105.doooge.choreassistant.View.User.ControlPanelActivity;
+import com.seg2105.doooge.choreassistant.View.User.RegistrationActivity;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -213,7 +219,7 @@ public class WelcomePageActivity extends AppCompatActivity {
                                 startActivity(intent);
 
                             } else {
-                                Intent intent = new Intent(WelcomePageActivity.this, ChoreList.class);
+                                Intent intent = new Intent(WelcomePageActivity.this, ResponsibilityList.class);
                                 intent.putExtra("currentUser", user);
                                 startActivity(intent);
 
@@ -280,7 +286,7 @@ public class WelcomePageActivity extends AppCompatActivity {
                     if (user.isAdmin()) {
                         showPasswordConfirm(user);
                     } else {
-                        Intent intent = new Intent(WelcomePageActivity.this, ChoreList.class);
+                        Intent intent = new Intent(WelcomePageActivity.this, ResponsibilityList.class);
                         intent.putExtra("currentUser", user);
                         startActivity(intent);
                     }

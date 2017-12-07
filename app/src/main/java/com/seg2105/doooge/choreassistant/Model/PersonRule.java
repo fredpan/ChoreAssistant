@@ -1,4 +1,4 @@
-package com.seg2105.doooge.choreassistant;
+package com.seg2105.doooge.choreassistant.Model;
 
 import java.io.Serializable;
 import java.util.ArrayList;

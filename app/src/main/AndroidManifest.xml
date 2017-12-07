@@ -9,20 +9,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".WelcomePageActivity">
+        <activity android:name=".View.WelcomePageActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ChoreEdit"></activity>
-        <activity android:name=".ChoreDetail"></activity>
-        <activity android:name=".ChoreList"></activity>
-        <activity android:name=".ControlPanelActivity"></activity>
-        <activity android:name=".RegistrationActivity"></activity>
-        <activity android:name=".EditUserActivity"></activity>
-        <activity android:name=".RewardEdit"></activity>
+        <activity android:name=".View.Chore.ChoreEdit"></activity>
+        <activity android:name=".View.Chore.ChoreDetail"></activity>
+        <activity android:name=".View.Responsibility.ResponsibilityList"></activity>
+        <activity android:name=".View.User.ControlPanelActivity"></activity>
+        <activity android:name=".View.User.RegistrationActivity"></activity>
+        <activity android:name=".View.User.EditUserActivity"></activity>
+        <activity android:name=".View.Reward.RewardEdit"></activity>
 
     </application>
 
