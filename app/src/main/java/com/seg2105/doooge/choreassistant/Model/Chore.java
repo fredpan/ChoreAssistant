@@ -21,8 +21,7 @@ public class Chore implements Serializable {
 
     private Long timeInMillis;
     private String choreIdentification;
-
-    private Boolean complete;
+    
 
     public Chore() {
         //Keep for Firebase only
@@ -37,7 +36,7 @@ public class Chore implements Serializable {
         responsibilities = new ArrayList<Responsibility>();
 
         choreIdentification = IdentificationUtility.generateIdentification(choreName, String.valueOf(timeInMillis), description);
-        complete = false;
+
     }
 
     public boolean hasResponsibilities() {
@@ -103,14 +102,6 @@ public class Chore implements Serializable {
 
     public void setChoreName(String choreName) {
         this.choreName = choreName;
-    }
-
-    public Boolean getComplete() {
-        return complete;
-    }
-
-    public void setComplete(boolean value) {
-        this.complete = value;
     }
 
 
