@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -592,6 +593,17 @@ public class ChoreEdit extends AppCompatActivity {
                 }
                 TextView textSelectedUsers = findViewById(R.id.textSelectUsers);
                 textSelectedUsers.setText(userID.toString());
+
+                if (choreSubmit.getResponsibilities() != null) {
+                    EditText txtPoint = findViewById(R.id.textPoints);
+                    for (Responsibility res : choreSubmit.getResponsibilities()) {
+                        if (res.getUserID() == (personRulesList.get(0)).getUserID()) {
+                            txtPoint.setText(res.getPoints() + "");
+                            break;
+                        }
+                    }
+                }
+
 
             }
 
