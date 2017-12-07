@@ -44,7 +44,6 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     private boolean createUserIsClickable;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,17 +92,9 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                 }
 
                 createUserIsClickable = enableCreateNormalUser;
-//                if (enableCreateNormalUser) {
-//                    createUser.setClickable(true);
-//                    System.out.println("createUser has been enabled");
-//                } else {
-//                    createUser.setClickable(false);
-//                    System.out.println("createUser has been disabled");
-//                    Toast.makeText(getApplicationContext(), "Please create admin first !!!!", Toast.LENGTH_SHORT).show();
-//
-//                }
 
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -118,24 +109,20 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         switch (view.getId()) {
 
             case R.id.createUser:
-//                if (createUser.isClickable()) {
-                    try {
-                        if (createUserIsClickable) {
-                            storeAccountInfo(false);
-//                        createUser.setClickable(false);
-                            //TODO Add to report: Assume users' login do not require password.
-                            Toast.makeText(getApplicationContext(), "The user's password will be ignored!", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Please create admin first !!!!", Toast.LENGTH_SHORT).show();
-                        }
 
-                    } catch (NoSuchAlgorithmException e) {
-                        e.printStackTrace();
+                try {
+                    if (createUserIsClickable) {
+                        storeAccountInfo(false);
+
+
+                        Toast.makeText(getApplicationContext(), "The user's password will be ignored!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Please create admin first !!!!", Toast.LENGTH_SHORT).show();
                     }
-//                } else {
-//                    System.out.println("TO BE IMPLEMENT: POP UP: PLZ CREATE ADMIN FIRST!!!!!");
-//
-//                }
+
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
                 break;
 
             case R.id.createAdmin:
@@ -145,7 +132,6 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                     storeAccountInfo(true);
 
                     isAdmin = false;
-                    //createUser.setClickable(false);
                 } catch (NoSuchAlgorithmException e) {
                     e.printStackTrace();
                 }
@@ -236,7 +222,6 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         }
         return true;
     }
-
 
 
 }

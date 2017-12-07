@@ -19,7 +19,6 @@ public class PersonRule implements Serializable {
     private List<Responsibility> responsibilities;
 
     public PersonRule() {
-        //rewards = new ArrayList<Reward>();
         responsibilities = new ArrayList<Responsibility>();
     }
 
@@ -31,7 +30,6 @@ public class PersonRule implements Serializable {
         this.color = color;
 
         points = 0;
-        //rewards = new ArrayList<Reward>();
 
         this.responsibilities = new ArrayList<Responsibility>();
 
@@ -43,7 +41,9 @@ public class PersonRule implements Serializable {
 
     public boolean addResponsibility(Responsibility responsibility) {
         boolean added = false;
-        if (responsibilities.contains(responsibility)) { return false; }
+        if (responsibilities.contains(responsibility)) {
+            return false;
+        }
 
         PersonRule existingPerson = responsibility.getPersonRule();
         boolean isNewPerson = existingPerson != null && !this.equals(existingPerson);
@@ -112,19 +112,19 @@ public class PersonRule implements Serializable {
         return color;
     }
 
-    public int getPoints(){
+    public int getPoints() {
         return points;
     }
 
-    public void removePoints(int points){
-        this.points = this.points - points;
-    }
-
-    public void setPoints(int points){
+    public void setPoints(int points) {
         this.points = points;
     }
 
-    public void addPoints(int points){
+    public void removePoints(int points) {
+        this.points = this.points - points;
+    }
+
+    public void addPoints(int points) {
         this.points = this.points + points;
     }
 

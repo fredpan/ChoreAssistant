@@ -26,13 +26,14 @@ import java.util.TimerTask;
  * Created by user on 2017/11/22.
  */
 
-public class showDetailDialog extends AppCompatActivity {
+public class ChoreDetail extends AppCompatActivity {
 
     DatabaseReference databaseChore = FirebaseDatabase.getInstance().getReference("chore");
     DatabaseReference databaseUsers = FirebaseDatabase.getInstance().getReference("PersonRule");
     DatabaseReference databaseReward = FirebaseDatabase.getInstance().getReference("Reward");
     private Chore choreSubmit;
     private PersonRule personRule;
+    private boolean finish = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,17 +45,22 @@ public class showDetailDialog extends AppCompatActivity {
         initialData(choreSubmit);
 
         final ImageButton finish_button = findViewById(R.id.finishButton);
+        for (Responsibility responsibility : choreSubmit.getResponsibilities()) {
+            if (responsibility.isComplete() && (responsibility.getUserID() == personRule.getUserID())) {
+                finish_button.setBackgroundResource(R.drawable.finish_button);
+                finish = true;
+            }
+        }
+
+
         finish_button.setOnClickListener(new View.OnClickListener() {
-            boolean click = false;
 
             @Override
             public void onClick(View view) {
-                click = !click;
-                if (click) {
-
-
+                if (finish == false) {
                     showDialog(finish_button);
-
+                } else {
+                    Toast.makeText(getApplicationContext(), "You have already finished this chore !", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -65,41 +71,38 @@ public class showDetailDialog extends AppCompatActivity {
     // intial all the informatioin of chore
     public void initialData(Chore chore) {
         TextView choreName = findViewById(R.id.printChoreName);
-        choreName.setText("Clean the Garage");
         TextView time = findViewById(R.id.printTime);
-        time.setText("2017/11/22" + "\n" + "18:00");
         TextView description = findViewById(R.id.printDescription);
-        description.setText("Please be careful !!!");
         TextView reward = findViewById(R.id.printReward);
-        reward.setText("No reward now .");
-        Intent intent = getIntent();
-        choreSubmit = (Chore) intent.getSerializableExtra("SUBMIT");
 
-        if (choreSubmit != null) {
-
-            choreName.setText(choreSubmit.getChoreName());
-            //String descrip = databaseReward.child(personRule.getUserName()).child("description").getKey();
-            //if(descrip!=null) {
-            //    description.setText(descrip);
-            //}
-
-            Calendar tempCal = Calendar.getInstance();
-            long millis = choreSubmit.getTimeInMillis();
-
-            tempCal.setTimeInMillis(millis);
-
-            int calYear = tempCal.get(Calendar.YEAR);
-            int calMonth = tempCal.get(Calendar.MONTH);
-            int calDay = tempCal.get(Calendar.DAY_OF_MONTH);
-            int calHour = tempCal.get(Calendar.HOUR);
-            int calMinute = tempCal.get(Calendar.MINUTE);
-
-            String Date = setDate(calYear, calMonth, calDay);
-            String times = setTime(calHour, calMinute);
-
-            time.setText(Date + "\n" + times);
-
+        choreName.setText(chore.getChoreName());
+        description.setText(chore.getDescription());
+        for (Responsibility responsibility : chore.getResponsibilities()) {
+            if (responsibility.isComplete() && (responsibility.getUserID() == personRule.getUserID())) {
+                reward.setText("You have recieved " + responsibility.getPoints() + " Points!");
+            } else {
+                reward.setText("It is worth " + responsibility.getPoints() + " Points!");
+            }
         }
+
+
+        Calendar tempCal = Calendar.getInstance();
+        long millis = chore.getTimeInMillis();
+
+        tempCal.setTimeInMillis(millis);
+
+        int calYear = tempCal.get(Calendar.YEAR);
+        int calMonth = tempCal.get(Calendar.MONTH);
+        int calDay = tempCal.get(Calendar.DAY_OF_MONTH);
+        int calHour = tempCal.get(Calendar.HOUR);
+        int calMinute = tempCal.get(Calendar.MINUTE);
+
+        String Date = setDate(calYear, calMonth, calDay);
+        String times = setTime(calHour, calMinute);
+
+        time.setText(Date + "\n" + times);
+
+
     }
 
     /**
@@ -144,7 +147,6 @@ public class showDetailDialog extends AppCompatActivity {
     }
 
 
-
     public void closeDialog(View view) throws Exception {
         try {
             finish();
@@ -177,10 +179,8 @@ public class showDetailDialog extends AppCompatActivity {
                                     ((Integer) personRule.getUserID()).equals(responsibility.getUserID()) && !responsibility.isComplete()) {
                                 databaseChore.child(choreSubmit.getChoreIdentification()).child("responsibilities").child("" + counter).child("complete").setValue(true);
                                 databaseUsers.child(personRule.getUserName()).child("responsibilities").child("" + counter).child("complete").setValue(true);
-                                databaseReward.child(personRule.getUserName()).child("responsibilities").child("" + counter).child("complete").setValue(true);
-
-                                personRule.addPoints( responsibility.getPoints() );
-                                databaseUsers.child(personRule.getUserName()).child("points").setValue( personRule.getPoints() );
+                                personRule.addPoints(responsibility.getPoints());
+                                databaseUsers.child(personRule.getUserName()).child("points").setValue(personRule.getPoints());
                             }
                             counter++;
                         }
@@ -192,20 +192,20 @@ public class showDetailDialog extends AppCompatActivity {
                     }
                 });
 
-
                 Toast.makeText(getApplicationContext(), "Congraduation, You finish !!!!", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
                 button.setBackgroundResource(R.drawable.finish_button);
+                button.setClickable(false);
                 final Timer t = new Timer();
                 t.schedule(new TimerTask() {
                     public void run() {
-                        Intent intent = new Intent(showDetailDialog.this, ChoreList.class);
+                        Intent intent = new Intent(ChoreDetail.this, ChoreList.class);
                         intent.putExtra("currentUser", personRule);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         t.cancel();
                     }
-                }, 200); // after 2 second (or 2000 miliseconds), the task will be active.
+                }, 200); // after 0.2 second (or 200 miliseconds), the task will be active.
 
 
             }

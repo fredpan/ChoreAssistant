@@ -17,7 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ChoreEdit"></activity>
-        <activity android:name=".showDetailDialog"></activity>
+        <activity android:name=".ChoreDetail"></activity>
         <activity android:name=".ChoreList"></activity>
         <activity android:name=".ControlPanelActivity"></activity>
         <activity android:name=".RegistrationActivity"></activity>

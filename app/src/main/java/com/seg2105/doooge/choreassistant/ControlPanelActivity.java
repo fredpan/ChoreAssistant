@@ -32,8 +32,8 @@ public class ControlPanelActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.control_panel);
 
-        Intent intent   = getIntent();
-        currentUser     = (PersonRule) intent.getSerializableExtra("currentUser");
+        Intent intent = getIntent();
+        currentUser = (PersonRule) intent.getSerializableExtra("currentUser");
 
         controlPanelListView = findViewById(R.id.controlPanelListView);
 
@@ -48,7 +48,7 @@ public class ControlPanelActivity extends AppCompatActivity {
                             personRules.add(personRule);
 
                         }
-                        UserInfoAdapter userInfoAdapter = new UserInfoAdapter(personRules, ControlPanelActivity.this);
+                        UserInfoAdapter userInfoAdapter = new UserInfoAdapter(personRules, ControlPanelActivity.this, currentUser);
                         controlPanelListView.setAdapter(userInfoAdapter);
                     }
 
@@ -58,7 +58,6 @@ public class ControlPanelActivity extends AppCompatActivity {
                     }
                 }
         );
-
 
 
 //        databaseLoginInfo.addValueEventListener(new ValueEventListener() {
@@ -109,13 +108,13 @@ public class ControlPanelActivity extends AppCompatActivity {
         });
     }
 
-    public void btnCreateReward_OnClick(View view){
+    public void btnCreateReward_OnClick(View view) {
         Intent intent = new Intent(ControlPanelActivity.this, RewardEdit.class);
         intent.putExtra("currentUser", currentUser);
         startActivity(intent);
     }
 
-    public void btnChore_OnClick(View view){ //--------------------------------------------------------------------
+    public void btnChore_OnClick(View view) { //--------------------------------------------------------------------
         Intent intent = new Intent(ControlPanelActivity.this, ChoreList.class);
         intent.putExtra("currentUser", currentUser);
         startActivity(intent);

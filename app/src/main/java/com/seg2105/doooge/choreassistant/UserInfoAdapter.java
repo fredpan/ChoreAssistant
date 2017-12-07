@@ -17,12 +17,14 @@ import java.util.ArrayList;
 public class UserInfoAdapter extends ArrayAdapter<PersonRule> {
     private ArrayList<PersonRule> listOfUser;
     private Activity context;
+    private PersonRule currentUser;
 
 
-    public UserInfoAdapter(ArrayList<PersonRule> list, Activity context) {
+    public UserInfoAdapter(ArrayList<PersonRule> list, Activity context, PersonRule current) {
         super(context, R.layout.single_user_info, list);
         this.listOfUser = list;
         this.context = context;
+        this.currentUser = current;
     }
 
     @Override
@@ -31,10 +33,6 @@ public class UserInfoAdapter extends ArrayAdapter<PersonRule> {
         LayoutInflater inflater = context.getLayoutInflater();
         View view = inflater.inflate(R.layout.single_user_info, null);
 
-
-//        //Handle TextView and display string from your list
-//        TextView listItemText = (TextView)view.findViewById(R.id.list_item_string);
-//        listItemText.setText(list.get(position));
 
         //Handle buttons and add onClickListeners
         final PersonRule user = listOfUser.get(position);
@@ -47,6 +45,7 @@ public class UserInfoAdapter extends ArrayAdapter<PersonRule> {
             public void onClick(View view) {
 
                 Intent intent = new Intent(context, EditUserActivity.class);
+                intent.putExtra("currentUser", currentUser);
                 intent.putExtra("userInfo", user);
                 context.startActivity(intent);
             }

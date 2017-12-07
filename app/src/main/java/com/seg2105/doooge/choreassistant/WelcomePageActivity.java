@@ -64,7 +64,7 @@ public class WelcomePageActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 personRulesList = new ArrayList<>();
-                noAdmin=false;
+                noAdmin = false;
                 for (DataSnapshot personRoleInstance : dataSnapshot.getChildren()) {
                     PersonRule personRule = personRoleInstance.getValue(PersonRule.class);
                     personRulesList.add(personRule);
@@ -75,9 +75,6 @@ public class WelcomePageActivity extends AppCompatActivity {
                 mRecyclerView.setAdapter(mAdapter = new HomeAdapter());
                 for (PersonRule user : personRulesList) {
                     noAdmin = noAdmin || (user.isAdmin());
-//                    if(!noAdmin) {
-//                        break;
-//                    }
 
                 }
             }
@@ -87,7 +84,6 @@ public class WelcomePageActivity extends AppCompatActivity {
 
             }
         });
-
 
 
         Button loginButton = findViewById(R.id.loginAsAdmin);
@@ -210,7 +206,7 @@ public class WelcomePageActivity extends AppCompatActivity {
 
                     if (isConfrim) {
                         if (personRule.getEncrypted().equals(generatedIdentification)) {
-                            if (user.isAdmin()){ //Direct admin to the control panel instead of chore page
+                            if (user.isAdmin()) { //Direct admin to the control panel instead of chore page
 
                                 Intent intent = new Intent(WelcomePageActivity.this, ControlPanelActivity.class);
                                 intent.putExtra("currentUser", user);
@@ -230,7 +226,7 @@ public class WelcomePageActivity extends AppCompatActivity {
                     } else {
                         if (personRule.getEncrypted().equals(generatedIdentification)) {
                             //Creating an admin account that will not be saved
-                            PersonRule tempAdmin = new PersonRule("tempAdmin", "", true, 0,0 );
+                            PersonRule tempAdmin = new PersonRule("tempAdmin", "", true, 0, 0);
 
                             Intent intent = new Intent(WelcomePageActivity.this, ControlPanelActivity.class);
                             intent.putExtra("currentUser", tempAdmin); //-----------------------------------------------------------------------
@@ -242,6 +238,7 @@ public class WelcomePageActivity extends AppCompatActivity {
                     }
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }

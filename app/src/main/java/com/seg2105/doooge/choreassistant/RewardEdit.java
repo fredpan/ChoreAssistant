@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,33 +27,30 @@ import java.util.List;
  */
 
 
-public class RewardEdit extends AppCompatActivity{
-
-    private List<PersonRule> personRulesList;
-    private List<PersonRule> selectedPersonRuleList;
-    private List<Reward> rewardsList;
-    //private List<Responsibility> selectedResponsibilityList;
-
-    private Reward rewardSubmit;
-    private PersonRule currentUser;
+public class RewardEdit extends AppCompatActivity {
 
     DatabaseReference databaseLoginInfo;
     DatabaseReference databaseReward;
     DatabaseReference databaseChore;
+    private List<PersonRule> personRulesList;
+    private List<PersonRule> selectedPersonRuleList;
+    private List<Reward> rewardsList;
+    private Reward rewardSubmit;
+    private PersonRule currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reward_edit);
 
-        Intent intent   = getIntent();
-        currentUser     = (PersonRule) intent.getSerializableExtra("currentUser");
+        Intent intent = getIntent();
+        currentUser = (PersonRule) intent.getSerializableExtra("currentUser");
 
         rewardSubmit = null;
 
-        databaseReward      = FirebaseDatabase.getInstance().getReference("Reward");
-        databaseLoginInfo   = FirebaseDatabase.getInstance().getReference("PersonRule");
-        databaseChore       = FirebaseDatabase.getInstance().getReference("chore");
+        databaseReward = FirebaseDatabase.getInstance().getReference("Reward");
+        databaseLoginInfo = FirebaseDatabase.getInstance().getReference("PersonRule");
+        databaseChore = FirebaseDatabase.getInstance().getReference("chore");
 
         userListen();               //listener for databaseLogInfo
         rewardListen();
@@ -73,13 +69,12 @@ public class RewardEdit extends AppCompatActivity{
      * of an error, once acknowledged by the user, it calles a function that will then return
      * the user to the Control Panel.
      *
-     *
      * @param warningTitle
      * @param warningText
      */
-    public void unhandledEvent(String warningTitle, String warningText){
+    public void unhandledEvent(String warningTitle, String warningText) {
 
-        AlertDialog.Builder unhandled = new AlertDialog.Builder( this );
+        AlertDialog.Builder unhandled = new AlertDialog.Builder(this);
         unhandled.setTitle(warningTitle);
         unhandled.setMessage(warningText);
         unhandled.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -107,19 +102,18 @@ public class RewardEdit extends AppCompatActivity{
      * the user the selections that were made. Then, a method is called and sent the array
      * containing the indexes of the selected users, a new array list is then constructed
      * which contains the users that were selected by the currentUser.
-     *
-     *
+     * <p>
+     * <p>
      * NOTE: the following site was referenced in the construction of this method
      * https://developer.android.com/reference/android/app/AlertDialog.Builder.html
-     *
      */
-    public void selectUsers(){
+    public void selectUsers() {
 
         //used in the creating of userList, list of all selected users
-        final String[] users            = new String[personRulesList.size()];
-        final ArrayList selectedUsers   = new ArrayList<>();
+        final String[] users = new String[personRulesList.size()];
+        final ArrayList selectedUsers = new ArrayList<>();
 
-        for (int i = 0; i <personRulesList.size() ; i++){
+        for (int i = 0; i < personRulesList.size(); i++) {
             users[i] = personRulesList.get(i).getUserName();
         }
 
@@ -130,7 +124,7 @@ public class RewardEdit extends AppCompatActivity{
 
             @Override
             public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                if(isChecked) {
+                if (isChecked) {
                     selectedUsers.add(which);
                 } else {
                     selectedUsers.remove(Integer.valueOf(which));
@@ -143,15 +137,17 @@ public class RewardEdit extends AppCompatActivity{
             public void onClick(DialogInterface dialog, int which) {
 
                 //Creating a list of users to display in a textview
-                StringBuilder sb    = new StringBuilder();
+                StringBuilder sb = new StringBuilder();
 
-                for (int i = 0; i < selectedUsers.size();i++){
-                    sb.append(users[ Integer.valueOf( selectedUsers.get(i).toString() ) ]);
-                    if (i+1 < selectedUsers.size() ) { sb.append(", "); }
+                for (int i = 0; i < selectedUsers.size(); i++) {
+                    sb.append(users[Integer.valueOf(selectedUsers.get(i).toString())]);
+                    if (i + 1 < selectedUsers.size()) {
+                        sb.append(", ");
+                    }
                 }
 
                 TextView textSelect = findViewById(R.id.textSelectUsers);
-                textSelect.setText( sb.toString() );
+                textSelect.setText(sb.toString());
 
                 setSelectedPersonRuleList(selectedUsers);                   //call to set class variable
             }
@@ -178,10 +174,9 @@ public class RewardEdit extends AppCompatActivity{
      * had occured, then calls a method to enable the user to select users from a
      * selectable checkbox dialog.
      *
-     *
      * @param view
      */
-    public void textSelectUsers_OnClick(View view){
+    public void textSelectUsers_OnClick(View view) {
         view.setBackgroundDrawable(getResources().getDrawable(R.drawable.back));
         TextView txtSelect = findViewById(R.id.textSelectUsers);
         txtSelect.setError(null);
@@ -194,18 +189,17 @@ public class RewardEdit extends AppCompatActivity{
      * A dialog message prompts the user for confirmation, then if confirmed,
      * carries out the removal of the reward from the database.
      *
-     *
      * @param view
      */
-    public void btnDelete_OnClick(View view){
-        AlertDialog.Builder deleteConfirm = new AlertDialog.Builder( this );
+    public void btnDelete_OnClick(View view) {
+        AlertDialog.Builder deleteConfirm = new AlertDialog.Builder(this);
         deleteConfirm.setTitle("Delete");
         deleteConfirm.setMessage("Are you sure you want to delete?");
         deleteConfirm.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                databaseReward.child( rewardSubmit.getRewardName() ).removeValue();
+                databaseReward.child(rewardSubmit.getRewardName()).removeValue();
                 scrubRewardView();
 
             }
@@ -225,10 +219,9 @@ public class RewardEdit extends AppCompatActivity{
      * OnClick event - first, the method resets the textview and error messages, if any
      * had occured.
      *
-     *
      * @param view
      */
-    public void textName_OnClick(View view){
+    public void textName_OnClick(View view) {
         view.setBackgroundDrawable(getResources().getDrawable(R.drawable.back));
         TextView txtName = findViewById(R.id.textName);
         txtName.setError(null);
@@ -243,7 +236,7 @@ public class RewardEdit extends AppCompatActivity{
      *
      * @param view
      */
-    public void textDescription_OnClick(View view){
+    public void textDescription_OnClick(View view) {
         view.setBackgroundDrawable(getResources().getDrawable(R.drawable.back));
         TextView txtPoints = findViewById(R.id.textDescription);
         txtPoints.setError(null);
@@ -256,7 +249,6 @@ public class RewardEdit extends AppCompatActivity{
      * user is iterated and a new Reward is created and linked to the appropriate
      * responsibilities. The reward database is updated, then a method is called to
      * change intent back to the control panel.
-     *
      *
      * @param view
      * @throws NoSuchAlgorithmException
@@ -271,8 +263,8 @@ public class RewardEdit extends AppCompatActivity{
         Boolean allPass = true;
 
         try {
-            Integer.parseInt( txtDescription.getText().toString().trim() );
-        } catch (NumberFormatException exNum){
+            Integer.parseInt(txtDescription.getText().toString().trim());
+        } catch (NumberFormatException exNum) {
             allPass = false;
             txtDescription.requestFocus();
             txtDescription.setError("Enter a number.");
@@ -284,35 +276,36 @@ public class RewardEdit extends AppCompatActivity{
             txtName.setError("Enter a name.");
             txtName.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
         }
-        if ((selectedPersonRuleList == null) || (selectedPersonRuleList.size() == 0) ||
-                txtSelectedUsers.getText().toString().trim().equals("") ) {
-            allPass = false;
-            txtSelectedUsers.setError("Please assign a user.");
-            txtSelectedUsers.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
-        }
-        if(allPass){
+//        if ((selectedPersonRuleList == null) || (selectedPersonRuleList.size() == 0) ||
+//                txtSelectedUsers.getText().toString().trim().equals("") ) {
+//            allPass = false;
+//            txtSelectedUsers.setError("Please assign a user.");
+//            txtSelectedUsers.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
+//        }
+        if (allPass) {
             String name = txtName.getText().toString().trim();
 
-            if( selectedPersonRuleList == null ){
-                unhandledEvent( "Error!", "Creation of reward could not finish." );
-                return;
-            }
+//            if( selectedPersonRuleList == null ){
+//                unhandledEvent( "Error!", "Creation of reward could not finish." );
+//                return;
+//            }
 
-            if (rewardSubmit != null){
+            if (rewardSubmit != null) {
                 databaseReward.child(rewardSubmit.getRewardName()).removeValue();
             }
 
             Reward reward = new Reward();
             reward.setRewardName(name);
-            reward.setPoints( Integer.parseInt( txtDescription.getText().toString().trim() ) );
+            reward.setPoints(Integer.parseInt(txtDescription.getText().toString().trim()));
 
-
-            for(PersonRule person : selectedPersonRuleList){
-                Responsibility responsibility = new Responsibility( person.getUserID(), name );
-                reward.addResponsibility(responsibility);
+            if (selectedPersonRuleList != null) {
+                for (PersonRule person : selectedPersonRuleList) {
+                    Responsibility responsibility = new Responsibility(person.getUserID(), name);
+                    reward.addResponsibility(responsibility);
+                }
             }
 
-            databaseReward.child( name ).setValue(reward);
+            databaseReward.child(name).setValue(reward);
 
             controlPanelShow();
         }
@@ -327,10 +320,8 @@ public class RewardEdit extends AppCompatActivity{
 
     /**
      * UI Event - removes all currently displayed responsibilities from respoonsibilityView
-     *
-     *
      */
-    private void scrubRewardView(){
+    private void scrubRewardView() {
         LinearLayout responsibilityView = findViewById(R.id.responsibilityView);
         responsibilityView.removeAllViews();
     }
@@ -343,10 +334,8 @@ public class RewardEdit extends AppCompatActivity{
      * text collected by the string builder is then displayed as a check box, the
      * responsibility is then tagged and a listener is created, when activated the listener
      * calls a method to add the responsibility to the reward list.
-     *
-     *
      */
-    private void displayReward(Reward reward){
+    private void displayReward(Reward reward) {
         LinearLayout responsibilityView = findViewById(R.id.responsibilityView);
 
         LinearLayout top = new LinearLayout(this);
@@ -360,15 +349,15 @@ public class RewardEdit extends AppCompatActivity{
         text2.setTextSize(14);
 
         text1.setTypeface(Typeface.DEFAULT_BOLD);
-        text2.setTypeface(null,Typeface.BOLD_ITALIC);
+        text2.setTypeface(null, Typeface.BOLD_ITALIC);
 
-        text1.setText( reward.getRewardName() );
-        text2.setText( reward.getPoints() + " Points - " + setSelectedPersonRuleList(reward) );
+        text1.setText(reward.getRewardName());
+        text2.setText(reward.getPoints() + " Points - " + setSelectedPersonRuleList(reward));
 
         top.addView(text1);
         top.addView(text2);
 
-        top.setPadding(0,30,0,30);
+        top.setPadding(0, 30, 0, 30);
 
         top.setTag(reward);
 
@@ -381,9 +370,9 @@ public class RewardEdit extends AppCompatActivity{
                 TextView txtPoints = findViewById(R.id.textDescription);
                 TextView txtUsers = findViewById(R.id.textSelectUsers);
 
-                txtName.setText( rewardSubmit.getRewardName() );
-                txtPoints.setText( String.valueOf( rewardSubmit.getPoints()) );
-                txtUsers.setText( setSelectedPersonRuleList(rewardSubmit) );
+                txtName.setText(rewardSubmit.getRewardName());
+                txtPoints.setText(String.valueOf(rewardSubmit.getPoints()));
+                txtUsers.setText(setSelectedPersonRuleList(rewardSubmit));
 
                 txtName.setBackgroundDrawable(getResources().getDrawable(R.drawable.back));
                 txtPoints.setBackgroundDrawable(getResources().getDrawable(R.drawable.back));
@@ -400,30 +389,29 @@ public class RewardEdit extends AppCompatActivity{
         responsibilityView.addView(top);
     }
 
-    private String setSelectedPersonRuleList(Reward reward){
+    private String setSelectedPersonRuleList(Reward reward) {
         selectedPersonRuleList = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         int i = 0;
-        for ( Responsibility responsibility : reward.getResponsibilities() ) {
-            for(PersonRule person : personRulesList){
-                if(responsibility.getUserID() == person.getUserID()){
+        for (Responsibility responsibility : reward.getResponsibilities()) {
+            for (PersonRule person : personRulesList) {
+                if (responsibility.getUserID() == person.getUserID()) {
                     selectedPersonRuleList.add(person);
                     sb.append(person.getUserName());
 
-                    if ( responsibility.isComplete() ){
+                    if (responsibility.isComplete()) {
                         sb.append(": completed");
                     }
                 }
             }
 
-            if( i + 1 < reward.getResponsibilities().size() ){
+            if (i + 1 < reward.getResponsibilities().size()) {
                 sb.append(";    ");
             }
             i++;
         }
         return sb.toString();
     }
-
 
 
 //--------------------------------------------------------------------------------------------------
@@ -437,17 +425,16 @@ public class RewardEdit extends AppCompatActivity{
      * to clear the UI and, once completed, another method is called to redraw the layout
      * with checkboxes obtaining related responsibilities to the selected users.
      *
-     *
      * @param selectedUserAtIndex
      */
-    public void setSelectedPersonRuleList(ArrayList selectedUserAtIndex){
+    public void setSelectedPersonRuleList(ArrayList selectedUserAtIndex) {
 
-        selectedPersonRuleList= new ArrayList<>();
+        selectedPersonRuleList = new ArrayList<>();
 
-        for (int i = 0 ; i < selectedUserAtIndex.size() ; i++ ){
+        for (int i = 0; i < selectedUserAtIndex.size(); i++) {
             selectedPersonRuleList
                     .add(personRulesList
-                            .get( Integer.valueOf(selectedUserAtIndex.get(i).toString() )
+                            .get(Integer.valueOf(selectedUserAtIndex.get(i).toString())
                             )
                     );
         }
@@ -464,8 +451,6 @@ public class RewardEdit extends AppCompatActivity{
      * If a reward was passed through intent, a new list is made and filled
      * with the users that were assigned to that reward. The list of users is
      * displayed to the currentUser in a TextView
-     *
-     *
      */
     public void userListen() {
         personRulesList = new ArrayList<>();
@@ -478,7 +463,7 @@ public class RewardEdit extends AppCompatActivity{
                 personRulesList = new ArrayList<>();
                 for (DataSnapshot personRoleInstance : dataSnapshot.getChildren()) {
                     PersonRule user = personRoleInstance.getValue(PersonRule.class);
-                    if ( !user.isAdmin() ){
+                    if (!user.isAdmin()) {
                         personRulesList.add(user);
                     }
                 }
@@ -495,16 +480,15 @@ public class RewardEdit extends AppCompatActivity{
     /**
      * Listener - Fills rewardsList with all the avaiable awards and then calls
      * a method to have them displayed on the UI.
-     *
      */
-    private void rewardListen(){
+    private void rewardListen() {
         scrubRewardView();
         rewardsList = new ArrayList<>();
 
         databaseReward.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapShot : dataSnapshot.getChildren() ) {
+                for (DataSnapshot snapShot : dataSnapshot.getChildren()) {
                     Reward reward = snapShot.getValue(Reward.class);
                     rewardsList.add(reward);
                     displayReward(reward);
@@ -528,10 +512,8 @@ public class RewardEdit extends AppCompatActivity{
 
     /**
      * Intent - Switches the intent back to the control panel
-     *
-     *
      */
-    private void controlPanelShow(){
+    private void controlPanelShow() {
         Intent intent = new Intent(RewardEdit.this, ControlPanelActivity.class);
         intent.putExtra("currentUser", currentUser);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -544,7 +526,7 @@ public class RewardEdit extends AppCompatActivity{
      *
      * @param flag
      */
-    private void toggleDeleteButton(boolean flag){
+    private void toggleDeleteButton(boolean flag) {
         Button btnDelete = findViewById(R.id.btnDelete);
         btnDelete.setEnabled(flag);
     }

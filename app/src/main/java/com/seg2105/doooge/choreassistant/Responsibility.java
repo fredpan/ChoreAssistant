@@ -42,7 +42,7 @@ public class Responsibility implements Serializable {
         isComplete = true;
     }
 
-    public Chore getChore(){
+    public Chore getChore() {
         return chore;
     }
 
@@ -50,7 +50,7 @@ public class Responsibility implements Serializable {
         this.chore = chore;
     }
 
-    public PersonRule getPersonRule(){
+    public PersonRule getPersonRule() {
         return personRule;
     }
 
@@ -66,23 +66,13 @@ public class Responsibility implements Serializable {
         this.userID = userID;
     }
 
-    public void setPoints(int points){
-        this.points = points;
-    }
-
-    public int getPoints(){
+    public int getPoints() {
         return this.points;
     }
 
-/*
-    public int getUserID() {
-        return userID;
+    public void setPoints(int points) {
+        this.points = points;
     }
-
-    public void setUserID(int userID) {
-        this.userID = userID;
-    }
-*/
 
     public String getChoreIdentification() {
         return choreIdentification;
