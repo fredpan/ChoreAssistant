@@ -170,8 +170,11 @@ public class ResponsibilityList extends AppCompatActivity {
 
         //pass personRulist list to a string Array for functionality in alert dialog
         AlertDialog.Builder userList = new AlertDialog.Builder(this);
-        userList.setTitle("Select your reward.");
-
+        if (rewardsList.isEmpty()) {
+            userList.setTitle("There is no reward");
+        } else {
+            userList.setTitle("Select your reward.");
+        }
         //detect which users were selected for a task
         userList.setMultiChoiceItems(rewards, null, new DialogInterface.OnMultiChoiceClickListener() {
 

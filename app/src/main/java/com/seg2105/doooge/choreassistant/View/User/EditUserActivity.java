@@ -107,6 +107,7 @@ public class EditUserActivity extends AppCompatActivity implements View.OnClickL
                     password.setBackgroundDrawable(getResources().getDrawable(R.drawable.back_red));
                 } else {
                     PersonRule newPersonRule = new PersonRule(newUserName, encrypted, personRule.isAdmin(), color, personRule.getUserID());
+                    newPersonRule.setResponsibilities(personRule.getResponsibilities());
                     databaseLoginInfo.child(personRule.getUserName()).removeValue();
                     databaseLoginInfo.child(newPersonRule.getUserName()).setValue(newPersonRule);
                     Toast.makeText(getApplicationContext(), "update success !", Toast.LENGTH_SHORT).show();

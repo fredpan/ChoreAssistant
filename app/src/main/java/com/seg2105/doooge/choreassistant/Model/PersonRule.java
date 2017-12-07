@@ -87,6 +87,10 @@ public class PersonRule implements Serializable {
         return newResponsibilities;
     }
 
+    public void setResponsibilities(List<Responsibility> responsibilities) {
+        this.responsibilities = responsibilities;
+    }
+
     public int numberOfResponsibilities() {
         return responsibilities.size();
     }

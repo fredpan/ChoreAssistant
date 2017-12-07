@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -613,6 +614,8 @@ public class ChoreEdit extends AppCompatActivity {
         Intent intent = new Intent(ChoreEdit.this, ResponsibilityList.class);
         intent.putExtra("currentUser", currentUser);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        Toast.makeText(getBaseContext(), " Success !!", Toast.LENGTH_SHORT).show();
+
         startActivity(intent);
     }
 
